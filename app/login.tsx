@@ -3,10 +3,10 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
 import { LoginSchema, loginSchema } from '../schema/auth'
-import { useAuthContent } from '@/hooks/use-auth'
+import { useAuthContext } from '@/hooks/use-auth'
 
 export default function Login() {
-  const { tokenData, loginMutation } = useAuthContent()
+  const { tokenData, loginMutation } = useAuthContext()
 
   const {
     control,

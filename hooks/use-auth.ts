@@ -89,4 +89,4 @@ export function useAuth() {
   }
 }
 
-export const [AuthProvider, useAuthContent] = constate(useAuth)
+export const [AuthProvider, useAuthContext] = constate(useAuth)

@@ -1,10 +1,13 @@
 import { Button, Checkbox, FormControl, Input, Pressable, ScrollView, Text, VStack } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'expo-router'
-import { SignupSchema, signupSchema } from '../schema/auth'
+import { Link, Redirect } from 'expo-router'
+import { SignupSchema, signupSchema } from '@/schema/auth'
+import { useAuthContext } from '@/hooks/use-auth'
 
 export default function Signup() {
+  const { tokenData, signupMutation } = useAuthContext()
+
   const {
     control,
     handleSubmit,
@@ -18,7 +21,11 @@ export default function Signup() {
   })
 
   const handleSignup = (values: SignupSchema) => {
-    console.log(values)
+    signupMutation.mutate(values)
+  }
+
+  if (tokenData) {
+    return <Redirect href="/dashboard" />
   }
 
   return (
