@@ -61,7 +61,6 @@ export default function Login() {
             render={({ field }) => (
               <Checkbox
                 value="dart"
-                colorScheme="orange"
                 isChecked={field.value}
                 onChange={(value) => {
                   field.onChange(value)
