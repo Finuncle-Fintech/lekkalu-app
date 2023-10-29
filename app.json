@@ -25,6 +25,9 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": ["expo-router"],
-    "scheme": "com.lekkalu-app.lekkalu-app"
+    "scheme": "com.lekkalu-app.lekkalu-app",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
