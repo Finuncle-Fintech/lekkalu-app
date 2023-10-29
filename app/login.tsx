@@ -1,10 +1,13 @@
 import { Box, Button, Checkbox, FormControl, Input, Pressable, Text, VStack } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'expo-router'
+import { Link, Redirect } from 'expo-router'
 import { LoginSchema, loginSchema } from '../schema/auth'
+import { useAuthContent } from '@/hooks/use-auth'
 
 export default function Login() {
+  const { tokenData, loginMutation } = useAuthContent()
+
   const {
     control,
     handleSubmit,
@@ -17,7 +20,11 @@ export default function Login() {
   })
 
   const handleLogin = (values: LoginSchema) => {
-    console.log(values)
+    loginMutation.mutate(values)
+  }
+
+  if (tokenData) {
+    return <Redirect href="/dashboard" />
   }
 
   return (

@@ -27,7 +27,8 @@
     "plugins": ["expo-router"],
     "scheme": "com.lekkalu-app.lekkalu-app",
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "tsconfigPaths": true
     }
   }
 }
