@@ -30,7 +30,7 @@ export default function Login() {
           <Text color="gray.500">Welcome back to finuncle!</Text>
         </Box>
 
-        <FormControl isInvalid={'username' in errors}>
+        <FormControl isRequired isInvalid={'username' in errors}>
           <FormControl.Label>Username</FormControl.Label>
           <Controller
             name="username"
@@ -41,7 +41,7 @@ export default function Login() {
           <FormControl.ErrorMessage>{errors.username?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={'password' in errors}>
+        <FormControl isRequired isInvalid={'password' in errors}>
           <FormControl.Label>Password</FormControl.Label>
           <Controller
             name="password"
@@ -60,7 +60,7 @@ export default function Login() {
             control={control}
             render={({ field }) => (
               <Checkbox
-                value="dart"
+                value="rememberMe"
                 isChecked={field.value}
                 onChange={(value) => {
                   field.onChange(value)
@@ -78,7 +78,7 @@ export default function Login() {
 
         <Link href="/signup" asChild>
           <Pressable>
-            <Text>Don&rsquo;t have an account? Signup</Text>
+            <Text color="gray.500">Don&rsquo;t have an account? Signup</Text>
           </Pressable>
         </Link>
       </VStack>
