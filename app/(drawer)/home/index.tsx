@@ -1,26 +1,9 @@
-import { Text, View, StyleSheet } from 'react-native'
-import { DrawerToggleButton } from '@react-navigation/drawer'
-import { Drawer } from 'expo-router/drawer'
+import { Box, Text } from 'native-base'
+
 export default function Page() {
   return (
-    <View style={styles.container}>
-      <Drawer.Screen
-        options={{
-          title: 'Home', // <== NEW EDIT HERE
-          headerShown: true,
-          headerLeft: () => <DrawerToggleButton />,
-        }}
-      />
-      <Text style={{ fontSize: 24 }}>Index page of Home Drawer</Text>
-    </View>
+    <Box flex={1} alignItems="center" justifyContent="center">
+      <Text>This is home screenh</Text>
+    </Box>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

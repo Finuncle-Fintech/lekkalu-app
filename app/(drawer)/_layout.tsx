@@ -1,3 +1,4 @@
+import { DrawerToggleButton } from '@react-navigation/drawer'
 import { Drawer } from 'expo-router/drawer'
 
 export default function Layout() {
@@ -6,15 +7,17 @@ export default function Layout() {
       <Drawer.Screen
         name="home"
         options={{
-          drawerLabel: 'Home',
           title: 'Home',
+          headerShown: true,
+          headerLeft: () => <DrawerToggleButton />,
         }}
       />
       <Drawer.Screen
         name="settings"
         options={{
-          drawerLabel: 'Settings',
           title: 'Settings',
+          headerShown: true,
+          headerLeft: () => <DrawerToggleButton />,
         }}
       />
     </Drawer>
