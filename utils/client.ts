@@ -1,5 +1,5 @@
 import axios, { AxiosHeaders } from 'axios'
-import { getToken, setToken } from './token'
+import { getToken } from './token'
 
 const BASIC_HEADER = {
   Accept: 'application/json',
@@ -25,20 +25,6 @@ apiClient.interceptors.request.use((config) => {
   }
 
   return config
-})
-
-apiClient.interceptors.response.use(undefined, (error) => {
-  if (axios.isAxiosError(error)) {
-    // If we get unauthorized status code
-    // That means token is expired
-    if (error.response?.status === 403) {
-      // Remove access token from persisted cache
-      setToken('access', undefined)
-      setToken('refresh', undefined)
-    }
-  }
-
-  return Promise.reject(error)
 })
 
 /**
