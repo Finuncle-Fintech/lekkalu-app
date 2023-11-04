@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, FormControl, Input, Pressable, Text, VStack } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, Redirect } from 'expo-router'
+import { Link, Redirect, router } from 'expo-router'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 
@@ -21,6 +21,7 @@ export default function Login() {
 
   const handleLogin = (values: LoginSchema) => {
     loginMutation.mutate(values)
+    router.replace('/(drawer)/home')
   }
 
   if (tokenData) {
@@ -80,9 +81,10 @@ export default function Login() {
 
           <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
-
-        <Button onPress={handleSubmit(handleLogin)}>Submit</Button>
-
+        <Link href={'/(drawer)/home'} style={{ marginTop: 16, fontSize: 18 }}>
+          {/* <Text>Hellosd</Text> */}
+          <Button onPress={handleSubmit(handleLogin)}>Submit</Button>
+        </Link>
         <Link href="/signup" asChild>
           <Pressable>
             <Text color="gray.500">Don&rsquo;t have an account? Signup</Text>
