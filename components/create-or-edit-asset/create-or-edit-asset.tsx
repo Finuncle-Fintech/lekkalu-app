@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 import { omit } from 'lodash'
-import { useAuthContext } from '@/hooks/use-auth'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { AddPhysicalAssetSchema, addPhysicalAssetSchema } from '@/schema/balance-sheet'
 import { AssetCreateOrEditDto, addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
@@ -21,7 +20,6 @@ type CreateOrEditAssetProps = {
 }
 
 export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetProps) {
-  const { userData } = useAuthContext()
   const [showModal, setShowModal] = useState(false)
   const toast = useToast()
   const qc = useQueryClient()
