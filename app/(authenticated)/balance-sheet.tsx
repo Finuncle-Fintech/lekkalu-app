@@ -5,7 +5,7 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { fetchPhysicalAssets } from '@/queries/balance-sheet'
 
 export default function BalanceSheet() {
-  const { data } = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })
+  const { data, isFetching } = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })
 
   return (
     <VStack flex={1} p={4} space={4}>
@@ -16,6 +16,7 @@ export default function BalanceSheet() {
       <Heading>Your physical assets</Heading>
 
       <FlatList
+        refreshing={isFetching}
         data={data}
         renderItem={({ item }) => (
           <VStack space={4} bg="white" rounded="md" p="4" shadow="sm" mb="4">

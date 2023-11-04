@@ -44,7 +44,7 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
       sell_date: asset?.sell_date ? dayjs(asset.sell_date).toDate() : undefined,
       tags: [],
       type: 1,
-      user: userData?.id ?? 1,
+      user: 2,
       init_dep: asset?.depreciation_percent ? Number(asset.depreciation_frequency) : 1,
     },
   })
@@ -55,9 +55,6 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
       qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
       toast.show({ title: 'Asset created successfully!' })
       setShowModal(false)
-    },
-    onError: (error) => {
-      console.log(error)
     },
   })
 

@@ -37,7 +37,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
       case 'select': {
         return (
           <Select
-            {...omit(field, 'ref')}
+            {...omit(field, 'ref', 'value')}
             placeholder={input.label}
             _selectedItem={{
               bg: 'brand.600',
