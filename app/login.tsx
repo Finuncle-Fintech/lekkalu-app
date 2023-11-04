@@ -81,10 +81,8 @@ export default function Login() {
 
           <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
-        <Link href={'/(drawer)/home'} style={{ marginTop: 16, fontSize: 18 }}>
-          {/* <Text>Hellosd</Text> */}
-          <Button onPress={handleSubmit(handleLogin)}>Submit</Button>
-        </Link>
+        <Button onPress={handleSubmit(handleLogin)}>Submit</Button>
+
         <Link href="/signup" asChild>
           <Pressable>
             <Text color="gray.500">Don&rsquo;t have an account? Signup</Text>

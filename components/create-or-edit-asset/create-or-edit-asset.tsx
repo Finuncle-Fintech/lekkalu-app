@@ -1,7 +1,7 @@
 import { cloneElement, useState } from 'react'
-import { Button, CheckIcon, FormControl, Input, Modal, Select, useToast } from 'native-base'
+import { Button, Modal, useToast } from 'native-base'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 import { omit } from 'lodash'
@@ -12,8 +12,8 @@ import { AssetCreateOrEditDto, addPhysicalAsset, editPhysicalAsset } from '@/que
 import { BALANCE_SHEET } from '@/utils/query-keys'
 import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
-import DatePicker from '../date-picker'
-import { ASSET_MONTHS, ASSET_YEARS } from '@/utils/balance-sheet'
+import InputFields from '../input-fields'
+import { ASSET_INPUTS } from './config'
 
 type CreateOrEditAssetProps = {
   trigger: React.ReactElement<{ onPress: () => void }>
@@ -105,183 +105,7 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
           <Modal.Header>{title}</Modal.Header>
 
           <Modal.Body>
-            <FormControl isRequired isInvalid={'name' in errors}>
-              <FormControl.Label>Asset Name</FormControl.Label>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => (
-                  <Input placeholder="Enter asset name" onChangeText={field.onChange} {...field} />
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.name?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={'purchase_value' in errors}>
-              <FormControl.Label>Purchase Value</FormControl.Label>
-              <Controller
-                name="purchase_value"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    value={field.value?.toString()}
-                    keyboardType="numeric"
-                    placeholder="Enter purchase value"
-                    onChangeText={field.onChange}
-                  />
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.purchase_value?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={'purchase_date' in errors}>
-              <FormControl.Label>Purchase Date</FormControl.Label>
-              <Controller name="purchase_date" control={control} render={({ field }) => <DatePicker {...field} />} />
-
-              <FormControl.ErrorMessage>{errors.purchase_date?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={'sell_value' in errors}>
-              <FormControl.Label>Sell Value</FormControl.Label>
-              <Controller
-                name="sell_value"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    value={field.value?.toString()}
-                    keyboardType="numeric"
-                    placeholder="Enter sell value"
-                    onChangeText={field.onChange}
-                  />
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.sell_value?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={'sell_date' in errors}>
-              <FormControl.Label>Choose the sell date</FormControl.Label>
-              <Controller name="sell_date" control={control} render={({ field }) => <DatePicker {...field} />} />
-
-              <FormControl.ErrorMessage>{errors.sell_date?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={'depreciation_percent' in errors}>
-              <FormControl.Label>Choose depreciation %</FormControl.Label>
-              <Controller
-                name="depreciation_percent"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    value={field.value?.toString()}
-                    keyboardType="numeric"
-                    placeholder="Enter depreciation %"
-                    onChangeText={field.onChange}
-                  />
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.depreciation_percent?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={'init_dep' in errors}>
-              <FormControl.Label>Choose depreciation %</FormControl.Label>
-              <Controller
-                name="init_dep"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    value={field.value?.toString()}
-                    keyboardType="numeric"
-                    placeholder="Initial depreciation"
-                    onChangeText={field.onChange}
-                  />
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.init_dep?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={'market_value' in errors}>
-              <FormControl.Label>Market Value</FormControl.Label>
-              <Controller
-                name="market_value"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    value={field.value?.toString()}
-                    keyboardType="numeric"
-                    placeholder="Market Value"
-                    onChangeText={field.onChange}
-                  />
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.market_value?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={'months' in errors}>
-              <FormControl.Label>Months</FormControl.Label>
-
-              <Controller
-                name="months"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...omit(field, 'ref')}
-                    placeholder="Months"
-                    _selectedItem={{
-                      bg: 'brand.600',
-                      endIcon: <CheckIcon size={5} />,
-                    }}
-                    mt="1"
-                    defaultValue={field.value?.toString()}
-                    onValueChange={field.onChange}
-                  >
-                    {ASSET_MONTHS.map((month) => (
-                      <Select.Item key={month.id} label={month.label.toString()} value={month.id} />
-                    ))}
-                  </Select>
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.months?.message}</FormControl.ErrorMessage>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={'years' in errors}>
-              <FormControl.Label>Years</FormControl.Label>
-
-              <Controller
-                name="years"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...omit(field, 'ref')}
-                    placeholder="Years"
-                    _selectedItem={{
-                      bg: 'brand.600',
-                      endIcon: <CheckIcon size={5} />,
-                    }}
-                    mt="1"
-                    selectedValue={typeof field.value === 'string' ? field.value : undefined}
-                    onValueChange={field.onChange}
-                  >
-                    {ASSET_YEARS.map((year) => (
-                      <Select.Item key={year.id} label={year.label} value={year.id} />
-                    ))}
-                  </Select>
-                )}
-              />
-
-              <FormControl.ErrorMessage>{errors.years?.message}</FormControl.ErrorMessage>
-            </FormControl>
+            <InputFields control={control} errors={errors} inputs={ASSET_INPUTS} />
           </Modal.Body>
 
           <Modal.Footer>
