@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, FormControl, Input, Pressable, Text, VStack } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, Redirect, router } from 'expo-router'
+import { Link, Redirect } from 'expo-router'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 
@@ -21,7 +21,6 @@ export default function Login() {
 
   const handleLogin = (values: LoginSchema) => {
     loginMutation.mutate(values)
-    router.replace('/(drawer)/home')
   }
 
   if (tokenData) {
