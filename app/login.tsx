@@ -21,11 +21,11 @@ export default function Login() {
 
   const handleLogin = (values: LoginSchema) => {
     loginMutation.mutate(values)
-    router.replace('/(drawer)/home')
+    router.replace('/(drawer)/SipCalculator')
   }
 
-  if (tokenData) {
-    return <Redirect href="/dashboard" />
+  if (!tokenData) {
+    return <Redirect href="/(drawer)/SipCalculator/" />
   }
 
   return (

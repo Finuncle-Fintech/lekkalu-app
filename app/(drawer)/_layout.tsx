@@ -5,9 +5,9 @@ export default function Layout() {
   return (
     <Drawer screenOptions={{ headerShown: false }}>
       <Drawer.Screen
-        name="home"
+        name="SipCalculator"
         options={{
-          title: 'Home',
+          title: 'Sip Calculator',
           headerShown: true,
           headerLeft: () => <DrawerToggleButton />,
         }}
