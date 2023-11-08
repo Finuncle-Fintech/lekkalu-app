@@ -1,3 +1,4 @@
+import { calculateSip } from '@/utils/calculator'
 import { Box, Text, HStack, VStack, FormControl, Input, Slider } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -9,6 +10,8 @@ export default function Page() {
       aunual_return: '1',
     },
   })
+
+  const summery = calculateSip(Number(watch('sip')), Number(watch('year')), Number(watch('aunual_return')))
 
   const summaryText = (title: string, value: string | number) => {
     return (
@@ -38,9 +41,9 @@ export default function Page() {
           <Text fontSize="sm" color="black" mt={1} alignSelf={'center'} fontWeight={'800'}>
             {'Summary'}
           </Text>
-          {summaryText('Total invested:', watch('sip'))}
-          {summaryText('Final value:', '2000')}
-          {summaryText('Wealth gained:', '2200')}
+          {summaryText('Total invested:', summery.totalInvested)}
+          {summaryText('Final value:', summery.finalValue)}
+          {summaryText('Wealth gained:', summery.wealthGained)}
         </Box>
       </HStack>
       <VStack maxW="sm" w="full" p="5" space={4}>
