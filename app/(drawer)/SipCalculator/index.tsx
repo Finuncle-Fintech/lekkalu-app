@@ -30,9 +30,16 @@ export default function Page() {
   const data = [
     {
       name: 'Seoul',
-      population: 21500000,
-      color: 'rgba(131, 167, 234, 1)',
-      legendFontColor: '#7F7F7F',
+      population: summery.totalInvested,
+      color: '#0D6DDA',
+      legendFontColor: '#0D6DDA',
+      legendFontSize: 15,
+    },
+    {
+      name: 'parth',
+      population: summery.wealthGained,
+      color: '#79D40A',
+      legendFontColor: '#79D40A',
       legendFontSize: 15,
     },
   ]
@@ -52,7 +59,7 @@ export default function Page() {
         {'Calculate returns on your SIP investments'}
       </Text>
       <HStack maxW="sm" w="full" alignSelf={'center'}>
-        <Box flex={1} borderWidth={1}>
+        <Box flex={1}>
           <PieChart
             data={data}
             width={200}
@@ -60,11 +67,26 @@ export default function Page() {
             chartConfig={chartConfig}
             accessor={'population'}
             backgroundColor={'transparent'}
-            paddingLeft={'15'}
-            center={[10, 50]}
+            paddingLeft={'40'}
+            center={[0, -5]}
+            hasLegend={false}
           />
+          <VStack space={1}>
+            <Box flexDirection={'row'} justifyContent={'center'} alignItems={'center'}>
+              <Box w={5} h={5} rounded="full" bg={'primary.50'} />
+              <Text fontSize="sm" marginLeft={2} color={'primary.50'}>
+                Total Invested
+              </Text>
+            </Box>
+            <Box flexDirection={'row'} justifyContent={'center'} alignItems={'center'}>
+              <Box w={5} h={5} rounded="full" bg={'green.50'} />
+              <Text fontSize="sm" marginLeft={2} color={'green.50'}>
+                Wealth Gained
+              </Text>
+            </Box>
+          </VStack>
         </Box>
-        <Box flex={0.9} borderWidth={1}>
+        <Box flex={0.9}>
           <Text fontSize="sm" color="black" mt={1} alignSelf={'center'} fontWeight={'800'}>
             {'Summary'}
           </Text>
