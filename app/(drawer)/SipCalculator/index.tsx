@@ -1,8 +1,10 @@
 import { calculateSip } from '@/utils/calculator'
 import { Box, Text, HStack, VStack, FormControl, Input, Slider } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
-
+import { Dimensions, useWindowDimensions } from 'react-native'
+import { PieChart } from 'react-native-chart-kit'
 export default function Page() {
+  const { width } = useWindowDimensions()
   const { handleSubmit, register, control, setValue, getValues, watch } = useForm({
     defaultValues: {
       sip: '500',
@@ -25,7 +27,25 @@ export default function Page() {
       </VStack>
     )
   }
-
+  const data = [
+    {
+      name: 'Seoul',
+      population: 21500000,
+      color: 'rgba(131, 167, 234, 1)',
+      legendFontColor: '#7F7F7F',
+      legendFontSize: 15,
+    },
+  ]
+  const chartConfig = {
+    backgroundGradientFrom: '#1E2923',
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: '#08130D',
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false, // optional
+  }
   return (
     <Box flex={1} alignItems="center">
       <Text fontSize="lg" color="black" mt={3}>
@@ -33,9 +53,16 @@ export default function Page() {
       </Text>
       <HStack maxW="sm" w="full" alignSelf={'center'}>
         <Box flex={1} borderWidth={1}>
-          <Text fontSize="lg" color="black" mt={5} alignItems={'center'} alignSelf={'center'}>
-            {'Calculate returns on your SIP investments'}
-          </Text>
+          <PieChart
+            data={data}
+            width={200}
+            height={180}
+            chartConfig={chartConfig}
+            accessor={'population'}
+            backgroundColor={'transparent'}
+            paddingLeft={'15'}
+            center={[10, 50]}
+          />
         </Box>
         <Box flex={0.9} borderWidth={1}>
           <Text fontSize="sm" color="black" mt={1} alignSelf={'center'} fontWeight={'800'}>
