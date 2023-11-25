@@ -3,7 +3,11 @@ import { Drawer } from 'expo-router/drawer'
 
 export default function Layout() {
   return (
-    <Drawer screenOptions={{ headerShown: false }}>
+    <Drawer
+      defaultStatus={'closed'}
+      initialRouteName="SipCalculator"
+      screenOptions={{ headerShown: false, swipeEnabled: false }}
+    >
       <Drawer.Screen
         name="SipCalculator"
         options={{
