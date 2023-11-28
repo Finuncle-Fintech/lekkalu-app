@@ -20,6 +20,14 @@ export default function AuthenticatedAppLayout() {
           headerLeft: () => <DrawerToggleButton />,
         }}
       />
+      <Drawer.Screen
+        name="expenses"
+        options={{
+          title: 'Expenses',
+          headerShown: true,
+          headerLeft: () => <DrawerToggleButton />,
+        }}
+      />
     </Drawer>
   )
 }

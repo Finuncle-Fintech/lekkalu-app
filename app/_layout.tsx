@@ -3,7 +3,6 @@ import { Slot } from 'expo-router'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { THEME_COLORS } from '@/utils/theme'
 import { AuthProvider } from '@/hooks/use-auth'
 import { queryClient } from '@/utils/query-client'
@@ -19,9 +18,7 @@ export default function AppLayout() {
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
       <AuthProvider>
         <NativeBaseProvider theme={theme}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <Slot />
-          </SafeAreaView>
+          <Slot />
         </NativeBaseProvider>
       </AuthProvider>
     </PersistQueryClientProvider>
