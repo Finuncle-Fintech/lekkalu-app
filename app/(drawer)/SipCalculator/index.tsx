@@ -79,8 +79,8 @@ export default function Page() {
               </Text>
             </Box>
             <Box flexDirection={'row'} justifyContent={'center'} alignItems={'center'}>
-              <Box w={5} h={5} rounded="full" bg={'green.50'} />
-              <Text fontSize="sm" marginLeft={2} color={'green.50'}>
+              <Box w={5} h={5} rounded="full" bg={'green.500'} />
+              <Text fontSize="sm" marginLeft={2} color={'green.500'}>
                 Wealth Gained
               </Text>
             </Box>

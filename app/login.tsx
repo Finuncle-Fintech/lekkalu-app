@@ -25,7 +25,7 @@ export default function Login() {
   }
 
   if (!tokenData) {
-    return <Redirect href="/(drawer)/SipCalculator/" />
+    return <Redirect href="/dashboard" />
   }
 
   return (
