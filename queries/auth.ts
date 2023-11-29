@@ -1,4 +1,3 @@
-import { jwtDecode } from 'jwt-decode'
 import { getToken } from '@/utils/token'
 import { tokenClient, userClient } from '@/utils/client'
 import { User } from '@/types/user'
@@ -17,13 +16,12 @@ export async function fetchUser() {
     return
   }
 
-  const decodedToken = jwtDecode(token) as { user_id: number }
   const headers = {
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   }
 
-  const { data } = await userClient.get<User>(`/${decodedToken.user_id}`, { headers })
+  const { data } = await userClient.get<User>('/user_profile', { headers })
   return data
 }
 
@@ -33,6 +31,6 @@ export async function login(dto: Omit<LoginSchema, 'rememberMe'>) {
 }
 
 export async function signup(dto: Omit<SignupSchema, 'termsAndConditions' | 'privacyPolicy'>) {
-  const { data } = await userClient.post<{ email: string; username: string }>('', dto)
+  const { data } = await userClient.post<{ email: string; username: string }>('/users', dto)
   return data
 }
