@@ -3,7 +3,7 @@ import { Drawer } from 'expo-router/drawer'
 
 export default function Layout() {
   return (
-    <Drawer initialRouteName="dashboard" screenOptions={{ headerShown: false, swipeEnabled: false }}>
+    <Drawer initialRouteName="Dashboard" screenOptions={{ headerShown: false, swipeEnabled: false }}>
       <Drawer.Screen
         name="Dashboard"
         options={{

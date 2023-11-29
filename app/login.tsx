@@ -21,11 +21,11 @@ export default function Login() {
 
   const handleLogin = (values: LoginSchema) => {
     loginMutation.mutate(values)
-    router.replace('/(drawer)/SipCalculator')
+    router.replace('/(drawer)/Dashboard')
   }
 
   if (!tokenData) {
-    return <Redirect href="/dashboard" />
+    return <Redirect href="/(drawer)/Dashboard" />
   }
 
   return (
@@ -81,8 +81,7 @@ export default function Login() {
 
           <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
-        <Link href={'/(drawer)/home'} style={{ marginTop: 16, fontSize: 18 }}>
-          {/* <Text>Hellosd</Text> */}
+        <Link href={'/(drawer)/Dashboard'} style={{ marginTop: 16, fontSize: 18 }}>
           <Button onPress={handleSubmit(handleLogin)}>Submit</Button>
         </Link>
         <Link href="/signup" asChild>
