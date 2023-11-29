@@ -1,5 +1,5 @@
 import { Text } from 'native-base'
 
-export default function Dashboard() {
+export default function Page() {
   return <Text>Dashboard</Text>
 }
