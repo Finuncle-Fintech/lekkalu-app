@@ -5,9 +5,9 @@ export default function Layout() {
   return (
     <Drawer initialRouteName="dashboard" screenOptions={{ headerShown: false, swipeEnabled: false }}>
       <Drawer.Screen
-        name="dashboard"
+        name="Dashboard"
         options={{
-          title: 'dashboard',
+          title: 'Dashboard',
           headerShown: true,
           headerLeft: () => <DrawerToggleButton />,
         }}
