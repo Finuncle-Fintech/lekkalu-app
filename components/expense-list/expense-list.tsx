@@ -1,10 +1,12 @@
 import { useQueries } from '@tanstack/react-query'
-import { FlatList, HStack, Text, VStack } from 'native-base'
+import { FlatList, HStack, IconButton, Text, VStack } from 'native-base'
 import { useCallback } from 'react'
+import { EvilIcons } from '@expo/vector-icons'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import Loading from '../loading'
+import CreateOrEditExpense from '../create-or-edit-expense'
 
 export default function ExpenseList() {
   const [expenseQuery, tagsQuery] = useQueries({
@@ -56,6 +58,20 @@ export default function ExpenseList() {
                 {getTagNames(item.tags)}
               </Text>
             </HStack>
+
+            <CreateOrEditExpense
+              expense={item}
+              trigger={
+                <IconButton
+                  size={10}
+                  variant="solid"
+                  _icon={{
+                    as: EvilIcons,
+                    name: 'pencil',
+                  }}
+                />
+              }
+            />
           </VStack>
         )}
       />
