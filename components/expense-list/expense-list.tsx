@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query'
-import { Text, VStack } from 'native-base'
+import { FlatList, HStack, Text, VStack } from 'native-base'
 import { useCallback } from 'react'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchExpenses } from '@/queries/expense'
@@ -32,15 +32,33 @@ export default function ExpenseList() {
     [tagsQuery.data],
   )
 
-  console.log(expenseQuery.data)
-
   if (expenseQuery.isLoading) {
     return <Loading title="Loading expenses..." />
   }
 
   return (
     <VStack>
-      <Text>Expense List</Text>
+      <FlatList
+        refreshing={expenseQuery.isLoading || tagsQuery.isLoading}
+        keyExtractor={(item) => item.id.toString()}
+        data={expenseQuery.data ?? []}
+        renderItem={({ item }) => (
+          <VStack space={4} bg="white" rounded="md" p="4" shadow="sm" mb="4">
+            <HStack space={2} fontSize="xl">
+              <Text fontSize="lg">Amount : </Text>
+              <Text fontSize="lg" fontWeight="bold">
+                {item.amount}
+              </Text>
+            </HStack>
+            <HStack space={2} fontSize="xl">
+              <Text fontSize="lg">Tags : </Text>
+              <Text fontSize="lg" fontWeight="bold">
+                {getTagNames(item.tags)}
+              </Text>
+            </HStack>
+          </VStack>
+        )}
+      />
     </VStack>
   )
 }
