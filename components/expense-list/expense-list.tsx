@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query'
-import { FlatList, HStack, IconButton, Text, VStack } from 'native-base'
+import { Button, FlatList, HStack, IconButton, Text, VStack } from 'native-base'
 import { useCallback } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
@@ -7,6 +7,7 @@ import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import Loading from '../loading'
 import CreateOrEditExpense from '../create-or-edit-expense'
+import DeleteExpense from '../delete-expense'
 
 export default function ExpenseList() {
   const [expenseQuery, tagsQuery] = useQueries({
@@ -39,26 +40,27 @@ export default function ExpenseList() {
   }
 
   return (
-    <VStack>
-      <FlatList
-        refreshing={expenseQuery.isLoading || tagsQuery.isLoading}
-        keyExtractor={(item) => item.id.toString()}
-        data={expenseQuery.data ?? []}
-        renderItem={({ item }) => (
-          <VStack space={4} bg="white" rounded="md" p="4" shadow="sm" mb="4">
-            <HStack space={2} fontSize="xl">
-              <Text fontSize="lg">Amount : </Text>
-              <Text fontSize="lg" fontWeight="bold">
-                {item.amount}
-              </Text>
-            </HStack>
-            <HStack space={2} fontSize="xl">
-              <Text fontSize="lg">Tags : </Text>
-              <Text fontSize="lg" fontWeight="bold">
-                {getTagNames(item.tags)}
-              </Text>
-            </HStack>
+    <FlatList
+      refreshing={expenseQuery.isLoading || tagsQuery.isLoading}
+      keyExtractor={(item) => item.id.toString()}
+      data={expenseQuery.data ?? []}
+      renderItem={({ item }) => (
+        <VStack space={4} bg="white" rounded="md" p="4" shadow="sm" mb="4">
+          <HStack space={2} fontSize="xl">
+            <Text fontSize="lg">Amount : </Text>
+            <Text fontSize="lg" fontWeight="bold">
+              {item.amount}
+            </Text>
+          </HStack>
+          <HStack space={2} fontSize="xl">
+            <Text fontSize="lg">Tags : </Text>
+            <Text fontSize="lg" fontWeight="bold">
+              {getTagNames(item.tags)}
+            </Text>
+          </HStack>
 
+          <Button.Group>
+            <DeleteExpense id={item.id} />
             <CreateOrEditExpense
               expense={item}
               trigger={
@@ -68,13 +70,14 @@ export default function ExpenseList() {
                   _icon={{
                     as: EvilIcons,
                     name: 'pencil',
+                    size: 7,
                   }}
                 />
               }
             />
-          </VStack>
-        )}
-      />
-    </VStack>
+          </Button.Group>
+        </VStack>
+      )}
+    />
   )
 }
