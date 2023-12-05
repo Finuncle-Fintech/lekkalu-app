@@ -43,7 +43,7 @@ export default function CreateOrEditExpense({ trigger, expense }: CreateOrEditEx
   } = useForm<AddExpenseSchema>({
     resolver: zodResolver(addExpenseSchema),
     defaultValues: {
-      amount: expense?.amount ? expense.amount : undefined,
+      amount: expense?.amount ? Number(expense.amount) : undefined,
       // @TODO: Add multiple tags
       tags: expense?.tags ? expense.tags[0] : undefined,
       time: expense?.time ? new Date(expense.time) : undefined,
@@ -94,7 +94,7 @@ export default function CreateOrEditExpense({ trigger, expense }: CreateOrEditEx
   const handleAddOrEditExpense = (values: AddExpenseSchema) => {
     const newExpense = {
       amount: values.amount,
-      tags: [values.tags],
+      tags: values.tags,
       time: values.time,
     }
     /** Handling case of expense updation */

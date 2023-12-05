@@ -2,8 +2,10 @@ import { Control, Controller, ControllerRenderProps, FieldErrors, FieldValues } 
 import { CheckIcon, FormControl, Input, Select } from 'native-base'
 import { useCallback } from 'react'
 import { omit } from 'lodash'
+import MultiSelect from 'react-native-multiple-select'
 import { InputField } from '@/types/input-fields'
 import DatePicker from '../date-picker'
+import { theme } from '@/app/_layout'
 
 type InputFieldsProps = {
   inputs: InputField[]
@@ -51,6 +53,26 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
               <Select.Item key={option.id} label={option.label} value={option.id?.toString()} />
             ))}
           </Select>
+        )
+      }
+
+      case 'multi-select': {
+        return (
+          <MultiSelect
+            items={input.options}
+            uniqueKey="id"
+            displayKey="label"
+            selectedItems={field.value}
+            onSelectedItemsChange={field.onChange}
+            tagRemoveIconColor={theme.colors.primary['500']}
+            tagBorderColor={theme.colors.primary['500']}
+            tagTextColor={theme.colors.primary['500']}
+            selectedItemTextColor={theme.colors.primary['500']}
+            selectedItemIconColor={theme.colors.primary['500']}
+            itemTextColor={theme.colors.black}
+            styleSelectorContainer={{ backgroundColor: theme.colors.red['500'] }}
+            submitButtonColor={theme.colors.primary['500']}
+          />
         )
       }
 

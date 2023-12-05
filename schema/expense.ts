@@ -3,7 +3,7 @@ import z from 'zod'
 
 export const addExpenseSchema = z.object({
   amount: z.coerce.number(),
-  tags: z.coerce.number(),
+  tags: z.array(z.coerce.number()),
   time: z.date(),
 })
 export type AddExpenseSchema = Omit<z.infer<typeof addExpenseSchema>, 'amount'> & {

@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { Expense } from '@/types/expense'
 import { Tag } from '@/types/tag'
 import { createTag } from '@/queries/tag'
+import { InputField } from '@/types/input-fields'
 
 export function checkIsExpenseExists(allExpenses: Expense[], newExpense: Pick<Expense, 'amount' | 'tags' | 'time'>) {
   let isExists = false
@@ -54,4 +55,27 @@ export async function getOrCreateTag(newTags: string[], existingTags: Tag[]) {
   }
 
   return existingOrCreatedTagIds
+}
+
+export function getExpenseInputs(tags: Tag[], defaultDate?: Date): InputField[] {
+  return [
+    {
+      id: 'amount',
+      label: 'Provide the amount',
+      type: 'number',
+    },
+    {
+      id: 'tags',
+      label: 'Select tags',
+      type: 'multi-select',
+      options: tags?.map((tag) => ({ id: tag.id, label: tag.name })) ?? [],
+      valueFormatter: (value) => Number(value),
+    },
+    {
+      id: 'time',
+      label: 'Choose the Date',
+      type: 'date',
+      defaultDate,
+    },
+  ] as InputField[]
 }
