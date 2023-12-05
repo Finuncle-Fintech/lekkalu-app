@@ -40,14 +40,15 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             {...omit(field, 'ref', 'value')}
             placeholder={input.label}
             _selectedItem={{
-              bg: 'brand.600',
+              bg: 'blue.100',
               endIcon: <CheckIcon size={5} />,
             }}
             defaultValue={field.value?.toString()}
+            selectedValue={field.value?.toString()}
             onValueChange={field.onChange}
           >
             {input.options.map((option) => (
-              <Select.Item key={option.id} label={option.label} value={option.id} />
+              <Select.Item key={option.id} label={option.label} value={option.id?.toString()} />
             ))}
           </Select>
         )
