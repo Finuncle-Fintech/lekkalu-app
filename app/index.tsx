@@ -17,5 +17,5 @@ export default function App() {
     return <Redirect href="/(authenticated)/dashboard" />
   }
 
-  return <Redirect href="/login" />
+  return <Redirect href="/sipCalculator" />
 }
