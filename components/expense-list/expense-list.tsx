@@ -2,11 +2,11 @@ import { useQueries } from '@tanstack/react-query'
 import { Button, FlatList, HStack, IconButton, Text, VStack } from 'native-base'
 import { useCallback } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
+import { Link } from 'expo-router'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import Loading from '../loading'
-import CreateOrEditExpense from '../create-or-edit-expense'
 import DeleteExpense from '../delete-expense'
 
 export default function ExpenseList() {
@@ -61,20 +61,17 @@ export default function ExpenseList() {
 
           <Button.Group>
             <DeleteExpense id={item.id} />
-            <CreateOrEditExpense
-              expense={item}
-              trigger={
-                <IconButton
-                  size={10}
-                  variant="solid"
-                  _icon={{
-                    as: EvilIcons,
-                    name: 'pencil',
-                    size: 7,
-                  }}
-                />
-              }
-            />
+            <Link href={`/update-expense/${item.id}`} asChild>
+              <IconButton
+                size={10}
+                variant="solid"
+                _icon={{
+                  as: EvilIcons,
+                  name: 'pencil',
+                  size: 7,
+                }}
+              />
+            </Link>
           </Button.Group>
         </VStack>
       )}
