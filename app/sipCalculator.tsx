@@ -50,6 +50,20 @@ export default function SipCalculator() {
       </VStack>
     )
   }
+
+  const sipDescription = (label1: string, label2: string) => {
+    return (
+      <Box flex={1} flexWrap={'wrap'} flexDirection={'row'} marginX={2}>
+        <Text fontSize="sm" color="black" mt={1} fontWeight={'800'} textAlign={'left'} mr={2}>
+          {label1}
+        </Text>
+        <Text fontSize="sm" color="black" fontWeight={'400'} flexWrap={'wrap'}>
+          {label2}
+        </Text>
+      </Box>
+    )
+  }
+
   const data = [
     {
       name: 'Seoul',
@@ -87,6 +101,10 @@ export default function SipCalculator() {
           <Button alignSelf={'flex-end'} marginTop={5} marginRight={5} onPress={() => navLogin()}>
             {'Login'}
           </Button>
+          <Text fontSize="lg" color="black" mt={3} fontWeight={'800'}>
+            {'SIP Calculator'}
+          </Text>
+
           <Text fontSize="lg" color="black" mt={3}>
             {'Calculate returns on your SIP investments'}
           </Text>
@@ -237,6 +255,91 @@ export default function SipCalculator() {
                 </Slider>
               </Box>
             </FormControl>
+          </VStack>
+
+          <VStack maxW="sm" w="full" marginX={2}>
+            <Text fontSize="sm" color="black" mt={1} alignSelf={'center'} fontWeight={'800'}>
+              {'About SIP Calculator'}
+            </Text>
+            <Box mt={2} justifyContent={'center'} marginX={2}>
+              <Text fontSize="sm" color="black" mt={1} fontWeight={'500'}>
+                {
+                  'To estimate your potential returns with a Systematic Investment Plan (SIP), you need to provide three key pieces of information:'
+                }
+              </Text>
+              {sipDescription('Monthly Investment Amount:', '- This is the amount you plan to invest each month.')}
+              {sipDescription(
+                'Duration of the Investment:',
+                '- Specify how long you intend to continue your SIP investments.',
+              )}
+              {sipDescription(
+                'Expected Annual Return (%):',
+                '- Estimate the average annual return you expect from your investments.',
+              )}
+
+              <Text fontSize="sm" color="black" mt={1} fontWeight={'500'}>
+                {
+                  'After entering these details, the SIP Calculator will provide you with an estimate of your potential wealth creation and returns.'
+                }
+              </Text>
+              {sipDescription(
+                'SIP Calculator Formula',
+                'The formula to calculate the future value of your SIP investment is:',
+              )}
+
+              <Box flex={1} flexWrap={'wrap'} flexDirection={'row'} marginX={2}>
+                <Text fontSize="sm" color="black" mt={1} fontWeight={'800'} textAlign={'left'} mr={2}>
+                  {'Future Value of SIP Investment (FV)'}
+                </Text>
+                <Text fontSize="sm" color="black" fontWeight={'800'} flexWrap={'wrap'}>
+                  {'= P * ([(1 + r)^n - 1]/r)(1 + r)'}
+                </Text>
+              </Box>
+
+              <Text fontSize="sm" color="black" fontWeight={'500'} flexWrap={'wrap'}>
+                {'Where:'}
+              </Text>
+              <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'}>
+                <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
+                  {'- FV '}
+                  <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
+                    {'is the Future Value of your investment at the end of the SIP duration.'}
+                  </Text>
+                </Text>
+              </Box>
+              <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'}>
+                <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
+                  {'- P'}
+                </Text>
+                <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
+                  {'is the Monthly Investment Amount you contribute.'}
+                </Text>
+              </Box>
+              <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'}>
+                <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
+                  {'- r '}
+                  <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
+                    {
+                      'is the monthly interest rate, calculated from the Expected Annual Return. The formula for monthly interest rate is: '
+                    }
+                  </Text>
+                  <Text fontSize="sm" color="black" fontWeight={'800'}>
+                    {'r = [(Annual rate/100)/12]'}
+                  </Text>
+                </Text>
+              </Box>
+
+              <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'} marginBottom={3}>
+                <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
+                  {'- n '}
+                  <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
+                    {
+                      'is the total number of contributions, calculated as the product of the Duration of Investment (in years) and 12 (for monthly contributions).'
+                    }
+                  </Text>
+                </Text>
+              </Box>
+            </Box>
           </VStack>
         </Box>
       </ScrollView>
