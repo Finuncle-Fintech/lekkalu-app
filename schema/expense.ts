@@ -6,7 +6,9 @@ export const addExpenseSchema = z.object({
   tags: z.coerce.number(),
   time: z.date(),
 })
-export type AddExpenseSchema = z.infer<typeof addExpenseSchema>
+export type AddExpenseSchema = Omit<z.infer<typeof addExpenseSchema>, 'amount'> & {
+  amount: string
+}
 
 export const expenseFiltersSchema = z
   .object({
