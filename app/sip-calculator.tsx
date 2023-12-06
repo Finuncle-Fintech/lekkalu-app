@@ -18,6 +18,7 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { Dimensions, Platform, useWindowDimensions } from 'react-native'
 import { PieChart } from 'react-native-chart-kit'
+
 export default function SipCalculator() {
   const { width } = useWindowDimensions()
   const router = useRouter()
