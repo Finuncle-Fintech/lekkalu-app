@@ -15,18 +15,48 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'native-base'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Dimensions, Platform, useWindowDimensions } from 'react-native'
 import { PieChart } from 'react-native-chart-kit'
 
+const SummaryText = (props: { title: string; value: string | number }) => {
+  return (
+    <VStack marginLeft={1} alignItems={'flex-start'}>
+      <Text fontSize="xs" color="black" mt={1} fontWeight={'700'}>
+        {props.title}
+      </Text>
+      <Text fontSize="xs" color="black" mt={0.5} fontWeight={'500'}>
+        {`${props.value}₹`}
+      </Text>
+    </VStack>
+  )
+}
+
+const SipDescription = (props: { label1: string; label2: string }) => {
+  return (
+    <Box flex={1} flexWrap={'wrap'} flexDirection={'row'} marginX={2}>
+      <Text fontSize="sm" color="black" mt={1} fontWeight={'800'} textAlign={'left'} mr={2}>
+        {props.label1}
+      </Text>
+      <Text fontSize="sm" color="black" fontWeight={'400'} flexWrap={'wrap'}>
+        {props.label2}
+      </Text>
+    </Box>
+  )
+}
+
 export default function SipCalculator() {
+  const [sip, setSip] = useState('500')
+  const [year, setYear] = useState('1')
+  const [annualReturn, setAnnualReturn] = useState('1')
   const { width } = useWindowDimensions()
   const router = useRouter()
   const navig = useNavigation()
 
   const { tokenData } = useAuthContext()
-
-  const { handleSubmit, register, control, setValue, getValues, watch } = useForm({
+  // This code commect becasue onece abouve issue solve then i remove it
+  const { register, control, setValue, watch } = useForm({
     defaultValues: {
       sip: '500',
       year: '1',
@@ -34,41 +64,16 @@ export default function SipCalculator() {
     },
   })
 
-  const summery = calculateSip(Number(watch('sip')), Number(watch('year')), Number(watch('aunual_return')))
+  const summery = calculateSip(Number(sip), Number(year), Number(annualReturn))
 
   const navLogin = () => {
     router.push('/login')
   }
-  const summaryText = (title: string, value: string | number) => {
-    return (
-      <VStack marginLeft={1} alignItems={'flex-start'}>
-        <Text fontSize="xs" color="black" mt={1} fontWeight={'700'}>
-          {title}
-        </Text>
-        <Text fontSize="xs" color="black" mt={0.5} fontWeight={'500'}>
-          {`${value}₹`}
-        </Text>
-      </VStack>
-    )
-  }
-
-  const sipDescription = (label1: string, label2: string) => {
-    return (
-      <Box flex={1} flexWrap={'wrap'} flexDirection={'row'} marginX={2}>
-        <Text fontSize="sm" color="black" mt={1} fontWeight={'800'} textAlign={'left'} mr={2}>
-          {label1}
-        </Text>
-        <Text fontSize="sm" color="black" fontWeight={'400'} flexWrap={'wrap'}>
-          {label2}
-        </Text>
-      </Box>
-    )
-  }
-
+  console.log('ghfghfghf', summery.totalInvested)
   const data = [
     {
       name: 'Seoul',
-      population: summery.totalInvested,
+      population: Number(summery.totalInvested),
       color: '#0D6DDA',
       legendFontColor: '#0D6DDA',
       legendFontSize: 15,
@@ -142,13 +147,50 @@ export default function SipCalculator() {
               <Text fontSize="sm" color="black" mt={1} alignSelf={'center'} fontWeight={'800'}>
                 Summary
               </Text>
-              {summaryText('Total invested:', summery.totalInvested)}
-              {summaryText('Final value:', summery.finalValue)}
-              {summaryText('Wealth gained:', summery.wealthGained)}
+              <SummaryText title={'Total invested:'} value={summery.totalInvested} />
+              <SummaryText title={'Final value:'} value={summery.totalInvested} />
+              <SummaryText title={'Wealth gained:'} value={summery.totalInvested} />
             </Box>
           </HStack>
           <VStack maxW="sm" w="full" p="5" space={4}>
-            <FormControl>
+            <Box>
+              <Text fontSize="sm" color="gray.500" mt={1} alignSelf={'left'} fontWeight={'600'}>
+                Monthly investment amount ₹
+              </Text>
+
+              <Input
+                mt={1.5}
+                keyboardType={'number-pad'}
+                size="md"
+                h={10}
+                placeholder="Monthly investment amount ₹"
+                value={sip}
+                onChangeText={(text) => {
+                  setSip(text)
+                }}
+              />
+              <Box alignItems="center" w="100%" mt={2}>
+                <Slider
+                  w="100%"
+                  colorScheme="cyan"
+                  defaultValue={500}
+                  minValue={500}
+                  size="sm"
+                  maxValue={100000}
+                  step={500}
+                  onChange={(e) => {
+                    setSip(e.toString())
+                    // setValue('sip', e.toString())
+                  }}
+                >
+                  <Slider.Track>
+                    <Slider.FilledTrack />
+                  </Slider.Track>
+                  <Slider.Thumb />
+                </Slider>
+              </Box>
+            </Box>
+            {/* <FormControl>
               <FormControl.Label>Monthly investment amount ₹</FormControl.Label>
               <Controller
                 name="sip"
@@ -183,7 +225,7 @@ export default function SipCalculator() {
                   <Slider.Thumb />
                 </Slider>
               </Box>
-            </FormControl>
+            </FormControl> */}
             <FormControl>
               <FormControl.Label>Duration of the investment (Yr)</FormControl.Label>
               <Controller
@@ -267,24 +309,27 @@ export default function SipCalculator() {
                 To estimate your potential returns with a Systematic Investment Plan (SIP), you need to provide three
                 key pieces of information:
               </Text>
-              {sipDescription('Monthly Investment Amount:', '- This is the amount you plan to invest each month.')}
-              {sipDescription(
-                'Duration of the Investment:',
-                '- Specify how long you intend to continue your SIP investments.',
-              )}
-              {sipDescription(
-                'Expected Annual Return (%):',
-                '- Estimate the average annual return you expect from your investments.',
-              )}
+              <SipDescription
+                label1="Monthly Investment Amount:"
+                label2="- This is the amount you plan to invest each month."
+              />
+              <SipDescription
+                label1="Duration of the Investment:"
+                label2="- Specify how long you intend to continue your SIP investments."
+              />
+              <SipDescription
+                label1="Expected Annual Return (%):"
+                label2="- Estimate the average annual return you expect from your investments."
+              />
 
               <Text fontSize="sm" color="black" mt={1} fontWeight={'500'}>
                 After entering these details, the SIP Calculator will provide you with an estimate of your potential
                 wealth creation and returns.
               </Text>
-              {sipDescription(
-                'SIP Calculator Formula',
-                'The formula to calculate the future value of your SIP investment is:',
-              )}
+              <SipDescription
+                label1="SIP Calculator Formula"
+                label2="The formula to calculate the future value of your SIP investment is:"
+              />
 
               <Box flex={1} flexWrap={'wrap'} flexDirection={'row'} marginX={2}>
                 <Text fontSize="sm" color="black" mt={1} fontWeight={'800'} textAlign={'left'} mr={2}>
