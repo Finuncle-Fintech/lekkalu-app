@@ -1,9 +1,15 @@
-import { Text, VStack } from 'native-base'
+import { ScrollView, View } from 'native-base'
+import UpdateUserInfo from '@/components/update-user-info'
+import ChangePassword from '@/components/change-password'
 
 export default function Settings() {
   return (
-    <VStack>
-      <Text>Settings</Text>
-    </VStack>
+    <ScrollView p={4}>
+      <UpdateUserInfo />
+
+      <View h="5" />
+
+      <ChangePassword />
+    </ScrollView>
   )
 }
