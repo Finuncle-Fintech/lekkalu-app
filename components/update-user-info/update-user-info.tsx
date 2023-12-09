@@ -1,9 +1,10 @@
-import { Button, Divider, FormControl, Heading, Input, VStack } from 'native-base'
+import { Button, Divider, FormControl, Heading, Input, VStack, useToast } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserProfileSchema, userProfileSchema } from '@/schema/user'
 
 export default function UpdateUserInfo() {
+  const toast = useToast()
   const {
     control,
     handleSubmit,
@@ -12,8 +13,11 @@ export default function UpdateUserInfo() {
     resolver: zodResolver(userProfileSchema),
   })
 
-  const handleUpdateProfile = (values: UserProfileSchema) => {
-    console.log(values)
+  const handleUpdateProfile = () => {
+    toast.show({
+      title: 'Feature under development!',
+      description: 'This feature is still under development and will be available soon!',
+    })
   }
 
   return (

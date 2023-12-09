@@ -1,9 +1,10 @@
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Divider, FormControl, Heading, Input, VStack } from 'native-base'
+import { Button, Divider, FormControl, Heading, Input, VStack, useToast } from 'native-base'
 import { ChangePasswordSchema, changePasswordSchema } from '@/schema/user'
 
 export default function ChangePassword() {
+  const toast = useToast()
   const {
     control,
     handleSubmit,
@@ -12,8 +13,11 @@ export default function ChangePassword() {
     resolver: zodResolver(changePasswordSchema),
   })
 
-  const handleChangePassword = (values: ChangePasswordSchema) => {
-    console.log(values)
+  const handleChangePassword = () => {
+    toast.show({
+      title: 'Feature under development!',
+      description: 'This feature is still under development and will be available soon!',
+    })
   }
 
   return (
