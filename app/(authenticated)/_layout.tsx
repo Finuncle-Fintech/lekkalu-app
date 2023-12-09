@@ -1,52 +1,76 @@
-import { DrawerToggleButton } from '@react-navigation/drawer'
-import { Drawer } from 'expo-router/drawer'
+import { Tabs } from 'expo-router/tabs'
+import { AntDesign } from '@expo/vector-icons'
+import { Text } from 'native-base'
+import { THEME_COLORS } from '@/utils/theme'
+
+const tabBarStyle = { paddingTop: 10, paddingBottom: 10, height: 60 }
+
+const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => (
+  <AntDesign name={name} size={24} color={focused ? THEME_COLORS.primary['300'] : '#6b7280'} />
+)
+
+const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => (
+  <Text fontSize="xs" color={focused ? 'primary.500' : 'gray.500'}>
+    {children}
+  </Text>
+)
 
 export default function AuthenticatedAppLayout() {
   return (
-    <Drawer screenOptions={{ headerShown: false }} initialRouteName="dashboard">
-      <Drawer.Screen
+    <Tabs initialRouteName="dashboard">
+      <Tabs.Screen
         name="dashboard"
         options={{
           title: 'Dashboard',
-          headerShown: true,
-          headerLeft: () => <DrawerToggleButton />,
+          tabBarStyle,
+          tabBarIcon: ({ focused }) => <TabBarIcon name="home" focused={focused} />,
+          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
-      <Drawer.Screen
+      <Tabs.Screen
         name="balance-sheet"
         options={{
           title: 'Balance Sheet',
-          headerShown: true,
-          headerLeft: () => <DrawerToggleButton />,
+          tabBarStyle,
+          tabBarIcon: ({ focused }) => <TabBarIcon name="calculator" focused={focused} />,
+          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
-      <Drawer.Screen
+      <Tabs.Screen
         name="expenses"
         options={{
           title: 'Expenses',
-          headerShown: true,
-          headerLeft: () => <DrawerToggleButton />,
+          tabBarStyle,
+          tabBarIcon: ({ focused }) => <TabBarIcon name="wallet" focused={focused} />,
+          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
 
-      <Drawer.Screen
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarStyle,
+          tabBarIcon: ({ focused }) => <TabBarIcon name="setting" focused={focused} />,
+          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
+        }}
+      />
+
+      <Tabs.Screen
         name="create-expense"
         options={{
           title: 'Create Expense',
-          headerShown: true,
-          headerLeft: () => <DrawerToggleButton />,
+          href: null,
         }}
       />
 
-      <Drawer.Screen
+      <Tabs.Screen
         name="update-expense/[id]"
         options={{
           title: 'Update Expense',
-          headerShown: true,
-          drawerItemStyle: { display: 'none' },
-          headerLeft: () => <DrawerToggleButton />,
+          href: null,
         }}
       />
-    </Drawer>
+    </Tabs>
   )
 }
