@@ -11,6 +11,7 @@ export const theme = extendTheme({ colors: THEME_COLORS })
 
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
+  key: 'async-persister',
 })
 
 export default function AppLayout() {

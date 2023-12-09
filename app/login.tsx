@@ -6,7 +6,7 @@ import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 
 export default function Login() {
-  const { tokenData, loginMutation } = useAuthContext()
+  const { isAuthenticated, loginMutation } = useAuthContext()
 
   const {
     control,
@@ -23,7 +23,9 @@ export default function Login() {
     loginMutation.mutate(values)
   }
 
-  if (tokenData) {
+  console.log(isAuthenticated)
+
+  if (isAuthenticated) {
     return <Redirect href="/dashboard" />
   }
 
