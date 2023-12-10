@@ -3,8 +3,6 @@ import { AntDesign } from '@expo/vector-icons'
 import { Text } from 'native-base'
 import { THEME_COLORS } from '@/utils/theme'
 
-const tabBarStyle = { paddingTop: 10, paddingBottom: 10, height: 60 }
-
 const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => (
   <AntDesign name={name} size={24} color={focused ? THEME_COLORS.primary['300'] : '#6b7280'} />
 )
@@ -17,12 +15,14 @@ const TabBarLabel = ({ children, focused }: { children: string; focused: boolean
 
 export default function AuthenticatedAppLayout() {
   return (
-    <Tabs initialRouteName="dashboard">
+    <Tabs
+      initialRouteName="dashboard"
+      screenOptions={{ tabBarStyle: { paddingTop: 10, paddingBottom: 10, height: 70 } }}
+    >
       <Tabs.Screen
         name="dashboard"
         options={{
           title: 'Dashboard',
-          tabBarStyle,
           tabBarIcon: ({ focused }) => <TabBarIcon name="home" focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
@@ -31,7 +31,6 @@ export default function AuthenticatedAppLayout() {
         name="balance-sheet"
         options={{
           title: 'Balance Sheet',
-          tabBarStyle,
           tabBarIcon: ({ focused }) => <TabBarIcon name="calculator" focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
@@ -40,7 +39,6 @@ export default function AuthenticatedAppLayout() {
         name="expenses"
         options={{
           title: 'Expenses',
-          tabBarStyle,
           tabBarIcon: ({ focused }) => <TabBarIcon name="wallet" focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
@@ -50,7 +48,6 @@ export default function AuthenticatedAppLayout() {
         name="settings"
         options={{
           title: 'Settings',
-          tabBarStyle,
           tabBarIcon: ({ focused }) => <TabBarIcon name="setting" focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
