@@ -50,26 +50,25 @@ export default function SipCalculator() {
   const [sip, setSip] = useState('500')
   const [year, setYear] = useState('1')
   const [annualReturn, setAnnualReturn] = useState('1')
-  const { width } = useWindowDimensions()
+
   const router = useRouter()
-  const navig = useNavigation()
 
   const { tokenData } = useAuthContext()
   // This code commect becasue onece abouve issue solve then i remove it
-  const { register, control, setValue, watch } = useForm({
-    defaultValues: {
-      sip: '500',
-      year: '1',
-      aunual_return: '1',
-    },
-  })
+  // const { register, control, setValue, watch } = useForm({
+  //   defaultValues: {
+  //     sip: '500',
+  //     year: '1',
+  //     aunual_return: '1',
+  //   },
+  // })
 
   const summery = calculateSip(Number(sip), Number(year), Number(annualReturn))
 
   const navLogin = () => {
     router.push('/login')
   }
-  console.log('ghfghfghf', summery.totalInvested)
+
   const data = [
     {
       name: 'Seoul',
@@ -148,13 +147,13 @@ export default function SipCalculator() {
                 Summary
               </Text>
               <SummaryText title={'Total invested:'} value={summery.totalInvested} />
-              <SummaryText title={'Final value:'} value={summery.totalInvested} />
-              <SummaryText title={'Wealth gained:'} value={summery.totalInvested} />
+              <SummaryText title={'Final value:'} value={summery.finalValue} />
+              <SummaryText title={'Wealth gained:'} value={summery.wealthGained} />
             </Box>
           </HStack>
           <VStack maxW="sm" w="full" p="5" space={4}>
             <Box>
-              <Text fontSize="sm" color="gray.500" mt={1} alignSelf={'left'} fontWeight={'600'}>
+              <Text fontSize="sm" color="gray.500" mt={1} fontWeight={'600'}>
                 Monthly investment amount ₹
               </Text>
 
@@ -226,7 +225,44 @@ export default function SipCalculator() {
                 </Slider>
               </Box>
             </FormControl> */}
-            <FormControl>
+            <Box>
+              <Text fontSize="sm" color="gray.500" mt={1} fontWeight={'600'}>
+                Duration of the investment (Yr)
+              </Text>
+
+              <Input
+                mt={1.5}
+                keyboardType={'number-pad'}
+                size="md"
+                h={10}
+                placeholder="Duration of the investment (Yr)"
+                value={year}
+                onChangeText={(text) => {
+                  setYear(text)
+                }}
+              />
+              <Box alignItems="center" w="100%" mt={2}>
+                <Slider
+                  w="100%"
+                  colorScheme="cyan"
+                  defaultValue={1}
+                  minValue={1}
+                  size="sm"
+                  maxValue={40}
+                  step={1}
+                  onChange={(e) => {
+                    setYear(e.toString())
+                    // setValue('sip', e.toString())
+                  }}
+                >
+                  <Slider.Track>
+                    <Slider.FilledTrack />
+                  </Slider.Track>
+                  <Slider.Thumb />
+                </Slider>
+              </Box>
+            </Box>
+            {/* <FormControl>
               <FormControl.Label>Duration of the investment (Yr)</FormControl.Label>
               <Controller
                 name="year"
@@ -261,8 +297,44 @@ export default function SipCalculator() {
                   <Slider.Thumb />
                 </Slider>
               </Box>
-            </FormControl>
-            <FormControl>
+            </FormControl> */}
+            <Box>
+              <Text fontSize="sm" color="gray.500" mt={1} fontWeight={'600'}>
+                Expected annual return (%)
+              </Text>
+
+              <Input
+                mt={1.5}
+                keyboardType={'numeric'}
+                size="md"
+                h={10}
+                placeholder="Expected annual return (%)"
+                value={annualReturn}
+                onChangeText={(text) => {
+                  setAnnualReturn(text)
+                }}
+              />
+              <Box alignItems="center" w="100%" mt={2}>
+                <Slider
+                  w="100%"
+                  colorScheme="cyan"
+                  defaultValue={1}
+                  minValue={1}
+                  size="sm"
+                  maxValue={30}
+                  step={0.1}
+                  onChange={(e) => {
+                    setAnnualReturn(e.toString())
+                  }}
+                >
+                  <Slider.Track>
+                    <Slider.FilledTrack />
+                  </Slider.Track>
+                  <Slider.Thumb />
+                </Slider>
+              </Box>
+            </Box>
+            {/* <FormControl>
               <FormControl.Label>Expected annual return (%)</FormControl.Label>
               <Controller
                 name="aunual_return"
@@ -297,7 +369,7 @@ export default function SipCalculator() {
                   <Slider.Thumb />
                 </Slider>
               </Box>
-            </FormControl>
+            </FormControl> */}
           </VStack>
 
           <VStack maxW="sm" w="full" marginX={2}>
@@ -346,9 +418,9 @@ export default function SipCalculator() {
               <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'}>
                 <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
                   - FV
-                  <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
-                    is the Future Value of your investment at the end of the SIP duration.
-                  </Text>
+                </Text>
+                <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
+                  is the Future Value of your investment at the end of the SIP duration.
                 </Text>
               </Box>
               <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'}>
@@ -362,11 +434,11 @@ export default function SipCalculator() {
               <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'}>
                 <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
                   - r
-                  <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
-                    is the monthly interest rate, calculated from the Expected Annual Return. The formula for monthly
-                    interest rate is:
-                  </Text>
-                  <Text fontSize="sm" color="black" fontWeight={'800'}>
+                </Text>
+                <Text fontSize="sm" color="black" fontWeight={'500'}>
+                  is the monthly interest rate, calculated from the Expected Annual Return. The formula for monthly
+                  interest rate is:-
+                  <Text fontSize="sm" color="black" fontWeight={'800'} marginLeft={1}>
                     r = [(Annual rate/100)/12]
                   </Text>
                 </Text>
@@ -375,10 +447,10 @@ export default function SipCalculator() {
               <Box flexWrap={'wrap'} marginX={2} flexDirection={'row'} marginBottom={3}>
                 <Text fontSize="sm" color="black" fontWeight={'800'} textAlign={'left'} mr={1}>
                   - n
-                  <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
-                    is the total number of contributions, calculated as the product of the Duration of Investment (in
-                    years) and 12 (for monthly contributions).
-                  </Text>
+                </Text>
+                <Text flex={1} fontSize="sm" color="black" fontWeight={'500'}>
+                  is the total number of contributions, calculated as the product of the Duration of Investment (in
+                  years) and 12 (for monthly contributions).
                 </Text>
               </Box>
             </Box>
