@@ -23,8 +23,6 @@ export default function Login() {
     loginMutation.mutate(values)
   }
 
-  console.log(isAuthenticated)
-
   if (isAuthenticated) {
     return <Redirect href="/dashboard" />
   }

@@ -30,6 +30,7 @@ export default function CreateExpense() {
   })
 
   const {
+    reset,
     handleSubmit,
     control,
     formState: { errors },
@@ -40,6 +41,7 @@ export default function CreateExpense() {
   const createExpenseMutation = useMutation({
     mutationFn: addExpense,
     onSuccess: () => {
+      reset()
       qc.invalidateQueries({ queryKey: [EXPENSES.EXPENSES] })
       toast.show({ render: () => Success('Expense created successfully!') })
       router.push('/expenses')
