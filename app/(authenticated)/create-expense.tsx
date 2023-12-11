@@ -1,4 +1,4 @@
-import { Button, Heading, VStack, useToast } from 'native-base'
+import { Button, VStack, useToast } from 'native-base'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,13 +48,7 @@ export default function CreateExpense() {
     },
   })
 
-  const inputs = useMemo(() => {
-    if (!tagsQuery.data) {
-      return []
-    }
-
-    return getExpenseInputs(tagsQuery.data)
-  }, [tagsQuery.data])
+  const inputs = useMemo(() => getExpenseInputs(tagsQuery.data ?? []), [tagsQuery.data])
 
   const handleAddExpense = (values: AddExpenseSchema) => {
     const newExpense = {
@@ -76,8 +70,6 @@ export default function CreateExpense() {
 
   return (
     <VStack flex={1} p={4} space={4}>
-      <Heading>Create a new expense</Heading>
-
       <InputFields control={control} errors={errors} inputs={inputs} />
 
       <Button
