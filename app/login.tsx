@@ -80,7 +80,9 @@ export default function Login() {
 
           <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
-        <Button onPress={handleSubmit(handleLogin)}>Submit</Button>
+        <Button onPress={handleSubmit(handleLogin)} isLoading={loginMutation.isPending}>
+          Login
+        </Button>
 
         <Link href="/signup" asChild>
           <Pressable>

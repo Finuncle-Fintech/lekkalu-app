@@ -112,7 +112,9 @@ export default function Signup() {
           <FormControl.ErrorMessage>{errors.privacyPolicy?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <Button onPress={handleSubmit(handleSignup)}>Submit</Button>
+        <Button onPress={handleSubmit(handleSignup)} isLoading={signupMutation.isPending}>
+          Submit
+        </Button>
 
         <Link href="/login" asChild>
           <Pressable>
