@@ -6,7 +6,7 @@ import { SignupSchema, signupSchema } from '@/schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 
 export default function Signup() {
-  const { tokenData, signupMutation } = useAuthContext()
+  const { isAuthenticated, signupMutation } = useAuthContext()
 
   const {
     control,
@@ -24,7 +24,7 @@ export default function Signup() {
     signupMutation.mutate(values)
   }
 
-  if (tokenData) {
+  if (isAuthenticated) {
     return <Redirect href="/dashboard" />
   }
 

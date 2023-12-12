@@ -1,5 +1,5 @@
 import { Control, Controller, ControllerRenderProps, FieldErrors, FieldValues } from 'react-hook-form'
-import { CheckIcon, FormControl, Input, Select } from 'native-base'
+import { CheckIcon, FormControl, Input, Select, TextArea } from 'native-base'
 import { useCallback } from 'react'
 import { omit } from 'lodash'
 import MultiSelect from 'react-native-multiple-select'
@@ -73,6 +73,12 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             styleSelectorContainer={{ backgroundColor: theme.colors.red['500'] }}
             submitButtonColor={theme.colors.primary['500']}
           />
+        )
+      }
+
+      case 'textarea': {
+        return (
+          <TextArea autoCompleteType="none" {...field} placeholder={input.label} onChangeText={field.onChange} h={20} />
         )
       }
 
