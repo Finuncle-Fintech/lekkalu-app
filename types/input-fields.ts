@@ -48,4 +48,15 @@ type RadioInput = BaseInput & {
   options: Option[]
 }
 
-export type InputField = NumberInput | DateInput | MultiSelectInput | TextInput | SelectInput | RadioInput
+type TextareaInput = BaseInput & {
+  type: 'textarea'
+}
+
+export type InputField =
+  | NumberInput
+  | DateInput
+  | MultiSelectInput
+  | TextInput
+  | SelectInput
+  | RadioInput
+  | TextareaInput

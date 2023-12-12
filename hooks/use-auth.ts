@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from 'native-base'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import constate from 'constate'
 import { fetchUser, login, refreshToken, signup } from '@/queries/auth'
@@ -8,6 +8,8 @@ import { AUTH } from '@/utils/query-keys'
 import { setToken } from '@/utils/token'
 
 export function useAuth() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   const qc = useQueryClient()
   const toast = useToast()
 
@@ -28,6 +30,7 @@ export function useAuth() {
   useEffect(
     function updateTokenData() {
       if (refreshTokenStatus === 'success') {
+        setIsAuthenticated(true)
         setToken('refresh', tokenData.refresh)
         setToken('access', tokenData.access)
         fetchUserData()
@@ -73,6 +76,7 @@ export function useAuth() {
   })
 
   const logout = useCallback(() => {
+    setIsAuthenticated(false)
     setToken('refresh', undefined)
     setToken('access', undefined)
 
@@ -80,6 +84,7 @@ export function useAuth() {
   }, [])
 
   return {
+    isAuthenticated,
     isAuthenticationInProgress,
     tokenData,
     loginMutation,
