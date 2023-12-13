@@ -5,15 +5,31 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_TOKEN_BASE_URL": "https://api.finuncle.com/token",
+        "EXPO_PUBLIC_USER_BASE_URL": "https://api.finuncle.com/users/api",
+        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1"
+      }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_TOKEN_BASE_URL": "https://api.finuncle.com/token",
+        "EXPO_PUBLIC_USER_BASE_URL": "https://api.finuncle.com/users/api",
+        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_TOKEN_BASE_URL": "https://api.finuncle.com/token",
+        "EXPO_PUBLIC_USER_BASE_URL": "https://api.finuncle.com/users/api",
+        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1"
+      }
+    }
   },
   "submit": {
     "production": {}
