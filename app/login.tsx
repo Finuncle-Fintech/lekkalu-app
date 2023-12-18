@@ -1,7 +1,8 @@
-import { Box, Button, Checkbox, FormControl, Input, Pressable, Text, VStack } from 'native-base'
+import { Box, Checkbox, FormControl, Input, Pressable, Text, VStack } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
+import { Button } from 'tamagui'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 
@@ -80,7 +81,8 @@ export default function Login() {
 
           <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
-        <Button onPress={handleSubmit(handleLogin)} isLoading={loginMutation.isPending}>
+
+        <Button onPress={handleSubmit(handleLogin)} disabled={loginMutation.isPending}>
           Login
         </Button>
 
