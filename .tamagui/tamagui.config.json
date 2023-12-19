@@ -21118,6 +21118,8 @@
         "shadowColorHover": "rgba(0,0,0,0.3)",
         "shadowColorPress": "rgba(0,0,0,0.2)",
         "shadowColorFocus": "rgba(0,0,0,0.2)",
+        "bg": "hsl(284, 20.0%, 9.6%)",
+        "primary": "hsl(272, 52.1%, 45.9%)",
         "id": "dark"
       },
       "dark_Button": {
@@ -33386,6 +33388,8 @@
         "shadowColorHover": "rgba(0,0,0,0.085)",
         "shadowColorPress": "rgba(0,0,0,0.04)",
         "shadowColorFocus": "rgba(0,0,0,0.04)",
+        "bg": "hsl(280, 65.0%, 99.4%)",
+        "primary": "hsl(272, 60.0%, 73.5%)",
         "id": "light"
       },
       "light_Button": {

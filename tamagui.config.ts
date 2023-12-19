@@ -36,7 +36,19 @@ const config = createTamagui({
     heading: headingFont,
     body: bodyFont,
   },
-  themes,
+  themes: {
+    ...themes,
+    light: {
+      ...themes.light,
+      bg: tokens.color.purple1Light,
+      primary: tokens.color.purple8Light,
+    },
+    dark: {
+      ...themes.dark,
+      bg: tokens.color.purple1Dark,
+      primary: tokens.color.purple8Dark,
+    },
+  },
   tokens,
 })
 

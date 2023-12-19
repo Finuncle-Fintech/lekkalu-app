@@ -20,6 +20,7 @@
     "@tamagui/animations-react-native": "^1.79.12",
     "@tamagui/babel-plugin": "^1.79.12",
     "@tamagui/font-inter": "^1.79.12",
+    "@tamagui/lucide-icons": "^1.79.12",
     "@tamagui/themes": "^1.79.12",
     "@tanstack/query-async-storage-persister": "^5.4.3",
     "@tanstack/react-query": "^5.4.3",
