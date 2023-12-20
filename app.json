@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "lekkalu-app",
+    "name": "Finuncle",
     "slug": "lekkalu-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +19,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lekkalu.finuncle",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +31,14 @@
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8ee6d81e-3546-4d8f-b11e-8ebece615d4b"
+      }
     }
   }
 }
