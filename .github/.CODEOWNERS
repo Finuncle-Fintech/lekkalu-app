@@ -1,0 +1,14 @@
+# These owners will be the default owners for everything in
+
+# the repo. Unless a later match takes precedence,
+
+# following owners will be requested for
+
+# review when someone opens a pull request.
+
+- @bharathkumarchowdary @mohitkhatri06 @rockingrohit9639
+
+# subdirectories.
+
+package.json @mohitkhatri06
+package-lock.json @mohitkhatri06
