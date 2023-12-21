@@ -31,7 +31,7 @@ export default function Login() {
 
   return (
     <Stack flex={1} bg="$background" alignItems="center" justifyContent="center" p="$4">
-      <YStack bg="$backgroundStrong" w="100%" borderRadius="$4" p="$4" space="$4">
+      <YStack bg="$muted" w="100%" borderRadius="$4" p="$4" space="$4">
         <YStack space="$2">
           <H1 fontWeight="bold">Log in</H1>
           <Text color="$colorFocus">Welcome back to finuncle!</Text>
@@ -84,7 +84,7 @@ export default function Login() {
           <FormControl.ErrorMessage>{errors.rememberMe?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <Button onPress={handleSubmit(handleLogin)} disabled={loginMutation.isPending}>
+        <Button onPress={handleSubmit(handleLogin)} disabled={loginMutation.isPending} bg="$primary" color="white">
           Login
         </Button>
 
