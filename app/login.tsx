@@ -1,9 +1,11 @@
-import { Box, Button, Checkbox, FormControl, Input, Pressable, Text, VStack } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
+import { Button, Checkbox, H1, Input, Label, Stack, Text, XStack, YStack } from 'tamagui'
+import { Check as CheckIcon } from '@tamagui/lucide-icons'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
+import FormControl from '@/components/form-control'
 
 export default function Login() {
   const { isAuthenticated, loginMutation } = useAuthContext()
@@ -28,17 +30,16 @@ export default function Login() {
   }
 
   return (
-    <Box flex={1} bg="brand.900" alignItems="center" justifyContent="center">
-      <VStack maxW="sm" w="full" bg="white" rounded="lg" p="4" space={4}>
-        <Box>
-          <Text fontSize="3xl" fontWeight="bold">
-            Log in
-          </Text>
-          <Text color="gray.500">Welcome back to finuncle!</Text>
-        </Box>
+    <Stack flex={1} bg="$background" alignItems="center" justifyContent="center" p="$4">
+      <YStack bg="$muted" w="100%" borderRadius="$4" p="$4" space="$4">
+        <YStack space="$2">
+          <H1 fontWeight="bold">Log in</H1>
+          <Text color="$colorFocus">Welcome back to finuncle!</Text>
+        </YStack>
 
-        <FormControl isRequired isInvalid={'username' in errors}>
-          <FormControl.Label>Username</FormControl.Label>
+        <FormControl>
+          <FormControl.Label isRequired>Username</FormControl.Label>
+
           <Controller
             name="username"
             control={control}
@@ -48,48 +49,53 @@ export default function Login() {
           <FormControl.ErrorMessage>{errors.username?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <FormControl isRequired isInvalid={'password' in errors}>
-          <FormControl.Label>Password</FormControl.Label>
+        <FormControl>
+          <FormControl.Label isRequired>Password</FormControl.Label>
           <Controller
             name="password"
             control={control}
             render={({ field }) => (
-              <Input type="password" placeholder="Enter your password" onChangeText={field.onChange} {...field} />
+              <Input secureTextEntry placeholder="Enter your password" onChangeText={field.onChange} {...field} />
             )}
           />
 
           <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={'rememberMe' in errors}>
+        <FormControl>
           <Controller
             name="rememberMe"
             control={control}
             render={({ field }) => (
-              <Checkbox
-                value="rememberMe"
-                isChecked={field.value}
-                onChange={(value) => {
-                  field.onChange(value)
-                }}
-              >
-                <Text mx={2}>Remember Me</Text>
-              </Checkbox>
+              <XStack alignItems="center" space="$4">
+                <Checkbox id="rememberMe" size="$4" checked={field.value} onCheckedChange={field.onChange}>
+                  <Checkbox.Indicator>
+                    <CheckIcon />
+                  </Checkbox.Indicator>
+                </Checkbox>
+
+                <Label size="$4" htmlFor="rememberMe">
+                  Remember Me
+                </Label>
+              </XStack>
             )}
           />
 
-          <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
+          <FormControl.ErrorMessage>{errors.rememberMe?.message}</FormControl.ErrorMessage>
         </FormControl>
-        <Button onPress={handleSubmit(handleLogin)} isLoading={loginMutation.isPending}>
+
+        <Button onPress={handleSubmit(handleLogin)} disabled={loginMutation.isPending} bg="$primary" color="white">
           Login
         </Button>
 
         <Link href="/signup" asChild>
-          <Pressable>
-            <Text color="gray.500">Don&rsquo;t have an account? Signup</Text>
-          </Pressable>
+          <Button variant="outlined">
+            <Text color="$color" ta="center">
+              Don&rsquo;t have an account? Signup
+            </Text>
+          </Button>
         </Link>
-      </VStack>
-    </Box>
+      </YStack>
+    </Stack>
   )
 }

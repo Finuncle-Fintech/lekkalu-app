@@ -1,23 +1,42 @@
 import { Tabs } from 'expo-router/tabs'
 import { AntDesign } from '@expo/vector-icons'
-import { Text } from 'native-base'
-import { THEME_COLORS } from '@/utils/theme'
+import { Text, View, useTheme } from 'tamagui'
 
-const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => (
-  <AntDesign name={name} size={24} color={focused ? THEME_COLORS.primary['300'] : '#6b7280'} />
-)
+const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => {
+  const theme = useTheme()
+
+  return <AntDesign name={name} size={24} color={focused ? theme.primary.get() : theme.color.get()} />
+}
 
 const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => (
-  <Text fontSize="xs" color={focused ? 'primary.500' : 'gray.500'}>
-    {children}
-  </Text>
+  <Text color={focused ? '$primary' : '$color'}>{children}</Text>
 )
 
 export default function AuthenticatedAppLayout() {
+  const theme = useTheme()
+
   return (
     <Tabs
       initialRouteName="dashboard"
-      screenOptions={{ tabBarStyle: { paddingTop: 10, paddingBottom: 10, height: 70 } }}
+      screenOptions={{
+        tabBarStyle: {
+          paddingTop: 10,
+          paddingBottom: 10,
+          height: 70,
+          backgroundColor: theme.dark.get(),
+          borderTopColor: 'transparent',
+        },
+        header: ({ options }) => (
+          <>
+            <View width="100%" h="$1" bg="$dark" />
+            <View bg="$dark" jc="center" px="$4" py="$5">
+              <Text color="$color" fontSize="$8" fontWeight="bold">
+                {options.title}
+              </Text>
+            </View>
+          </>
+        ),
+      }}
     >
       <Tabs.Screen
         name="dashboard"
