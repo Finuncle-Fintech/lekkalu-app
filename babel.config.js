@@ -15,6 +15,21 @@ module.exports = function (api) {
       ],
       'expo-router/babel',
       'react-native-reanimated/plugin',
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '@/components': './components',
+            '@/utils': './utils',
+            '@/queries': './queries',
+            '@/hooks': './hooks',
+            '@/tamagui.config': './tamagui.config.ts',
+            '@/schema': './schema',
+            '@/app': './app',
+          },
+        },
+      ],
     ],
   }
 }

@@ -30,16 +30,16 @@ export default function AppLayout() {
   }
 
   return (
-    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
-      <AuthProvider>
-        <TamaguiProvider config={config}>
-          <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
-            <NativeBaseProvider theme={theme}>
+    <NativeBaseProvider theme={theme}>
+      <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
+        <AuthProvider>
+          <TamaguiProvider config={config}>
+            <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
               <Slot />
-            </NativeBaseProvider>
-          </Theme>
-        </TamaguiProvider>
-      </AuthProvider>
-    </PersistQueryClientProvider>
+            </Theme>
+          </TamaguiProvider>
+        </AuthProvider>
+      </PersistQueryClientProvider>
+    </NativeBaseProvider>
   )
 }

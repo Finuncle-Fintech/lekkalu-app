@@ -73,6 +73,12 @@ export function useAuth() {
 
       router.replace('/login')
     },
+    onError: () => {
+      toast.show({
+        title: 'Error!',
+        description: 'Failed to create your account! Please try again after sometime',
+      })
+    },
   })
 
   const logout = useCallback(() => {
