@@ -3,9 +3,11 @@ import { CheckIcon, FormControl, Input, Select, TextArea } from 'native-base'
 import { useCallback } from 'react'
 import { omit } from 'lodash'
 import MultiSelect from 'react-native-multiple-select'
+import { useTheme } from 'tamagui'
 import { InputField } from '@/types/input-fields'
 import DatePicker from '../date-picker'
 import { theme } from '@/app/_layout'
+import { hp, wp } from '@/utils/responsive'
 
 type InputFieldsProps = {
   inputs: InputField[]
@@ -14,10 +16,19 @@ type InputFieldsProps = {
 }
 
 export default function InputFields({ inputs, control, errors }: InputFieldsProps) {
+  const tamagtheme = useTheme()
   const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
     switch (input.type) {
       case 'text': {
-        return <Input placeholder={input.label} onChangeText={field.onChange} {...field} />
+        return (
+          <Input
+            placeholder={input.label}
+            onChangeText={field.onChange}
+            size={'md'}
+            color={tamagtheme.foreground?.val}
+            {...field}
+          />
+        )
       }
 
       case 'number': {
@@ -28,6 +39,8 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             keyboardType="numeric"
             placeholder={input.label}
             onChangeText={field.onChange}
+            size={'md'}
+            color={tamagtheme.foreground?.val}
           />
         )
       }
@@ -48,6 +61,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             defaultValue={field.value?.toString()}
             selectedValue={field.value?.toString()}
             onValueChange={field.onChange}
+            color={tamagtheme.foreground?.val}
           >
             {input.options.map((option) => (
               <Select.Item key={option.id} label={option.label} value={option.id?.toString()} />
@@ -69,21 +83,54 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             tagTextColor={theme.colors.primary['500']}
             selectedItemTextColor={theme.colors.primary['500']}
             selectedItemIconColor={theme.colors.primary['500']}
-            itemTextColor={theme.colors.black}
-            styleSelectorContainer={{ backgroundColor: theme.colors.red['500'] }}
+            itemTextColor={tamagtheme.foreground.val}
+            styleSelectorContainer={{ backgroundColor: tamagtheme.background.val }}
+            styleInputGroup={{
+              backgroundColor: tamagtheme.background.val,
+              paddingLeft: wp(3),
+              paddingRight: wp(3),
+              paddingVertical: hp(1),
+            }}
             submitButtonColor={theme.colors.primary['500']}
+            styleTextDropdown={{ paddingHorizontal: wp(3) }}
+            styleTextDropdownSelected={{ paddingHorizontal: wp(3) }}
+            styleDropdownMenuSubsection={{
+              borderRadius: wp(1),
+              backgroundColor: tamagtheme.backgroundHover.val,
+              paddingRight: wp(1.5),
+            }}
+            flatListProps={{
+              contentContainerStyle: { backgroundColor: tamagtheme.background.val },
+            }}
+            styleIndicator={{ top: -4 }}
           />
         )
       }
 
       case 'textarea': {
         return (
-          <TextArea autoCompleteType="none" {...field} placeholder={input.label} onChangeText={field.onChange} h={20} />
+          <TextArea
+            size={'md'}
+            autoCompleteType="none"
+            {...field}
+            placeholder={input.label}
+            onChangeText={field.onChange}
+            h={20}
+            color={tamagtheme.foreground?.val}
+          />
         )
       }
 
       default: {
-        return <Input placeholder={input.label} onChangeText={field.onChange} {...field} />
+        return (
+          <Input
+            color={tamagtheme.foreground?.val}
+            size={'md'}
+            placeholder={input.label}
+            onChangeText={field.onChange}
+            {...field}
+          />
+        )
       }
     }
   }, [])

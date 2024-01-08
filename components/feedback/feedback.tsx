@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTheme } from 'tamagui'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import InputFields from '../input-fields'
 import { FeedbackSchema, feedbackSchema } from '@/schema/feedback'
@@ -10,12 +11,14 @@ import { submitFeedback } from '@/queries/feedback'
 import { FEEDBACK_FIELDS } from '@/utils/feedback'
 
 import When from '../when'
+import { hp } from '@/utils/responsive'
 
 type FeedbackState = 'INITIAL' | 'SUBMITTED' | 'ERROR'
 
 export default function Feedback() {
   const [status, setStatus] = useState<FeedbackState>('INITIAL')
   const [showModal, setShowModal] = useState(false)
+  const theme = useTheme()
 
   const {
     handleSubmit,
@@ -63,11 +66,15 @@ export default function Feedback() {
           setShowModal(false)
         }}
       >
-        <Modal.Content maxW="sm" w="full">
+        <Modal.Content bgColor={theme.backgroundHover.val} maxW="sm" w="full">
           <Modal.CloseButton />
-          <Modal.Header>Share your thoughts with us</Modal.Header>
+          <Modal.Header bgColor={theme.backgroundHover.val}>
+            <Text color={theme.foreground.val} fontFamily={'heading'} fontWeight={'bold'} fontSize={'lg'}>
+              Share your thoughts with us
+            </Text>
+          </Modal.Header>
 
-          <Modal.Body>
+          <Modal.Body style={{ rowGap: hp(1.5) }}>
             <When truthy={status === 'INITIAL'}>
               <InputFields control={control} errors={errors} inputs={FEEDBACK_FIELDS} />
             </When>
@@ -88,7 +95,7 @@ export default function Feedback() {
           </Modal.Body>
 
           <When truthy={status === 'INITIAL'}>
-            <Modal.Footer>
+            <Modal.Footer bgColor={theme.backgroundHover.val}>
               <Button.Group space={2}>
                 <Button
                   variant="ghost"

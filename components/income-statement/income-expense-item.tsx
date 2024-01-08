@@ -1,10 +1,9 @@
 import React, { FC, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Text } from 'tamagui'
-import { hp, wp } from '@/utils/responsive'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Text, useTheme } from 'tamagui'
 import { Feather } from '@expo/vector-icons'
-import { TouchableOpacity } from 'react-native'
 import { Menu, MenuItem } from 'react-native-material-menu'
+import { hp, wp } from '@/utils/responsive'
 
 interface IIncomeExpenseItemProps {
   onEdit: () => void
@@ -13,6 +12,7 @@ interface IIncomeExpenseItemProps {
 
 const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, onEdit = () => {} }) => {
   const [visible, setVisible] = useState(false)
+  const theme = useTheme()
 
   const showMenu = () => {
     setVisible(true)
@@ -33,9 +33,9 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background.val }]}>
       <View style={styles.bodyLeftContent}>
-        <Text fontFamily={'$body'} fontSize={'$6'}>
+        <Text fontFamily={'$body'} color={theme.foreground.val} fontSize={'$6'}>
           Hello
         </Text>
         <Text color={'$gray9Dark'} fontFamily={'$body'} fontSize={'$4'}>
@@ -47,12 +47,15 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
           visible={visible}
           anchor={
             <TouchableOpacity onPress={showMenu}>
-              <Feather size={wp(4)} name="more-vertical" />
+              <Feather size={wp(4)} name="more-vertical" color={theme.foreground.val} />
             </TouchableOpacity>
           }
           onRequestClose={hideMenu}
+          style={{ backgroundColor: theme.backgroundHover.val }}
         >
-          <MenuItem onPress={handleEditPress}>Edit</MenuItem>
+          <MenuItem textStyle={{ color: theme.foreground.val }} onPress={handleEditPress}>
+            Edit
+          </MenuItem>
           <MenuItem textStyle={{ color: 'red' }} onPress={handleDeletePress}>
             Delete
           </MenuItem>
