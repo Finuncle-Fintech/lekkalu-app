@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 import { omit } from 'lodash'
+import { Text, useTheme } from 'tamagui'
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { AddPhysicalAssetSchema, addPhysicalAssetSchema } from '@/schema/balance-sheet'
 import { AssetCreateOrEditDto, addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
@@ -13,6 +14,7 @@ import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import InputFields from '../input-fields'
 import { ASSET_INPUTS } from './config'
+import { hp } from '@/utils/responsive'
 
 type CreateOrEditAssetProps = {
   trigger: React.ReactElement<{ onPress: () => void }>
@@ -25,6 +27,7 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
   const title = isEdit ? 'Edit Asset' : 'Create Asset'
+  const theme = useTheme()
 
   const {
     handleSubmit,
@@ -95,15 +98,19 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
           setShowModal(false)
         }}
       >
-        <Modal.Content maxW="sm" w="full">
+        <Modal.Content maxW="sm" w="full" bg={theme.background.val}>
           <Modal.CloseButton />
-          <Modal.Header>{title}</Modal.Header>
+          <Modal.Header bg={theme.background.val}>
+            <Text fontFamily={'$heading'} fontSize={'$6'} color={theme.foreground.val}>
+              {title}
+            </Text>
+          </Modal.Header>
 
-          <Modal.Body>
+          <Modal.Body style={{ rowGap: hp(1) }}>
             <InputFields control={control} errors={errors} inputs={ASSET_INPUTS} />
           </Modal.Body>
 
-          <Modal.Footer>
+          <Modal.Footer bg={theme.background.val}>
             <Button.Group space={2}>
               <Button
                 variant="ghost"

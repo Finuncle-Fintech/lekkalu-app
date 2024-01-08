@@ -1,13 +1,14 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
+import { Text, useTheme } from 'tamagui'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { hp, wp } from '@/utils/responsive'
-import { Text } from 'tamagui'
 import { THEME_COLORS } from '@/utils/theme'
 
 const PercentageCard = ({ percentage = '0', subTitle = '' }) => {
+  const theme = useTheme()
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background.val }]}>
       <View style={styles.iconContainer}>
         <FontAwesome5 name="percent" size={wp(4)} color={THEME_COLORS.primary[50]} />
       </View>

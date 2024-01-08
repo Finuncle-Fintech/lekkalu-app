@@ -27,6 +27,7 @@ module.exports = function (api) {
             '@/tamagui.config': './tamagui.config.ts',
             '@/schema': './schema',
             '@/app': './app',
+            '@/context': './context',
           },
         },
       ],

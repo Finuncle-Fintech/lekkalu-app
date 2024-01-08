@@ -2,6 +2,7 @@ import { EvilIcons } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertDialog, Button, IconButton } from 'native-base'
 import { useRef, useState } from 'react'
+import { Text, useTheme } from 'tamagui'
 import { deleteExpense } from '@/queries/expense'
 import { EXPENSES } from '@/utils/query-keys'
 
@@ -13,6 +14,7 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
   const [isOpen, setIsOpen] = useState(false)
   const cancelRef = useRef(null)
   const qc = useQueryClient()
+  const theme = useTheme()
 
   const onClose = () => setIsOpen(false)
 
@@ -50,10 +52,18 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
 
-          <AlertDialog.Header>Delete Expense</AlertDialog.Header>
-          <AlertDialog.Body>Are you sure you want to delete this expense ?</AlertDialog.Body>
+          <AlertDialog.Header backgroundColor={theme.backgroundHover.val}>
+            <Text fontSize={'$5'} color={theme.foreground.val} fontFamily={'$heading'}>
+              Delete Expense
+            </Text>
+          </AlertDialog.Header>
+          <AlertDialog.Body backgroundColor={theme.backgroundHover.val}>
+            <Text color={theme.foreground.val} fontFamily={'$heading'}>
+              Are you sure you want to delete this expense ?
+            </Text>
+          </AlertDialog.Body>
 
-          <AlertDialog.Footer>
+          <AlertDialog.Footer backgroundColor={theme.backgroundHover.val}>
             <Button.Group space={2}>
               <Button
                 variant="unstyled"
@@ -61,11 +71,16 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
                 onPress={onClose}
                 ref={cancelRef}
                 isLoading={deleteExpenseMutation.isPending}
+                color={theme.backgroundFocus.val}
               >
-                Cancel
+                <Text fontSize={'$5'} color={theme.foreground.val} fontFamily={'$heading'}>
+                  Cancel
+                </Text>
               </Button>
               <Button colorScheme="danger" onPress={handleDelete} isLoading={deleteExpenseMutation.isPending}>
-                Delete
+                <Text fontSize={'$5'} color={'white'} fontFamily={'$heading'}>
+                  Delete
+                </Text>
               </Button>
             </Button.Group>
           </AlertDialog.Footer>

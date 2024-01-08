@@ -3,6 +3,7 @@ import { Button, FlatList, HStack, IconButton, Text, VStack } from 'native-base'
 import { useCallback } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
 import { Link } from 'expo-router'
+import { useTheme } from 'tamagui'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
@@ -10,6 +11,8 @@ import Loading from '../loading'
 import DeleteExpense from '../delete-expense'
 
 export default function ExpenseList() {
+  const theme = useTheme()
+
   const [expenseQuery, tagsQuery] = useQueries({
     queries: [
       {
@@ -45,16 +48,20 @@ export default function ExpenseList() {
       keyExtractor={(item) => item.id.toString()}
       data={expenseQuery.data ?? []}
       renderItem={({ item }) => (
-        <VStack space={4} bg="white" rounded="md" p="4" shadow="sm" mb="4">
+        <VStack space={4} bg={theme.background.val} rounded="md" p="4" shadow="sm" mb="4">
           <HStack space={2} fontSize="xl">
-            <Text fontSize="lg">Amount : </Text>
-            <Text fontSize="lg" fontWeight="bold">
+            <Text color={theme.foreground.val} fontSize="lg">
+              Amount :{' '}
+            </Text>
+            <Text color={theme.foreground.val} fontSize="lg" fontWeight="bold">
               {item.amount}
             </Text>
           </HStack>
           <HStack space={2} fontSize="xl">
-            <Text fontSize="lg">Tags : </Text>
-            <Text fontSize="lg" fontWeight="bold">
+            <Text color={theme.foreground.val} fontSize="lg">
+              Tags :{' '}
+            </Text>
+            <Text color={theme.foreground.val} fontSize="lg" fontWeight="bold">
               {getTagNames(item.tags)}
             </Text>
           </HStack>

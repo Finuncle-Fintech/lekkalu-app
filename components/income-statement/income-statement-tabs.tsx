@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import { SizableText, Tabs } from 'tamagui'
-import { hp, wp } from '@/utils/responsive'
 import { AntDesign } from '@expo/vector-icons'
+import { SizableText, Tabs, useTheme } from 'tamagui'
+import { hp, wp } from '@/utils/responsive'
 import IncomeExpenseItem from './income-expense-item'
 import { THEME_COLORS } from '@/utils/theme'
 import AddEditExpenseIncomeModal from './AddEditExpenseIncomeModal'
 
 const IncomeStatementTabs = () => {
   const [activeTab, setActiveTab] = useState<'income' | 'expense'>('income')
+
+  const theme = useTheme()
 
   const deleteItemHandler = () => {}
 
@@ -18,18 +20,20 @@ const IncomeStatementTabs = () => {
     <Tabs onValueChange={setActiveTab} defaultValue="income" style={styles.tabs}>
       <Tabs.List style={styles.tabsList}>
         <Tabs.Tab
-          backgroundColor={activeTab === 'income' ? THEME_COLORS.primary[50] : 'white'}
+          backgroundColor={activeTab === 'income' ? THEME_COLORS.primary[50] : theme.background.val}
           style={styles.tabTile}
           value="income"
         >
-          <SizableText color={activeTab === 'income' ? 'white' : 'black'}>Income</SizableText>
+          <SizableText color={activeTab === 'income' ? theme.background.val : theme.foreground.val}>Income</SizableText>
         </Tabs.Tab>
         <Tabs.Tab
-          backgroundColor={activeTab === 'expense' ? THEME_COLORS.primary[50] : 'white'}
+          backgroundColor={activeTab === 'expense' ? THEME_COLORS.primary[50] : theme.background.val}
           style={styles.tabTile}
           value="expense"
         >
-          <SizableText color={activeTab === 'expense' ? 'white' : 'black'}>Expense</SizableText>
+          <SizableText color={activeTab === 'expense' ? theme.background.val : theme.foreground.val}>
+            Expense
+          </SizableText>
         </Tabs.Tab>
       </Tabs.List>
       <Tabs.Content value="income">

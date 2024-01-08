@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { StyleSheet } from 'react-native'
-import { wp } from '@/utils/responsive'
 import { Button, Dialog, H3, Input, Label, View } from 'tamagui'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { wp } from '@/utils/responsive'
 import { IAddEditIncomeExpenseSchema, addEditIncomeExpenseSchema } from '@/schema/income-statement'
 
 interface IAddEditExpenseIncomeModalProps {
@@ -21,7 +21,7 @@ const AddEditExpenseIncomeModal: FC<IAddEditExpenseIncomeModalProps> = () => {
   })
 
   return (
-    <Dialog defaultOpen>
+    <Dialog>
       <Dialog.Portal>
         <Dialog.Overlay />
         <Dialog.Content style={{ width: wp(90) }}>

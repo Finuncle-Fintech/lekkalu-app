@@ -3,8 +3,6 @@ import { AntDesign } from '@expo/vector-icons'
 import { Text, View, useTheme } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { hp, wp } from '@/utils/responsive'
-import { ArrowRight } from '@tamagui/lucide-icons'
-import { TouchableOpacity } from 'react-native'
 
 const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => {
   const theme = useTheme()
@@ -30,29 +28,18 @@ export default function AuthenticatedAppLayout() {
           paddingTop: hp(1),
           paddingBottom: bottom + 4,
           height: hp(7.5) + bottom,
-          backgroundColor: theme.dark.get(),
+          backgroundColor: theme.background.val,
           borderTopColor: 'transparent',
         },
         tabBarItemStyle: { paddingHorizontal: wp(2) },
-        header: ({ options, route, navigation }) => {
+        header: ({ options }) => {
           return (
             <>
-              <View width="100%" h="$1" bg="$dark" style={{ paddingTop: top }} />
-              <View flexDirection="row" bg="$dark" jc="space-between" alignItems="center" px="$4" py="$3.5">
+              <View width="100%" h="$1" bg="$background" style={{ paddingTop: top }} />
+              <View flexDirection="row" bg="$background" jc="space-between" alignItems="center" px="$4" py="$3.5">
                 <Text color="$color" fontSize="$8" fontWeight="bold">
                   {options.title}
                 </Text>
-                {route.name === 'dashboard' && (
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('income-statement')}
-                    style={{ flexDirection: 'row', alignItems: 'center', columnGap: wp(2) }}
-                  >
-                    <Text fontSize="$5" fontWeight="bold" color={'$blue10'}>
-                      Income statement
-                    </Text>
-                    <ArrowRight color={'$blue10'} style={{ top: -1 }} />
-                  </TouchableOpacity>
-                )}
               </View>
             </>
           )
@@ -113,6 +100,20 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Income Statement',
           href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="emi-calculator"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="emi-calculator-breakdown"
+        options={{
+          href: null,
+          headerShown: false,
         }}
       />
     </Tabs>

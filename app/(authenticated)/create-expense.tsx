@@ -1,9 +1,10 @@
+import { useMemo } from 'react'
 import { Button, VStack, useToast } from 'native-base'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo } from 'react'
 import { router } from 'expo-router'
+import { View, useTheme } from 'tamagui'
 import InputFields from '@/components/input-fields'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchTags } from '@/queries/tag'
@@ -15,6 +16,7 @@ import { checkIsExpenseExists, getExpenseInputs } from '@/utils/expense'
 export default function CreateExpense() {
   const toast = useToast()
   const qc = useQueryClient()
+  const theme = useTheme()
 
   const [tagsQuery, expensesQuery] = useQueries({
     queries: [
@@ -69,8 +71,10 @@ export default function CreateExpense() {
   }
 
   return (
-    <VStack flex={1} p={4} space={4}>
-      <InputFields control={control} errors={errors} inputs={inputs} />
+    <VStack flex={1} p={4} space={4} backgroundColor={theme.backgroundHover.val}>
+      <View rowGap="$2.5">
+        <InputFields control={control} errors={errors} inputs={inputs} />
+      </View>
 
       <Button
         onPress={handleSubmit(handleAddExpense)}
