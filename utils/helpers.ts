@@ -1,7 +1,7 @@
-export const formatNumberToCurrency = (value: number = 0) => {
-  return new Intl.NumberFormat('en-US', {
+export const formatNumberToCurrency = (value: number = 0, options?: Intl.NumberFormatOptions, locale?: string) => {
+  return new Intl.NumberFormat(locale || 'en-IN', {
     style: 'currency',
-    currency: 'USD',
-    compactDisplay: 'short',
+    currency: options?.currency || 'INR',
+    compactDisplay: options?.compactDisplay || 'short',
   }).format(value)
 }

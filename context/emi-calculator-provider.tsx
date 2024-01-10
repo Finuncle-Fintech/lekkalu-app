@@ -4,13 +4,9 @@ import throttle from 'lodash/throttle'
 import { calculateAssetsForEmi, calculateEmi, calculateTenureByUnit } from '@/utils/emi-calculator-helpers'
 
 interface IEmiCalculatorContextValue {
-  loanPrinicipal: string
   setLoanPrinicipal: Dispatch<SetStateAction<string>>
-  loanInterest: string
   setLoanInterest: Dispatch<SetStateAction<string>>
-  loanTenure: string
   setLoanTenure: Dispatch<SetStateAction<string>>
-  emiDay: string
   setEmiDay: Dispatch<SetStateAction<string>>
   calculationResult?: {
     summary: ReturnType<typeof calculateEmi>
@@ -70,11 +66,7 @@ const EmiCalculatorProvider: FC<PropsWithChildren> = (props) => {
   const isValidInputs = !!(+loanInterest && +loanPrinicipal && +loanTenure && calculationResult)
 
   const value: IEmiCalculatorContextValue = {
-    loanInterest,
-    loanPrinicipal,
-    emiDay,
     setEmiDay,
-    loanTenure,
     setLoanPrinicipal,
     setLoanInterest,
     setLoanTenure,
