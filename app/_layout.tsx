@@ -11,6 +11,7 @@ import { AuthProvider } from '@/hooks/use-auth'
 import { queryClient } from '@/utils/query-client'
 import config from '@/tamagui.config'
 import EmiCalculatorProvider from '@/context/emi-calculator-provider'
+import AppContextProvider from '@/context/app-context-provider'
 
 export const theme = extendTheme({ colors: THEME_COLORS })
 
@@ -34,13 +35,15 @@ export default function AppLayout() {
     <TamaguiProvider config={config}>
       <NativeBaseProvider theme={theme}>
         <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
-          <AuthProvider>
-            <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
-              <EmiCalculatorProvider>
-                <Slot />
-              </EmiCalculatorProvider>
-            </Theme>
-          </AuthProvider>
+          <AppContextProvider>
+            <AuthProvider>
+              <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+                <EmiCalculatorProvider>
+                  <Slot />
+                </EmiCalculatorProvider>
+              </Theme>
+            </AuthProvider>
+          </AppContextProvider>
         </PersistQueryClientProvider>
       </NativeBaseProvider>
     </TamaguiProvider>

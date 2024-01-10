@@ -54,7 +54,8 @@
     "react-native-svg": "13.9.0",
     "tamagui": "^1.79.12",
     "xlsx": "^0.18.5",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@react-native-community/slider": "4.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

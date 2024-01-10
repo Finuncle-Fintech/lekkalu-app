@@ -1,19 +1,21 @@
 import { Feather } from '@expo/vector-icons'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import React, { Dispatch, FC, SetStateAction, memo, useState } from 'react'
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
-import { Input, Label, Slider, Text, useTheme } from 'tamagui'
+import { Input, Label, Text, useTheme } from 'tamagui'
 import { Popover } from 'native-base'
+import Slider from '@react-native-community/slider'
+import debounce from 'lodash/debounce'
 import { wp } from '@/utils/responsive'
-import { THEME_COLORS } from '@/utils/theme'
 
 interface IInputWithSliderProps {
   label: string
   containerStyle?: StyleProp<ViewStyle>
   sliderMaxValue: number
-  value: string
+  defaultValue?: string
   setValue: Dispatch<SetStateAction<string>>
   showInfoTooltip?: boolean
   tooltipText?: string
+  sliderstep?: number
 }
 
 const InputWithSlider: FC<IInputWithSliderProps> = ({
@@ -21,11 +23,30 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
   containerStyle,
   setValue,
   sliderMaxValue = 100,
-  value = '0',
+  defaultValue = '0',
   tooltipText = '',
   showInfoTooltip = false,
+  sliderstep = 0,
 }) => {
   const theme = useTheme()
+  const [localvalue, setLocalValue] = useState(defaultValue)
+
+  const debouncedSetValue = debounce(setValue, 300)
+
+  const handleInputValueChange = (text: string) => {
+    const parsedValue = text.trim().replace(' ', '')
+    if (isNaN(+parsedValue)) {
+      return
+    }
+    setLocalValue(parsedValue)
+    debouncedSetValue(parsedValue)
+  }
+
+  const handleSliderValueChange = (val: number) => {
+    const newVal = parseFloat(val.toString()).toFixed(2)
+    debouncedSetValue(newVal)
+    setLocalValue(newVal)
+  }
 
   return (
     <View style={containerStyle}>
@@ -52,34 +73,22 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
           </Popover>
         )}
       </View>
-      <Input
-        value={value.toString()}
-        onChangeText={(text) => {
-          const parsedValue = text.trim().replace(' ', '')
-          if (isNaN(+parsedValue)) {
-            return
-          }
-          setValue(parsedValue)
-        }}
-      />
+      <Input value={localvalue} onChangeText={handleInputValueChange} />
       <Slider
-        value={[value]}
-        onValueChange={(val) => setValue(val[0])}
-        mt="$4"
-        size="$4"
-        width={'100%'}
-        max={sliderMaxValue}
-      >
-        <Slider.Track>
-          <Slider.TrackActive backgroundColor={THEME_COLORS.primary[50]} />
-        </Slider.Track>
-        <Slider.Thumb backgroundColor={THEME_COLORS.primary[50]} circular index={0} size={'$1'} />
-      </Slider>
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={sliderMaxValue}
+        minimumTrackTintColor="#003562"
+        maximumTrackTintColor="#e1e1e1"
+        thumbTintColor="#003562"
+        onValueChange={handleSliderValueChange}
+        step={sliderstep}
+      />
     </View>
   )
 }
 
-export default InputWithSlider
+export default memo(InputWithSlider)
 
 const styles = StyleSheet.create({
   labelContainer: {
@@ -87,4 +96,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     columnGap: wp(2),
   },
+  slider: { width: '100%', height: 34 },
 })
