@@ -1,15 +1,18 @@
 import { Tabs } from 'expo-router/tabs'
-import { AntDesign } from '@expo/vector-icons'
 import { Text, View, useTheme } from 'tamagui'
+import { Calculator, Coins, Home, IndianRupee, Settings } from '@tamagui/lucide-icons'
+import { cloneElement } from 'react'
 
-const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => {
+const TabBarIcon = ({ focused, icon }: { focused: boolean; icon: React.ReactElement<{ color: string }> }) => {
   const theme = useTheme()
 
-  return <AntDesign name={name} size={24} color={focused ? theme.primary.get() : theme.color.get()} />
+  return cloneElement(icon, { color: focused ? theme.primary.get() : theme.color.get() })
 }
 
 const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => (
-  <Text color={focused ? '$primary' : '$color'}>{children}</Text>
+  <Text color={focused ? '$primary' : '$color'} fontSize="$1">
+    {children}
+  </Text>
 )
 
 export default function AuthenticatedAppLayout() {
@@ -42,7 +45,7 @@ export default function AuthenticatedAppLayout() {
         name="dashboard"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ focused }) => <TabBarIcon name="home" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabBarIcon icon={<Home />} focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
@@ -50,7 +53,7 @@ export default function AuthenticatedAppLayout() {
         name="balance-sheet"
         options={{
           title: 'Balance Sheet',
-          tabBarIcon: ({ focused }) => <TabBarIcon name="calculator" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabBarIcon icon={<Calculator />} focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
@@ -58,16 +61,7 @@ export default function AuthenticatedAppLayout() {
         name="expenses"
         options={{
           title: 'Expenses',
-          tabBarIcon: ({ focused }) => <TabBarIcon name="wallet" focused={focused} />,
-          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
-        }}
-      />
-
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({ focused }) => <TabBarIcon name="setting" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabBarIcon icon={<Coins />} focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
@@ -85,6 +79,24 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Update Expense',
           href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="budgets"
+        options={{
+          title: 'Budgets',
+          tabBarIcon: ({ focused }) => <TabBarIcon icon={<IndianRupee />} focused={focused} />,
+          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
+        }}
+      />
+
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ focused }) => <TabBarIcon icon={<Settings />} focused={focused} />,
+          tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
       />
     </Tabs>
