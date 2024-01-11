@@ -31,7 +31,7 @@ export default function Signup() {
     return <Redirect href="/dashboard" />
   }
 
-  const inputTextColor = theme.foreground.val
+  const inputTextColor = theme.foreground.get()
 
   return (
     <ScrollView
@@ -119,7 +119,7 @@ export default function Signup() {
                   onChange={(value) => {
                     field.onChange(value)
                   }}
-                  bg={theme.muted.val}
+                  bg={theme.muted.get()}
                 >
                   <Text mx={2}>I have read, understood and agreed to Finuncle&apos;s Terms and Conditions</Text>
                 </Checkbox>
@@ -140,7 +140,7 @@ export default function Signup() {
                   onChange={(value) => {
                     field.onChange(value)
                   }}
-                  bg={theme.muted.val}
+                  bg={theme.muted.get()}
                 >
                   <Text mx={2}>I have read, understood and agreed to Finuncle&apos;s Privacy Policy</Text>
                 </Checkbox>

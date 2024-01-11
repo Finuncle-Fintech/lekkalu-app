@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react'
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
-import { Text, useTheme } from 'tamagui'
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
+import { Text, View, useTheme } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
 
@@ -17,9 +17,11 @@ const FeatureCard: FC<IFeatureCardProps> = ({ containerStyle, image, title, onPr
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={onPress}
-      style={[styles.container, { backgroundColor: theme.backgroundStrong.val }, containerStyle]}
+      style={[styles.container, { backgroundColor: theme.backgroundStrong.get() }, containerStyle]}
     >
-      <View style={styles.iconContainer}>{image}</View>
+      <View h={wp(12)} w={wp(12)} br={wp(7)} jc="center" ai="center" bg={THEME_COLORS.primary[50] + '20'}>
+        {image}
+      </View>
       <Text numberOfLines={1} adjustsFontSizeToFit fontSize={'$2'} fontFamily={'$heading'}>
         {title}
       </Text>
@@ -33,7 +35,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: wp(2),
     paddingVertical: hp(1.5),
-    backgroundColor: 'white',
     elevation: 4,
     shadowColor: 'black',
     shadowOpacity: 0.1,
@@ -42,13 +43,5 @@ const styles = StyleSheet.create({
     shadowRadius: wp(1),
     alignItems: 'center',
     rowGap: hp(2),
-  },
-  iconContainer: {
-    height: wp(12),
-    width: wp(12),
-    borderRadius: wp(7),
-    backgroundColor: THEME_COLORS.primary[50] + '20',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 })

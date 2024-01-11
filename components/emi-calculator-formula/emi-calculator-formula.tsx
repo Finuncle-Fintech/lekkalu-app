@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Text, useTheme } from 'tamagui'
+import { Text, View } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
 
 interface IKeyValueTextProps {
@@ -21,15 +20,28 @@ const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
 }
 
 const EmiCalculatorFormula = () => {
-  const theme = useTheme()
   return (
-    <View style={[styles.configureEMICard, { backgroundColor: theme.background.val }]}>
+    <View
+      bg="$background"
+      px={wp(4)}
+      pt={hp(1.5)}
+      br={wp(4)}
+      mt={hp(2)}
+      rowGap={hp(1)}
+      pb={hp(3)}
+      elevationAndroid={3}
+      shadowColor={'black'}
+      shadowOpacity={0.1}
+      shadowOffset={{ height: 0, width: 0 }}
+      shadowRadius={wp(1)}
+      mx={wp(4)}
+    >
       <Text fontFamily={'$heading'} fontSize={'$7'} fontWeight={'bold'}>
         EMI Formula
       </Text>
       <Text fontFamily={'$body'}>EMI = P * (r * (1 + r)^n) / ((1 + r)^n - 1)</Text>
       <Text fontFamily={'$body'}>Where:</Text>
-      <View style={styles.whereBlock}>
+      <View ml={wp(2)} rowGap={hp(1)}>
         <KeyValueText title="EMI" value="Equated Monthly Installment, the fixed amount you need to pay every month." />
         <KeyValueText title="P" value="Loan Principal, the initial loan amount you receive." />
         <KeyValueText title="r" value="Monthly interest rate, calculated from the Loan Interest Rate." />
@@ -49,25 +61,3 @@ const EmiCalculatorFormula = () => {
 }
 
 export default EmiCalculatorFormula
-
-const styles = StyleSheet.create({
-  configureEMICard: {
-    paddingHorizontal: wp(4),
-    paddingTop: hp(1.5),
-    backgroundColor: 'white',
-    borderRadius: wp(4),
-    marginTop: hp(2),
-    rowGap: hp(1),
-    paddingBottom: hp(3),
-    elevation: 3,
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowOffset: { height: 0, width: 0 },
-    shadowRadius: wp(1),
-    marginHorizontal: wp(4),
-  },
-  whereBlock: {
-    marginLeft: wp(2),
-    rowGap: hp(1),
-  },
-})

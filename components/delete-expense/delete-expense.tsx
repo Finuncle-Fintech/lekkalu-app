@@ -52,18 +52,18 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
 
-          <AlertDialog.Header backgroundColor={theme.backgroundHover.val}>
-            <Text fontSize={'$5'} color={theme.foreground.val} fontFamily={'$heading'}>
+          <AlertDialog.Header backgroundColor={theme.backgroundHover.get()}>
+            <Text fontSize={'$5'} color={'$foreground'} fontFamily={'$heading'}>
               Delete Expense
             </Text>
           </AlertDialog.Header>
-          <AlertDialog.Body backgroundColor={theme.backgroundHover.val}>
-            <Text color={theme.foreground.val} fontFamily={'$heading'}>
+          <AlertDialog.Body backgroundColor={theme.backgroundHover.get()}>
+            <Text color={'$foreground'} fontFamily={'$heading'}>
               Are you sure you want to delete this expense ?
             </Text>
           </AlertDialog.Body>
 
-          <AlertDialog.Footer backgroundColor={theme.backgroundHover.val}>
+          <AlertDialog.Footer backgroundColor={theme.backgroundHover.get()}>
             <Button.Group space={2}>
               <Button
                 variant="unstyled"
@@ -71,9 +71,9 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
                 onPress={onClose}
                 ref={cancelRef}
                 isLoading={deleteExpenseMutation.isPending}
-                color={theme.backgroundFocus.val}
+                color={theme.backgroundFocus.get()}
               >
-                <Text fontSize={'$5'} color={theme.foreground.val} fontFamily={'$heading'}>
+                <Text fontSize={'$5'} color={'$foreground'} fontFamily={'$heading'}>
                   Cancel
                 </Text>
               </Button>

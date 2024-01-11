@@ -66,10 +66,10 @@ export default function Feedback() {
           setShowModal(false)
         }}
       >
-        <Modal.Content bgColor={theme.backgroundHover.val} maxW="sm" w="full">
+        <Modal.Content bgColor={theme.backgroundHover.get()} maxW="sm" w="full">
           <Modal.CloseButton />
-          <Modal.Header bgColor={theme.backgroundHover.val}>
-            <Text color={theme.foreground.val} fontFamily={'heading'} fontWeight={'bold'} fontSize={'lg'}>
+          <Modal.Header bgColor={theme.backgroundHover.get()}>
+            <Text color={theme.foreground.get()} fontFamily={'heading'} fontWeight={'bold'} fontSize={'lg'}>
               Share your thoughts with us
             </Text>
           </Modal.Header>
@@ -95,7 +95,7 @@ export default function Feedback() {
           </Modal.Body>
 
           <When truthy={status === 'INITIAL'}>
-            <Modal.Footer bgColor={theme.backgroundHover.val}>
+            <Modal.Footer bgColor={theme.backgroundHover.get()}>
               <Button.Group space={2}>
                 <Button
                   variant="ghost"

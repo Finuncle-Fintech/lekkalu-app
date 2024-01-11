@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Entypo } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import { useTheme } from 'tamagui'
+import { View, useTheme } from 'tamagui'
 import { THEME_COLORS } from '@/utils/theme'
 import { hp, wp } from '@/utils/responsive'
 import EmiCalculatorFormula from '@/components/emi-calculator-formula'
@@ -13,27 +13,24 @@ import KeyboardScrollView from '@/components/keyboard-scroll-view'
 
 const EmiCalculator = () => {
   const theme = useTheme()
+  const { top } = useSafeAreaInsets()
   return (
-    <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.backgroundHover.val }]}>
+    <View f={1} pt={top + hp(2)} bg="$backgroundHover">
       <KeyboardScrollView contentContainerStyle={styles.scrollContent}>
         <TouchableOpacity onPress={router.back} style={styles.back}>
-          <Entypo name="chevron-thin-left" size={wp(5)} color={theme.foreground.val} />
+          <Entypo name="chevron-thin-left" size={wp(5)} color={theme.foreground.get()} />
         </TouchableOpacity>
         <EmiCalculatorChartCard />
         <EmiCalculatorForm />
         <EmiCalculatorFormula />
       </KeyboardScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
 export default EmiCalculator
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: hp(2),
-  },
   back: {
     height: wp(10),
     width: wp(10),

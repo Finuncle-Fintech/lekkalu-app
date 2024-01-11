@@ -98,10 +98,10 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
           setShowModal(false)
         }}
       >
-        <Modal.Content maxW="sm" w="full" bg={theme.background.val}>
+        <Modal.Content maxW="sm" w="full" bg={theme.background.get()}>
           <Modal.CloseButton />
-          <Modal.Header bg={theme.background.val}>
-            <Text fontFamily={'$heading'} fontSize={'$6'} color={theme.foreground.val}>
+          <Modal.Header bg={theme.background.get()}>
+            <Text fontFamily={'$heading'} fontSize={'$6'} color={theme.foreground.get()}>
               {title}
             </Text>
           </Modal.Header>
@@ -110,7 +110,7 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
             <InputFields control={control} errors={errors} inputs={ASSET_INPUTS} />
           </Modal.Body>
 
-          <Modal.Footer bg={theme.background.val}>
+          <Modal.Footer bg={theme.background.get()}>
             <Button.Group space={2}>
               <Button
                 variant="ghost"

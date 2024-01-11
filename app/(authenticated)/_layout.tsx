@@ -28,7 +28,7 @@ export default function AuthenticatedAppLayout() {
           paddingTop: hp(1),
           paddingBottom: bottom + 4,
           height: hp(7.5) + bottom,
-          backgroundColor: theme.background.val,
+          backgroundColor: theme.background.get(),
           borderTopColor: 'transparent',
         },
         tabBarItemStyle: { paddingHorizontal: wp(2) },

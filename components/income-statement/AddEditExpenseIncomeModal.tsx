@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import { StyleSheet } from 'react-native'
 import { Button, Dialog, H3, Input, Label, View } from 'tamagui'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -44,5 +43,3 @@ const AddEditExpenseIncomeModal: FC<IAddEditExpenseIncomeModalProps> = () => {
 }
 
 export default AddEditExpenseIncomeModal
-
-const styles = StyleSheet.create({})

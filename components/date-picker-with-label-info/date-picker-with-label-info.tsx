@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
-import { Label, Text, useTheme } from 'tamagui'
+import { StyleProp, TouchableOpacity, View as RNView, ViewStyle } from 'react-native'
+import { Label, Text, View, useTheme } from 'tamagui'
 import { Popover } from 'native-base'
 import { Feather } from '@expo/vector-icons'
 import DatePicker from '../date-picker'
@@ -19,22 +19,22 @@ const DatePickerWithLabelInfo: FC<IDatePickerWithLabelInfo> = (props) => {
   const theme = useTheme()
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <View style={styles.labelContainer}>
+    <RNView style={containerStyle}>
+      <View fd="row" ai="center" columnGap={wp(2)}>
         <Label fontSize={'$5'}>{label}</Label>
         <Popover
           trigger={(triggerProps) => {
             return (
               <TouchableOpacity hitSlop={15} {...triggerProps}>
-                <Feather name="info" size={wp(5)} color={theme.foreground.val} />
+                <Feather name="info" size={wp(5)} color={theme.foreground.get()} />
               </TouchableOpacity>
             )
           }}
         >
           <Popover.Content accessibilityLabel="Delete Customerd" w="56">
-            <Popover.Arrow />
-            <Popover.Body>
-              <Text color={theme.foreground.val} fontFamily={'$heading'} fontSize={'$4'} lineHeight={'$1'}>
+            <Popover.Arrow bgColor={theme.backgroundHover.get()} />
+            <Popover.Body bgColor={theme.backgroundHover.get()}>
+              <Text color={'$foreground'} fontFamily={'$heading'} fontSize={'$4'} lineHeight={'$1'}>
                 {infoText}
               </Text>
             </Popover.Body>
@@ -42,17 +42,8 @@ const DatePickerWithLabelInfo: FC<IDatePickerWithLabelInfo> = (props) => {
         </Popover>
       </View>
       <DatePicker value={props.value} onChange={(date) => props.onChangeDate(date)} />
-    </View>
+    </RNView>
   )
 }
 
 export default DatePickerWithLabelInfo
-
-const styles = StyleSheet.create({
-  container: {},
-  labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    columnGap: wp(2),
-  },
-})
