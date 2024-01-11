@@ -54,7 +54,7 @@ const config = createTamagui({
       ...themes.dark,
       color: '#f2f2f2',
       dark: 'black',
-      background: '#0c0a09',
+      background: '#141414',
       foreground: '#f2f2f2',
       primary: '#e11d48',
       secondary: '#27272a',

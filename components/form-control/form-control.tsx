@@ -1,4 +1,5 @@
 import { Stack } from 'tamagui'
+import { Controller } from 'react-hook-form'
 import Label from './components/label'
 import ErrorMessage from './components/error-message'
 
@@ -12,3 +13,4 @@ export default function FormControl({ children }: FormControlProps) {
 
 FormControl.Label = Label
 FormControl.ErrorMessage = ErrorMessage
+FormControl.Controller = Controller

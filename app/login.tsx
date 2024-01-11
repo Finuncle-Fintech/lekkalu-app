@@ -1,4 +1,4 @@
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
 import { Button, Checkbox, H1, Input, Label, Stack, Text, XStack, YStack } from 'tamagui'
@@ -40,7 +40,7 @@ export default function Login() {
         <FormControl>
           <FormControl.Label isRequired>Username</FormControl.Label>
 
-          <Controller
+          <FormControl.Controller
             name="username"
             control={control}
             render={({ field }) => <Input placeholder="Enter your username" onChangeText={field.onChange} {...field} />}
@@ -51,7 +51,7 @@ export default function Login() {
 
         <FormControl>
           <FormControl.Label isRequired>Password</FormControl.Label>
-          <Controller
+          <FormControl.Controller
             name="password"
             control={control}
             render={({ field }) => (
@@ -63,7 +63,7 @@ export default function Login() {
         </FormControl>
 
         <FormControl>
-          <Controller
+          <FormControl.Controller
             name="rememberMe"
             control={control}
             render={({ field }) => (
