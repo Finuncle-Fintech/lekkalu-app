@@ -48,20 +48,20 @@ export default function ExpenseList() {
       keyExtractor={(item) => item.id.toString()}
       data={expenseQuery.data ?? []}
       renderItem={({ item }) => (
-        <VStack space={4} bg={theme.background.val} rounded="md" p="4" shadow="sm" mb="4">
+        <VStack space={4} bg={theme.background.get()} rounded="md" p="4" shadow="sm" mb="4">
           <HStack space={2} fontSize="xl">
-            <Text color={theme.foreground.val} fontSize="lg">
+            <Text color={theme.foreground.get()} fontSize="lg">
               Amount :{' '}
             </Text>
-            <Text color={theme.foreground.val} fontSize="lg" fontWeight="bold">
+            <Text color={theme.foreground.get()} fontSize="lg" fontWeight="bold">
               {item.amount}
             </Text>
           </HStack>
           <HStack space={2} fontSize="xl">
-            <Text color={theme.foreground.val} fontSize="lg">
+            <Text color={theme.foreground.get()} fontSize="lg">
               Tags :{' '}
             </Text>
-            <Text color={theme.foreground.val} fontSize="lg" fontWeight="bold">
+            <Text color={theme.foreground.get()} fontSize="lg" fontWeight="bold">
               {getTagNames(item.tags)}
             </Text>
           </HStack>

@@ -1,7 +1,6 @@
 import React, { FC, useContext } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { PieChart } from 'react-native-gifted-charts'
-import { Button, Text, useTheme } from 'tamagui'
+import { Button, Text, View, useTheme } from 'tamagui'
 import { router } from 'expo-router'
 import round from 'lodash/round'
 import { useToast } from 'native-base'
@@ -12,17 +11,22 @@ import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
 import { generateExcelFileForEmiCalculator } from '@/utils/emi-calculator-helpers'
 
 const ChartCenterLabel: FC<{ emiValue: number }> = ({ emiValue }) => {
-  const theme = useTheme()
-
   return (
-    <View style={[styles.chartCenterLabel, { backgroundColor: theme.backgroundHover.val }]}>
-      <Text textAlign="center" fontFamily="$heading" color={theme.foreground.val}>
+    <View bg="$backgroundHover" ai="center" rowGap={wp(2)} px={wp(1)} br={wp(50)}>
+      <Text textAlign="center" fontFamily="$heading" color="$foreground">
         Your EMI is
       </Text>
-      <Text numberOfLines={1} textAlign="center" adjustsFontSizeToFit fontSize="$7" fontFamily="$heading">
+      <Text
+        color="$foreground"
+        numberOfLines={1}
+        textAlign="center"
+        adjustsFontSizeToFit
+        fontSize="$7"
+        fontFamily="$heading"
+      >
         {formatNumberToCurrency(emiValue || 0)}
       </Text>
-      <Text textAlign="center" fontFamily="$heading">
+      <Text color="$foreground" textAlign="center" fontFamily="$heading">
         per month
       </Text>
     </View>
@@ -31,8 +35,8 @@ const ChartCenterLabel: FC<{ emiValue: number }> = ({ emiValue }) => {
 
 const ChartAgendaItem = ({ color = '', title = '', percentage = 0 }) => {
   return (
-    <View style={styles.chartAgendaItem}>
-      <View style={{ height: wp(3), width: wp(3), backgroundColor: color }} />
+    <View fd="row" ai="center" columnGap={wp(2)}>
+      <View h={wp(3)} w={wp(3)} bg={color} />
       <Text fontFamily={'$heading'} fontSize={'$4'}>
         {title} :- {percentage || 0}%
       </Text>
@@ -53,7 +57,7 @@ const EmiCalculatorChartCard = () => {
         { value: interestPercent, color: '#9e54dd' },
         { value: principalPercent, color: '#34c3ff' },
       ]
-    : [{ value: 100, color: theme.backgroundFocus.val }]
+    : [{ value: 100, color: theme.backgroundFocus.get() }]
 
   const handleExportToExcel = async () => {
     await generateExcelFileForEmiCalculator(excelData, calculationResult?.summary?.repayment_table || [])
@@ -61,19 +65,32 @@ const EmiCalculatorChartCard = () => {
   }
 
   return (
-    <View style={[styles.chartCard, { backgroundColor: theme.background.val }]}>
-      <View style={styles.chartCardChartContainer}>
+    <View
+      bg="$background"
+      px={wp(4)}
+      py={hp(1.5)}
+      br={wp(4)}
+      mt={hp(10)}
+      ai="center"
+      elevationAndroid={3}
+      shadowOffset={{ height: 0, width: 0 }}
+      shadowColor="black"
+      shadowOpacity={0.1}
+      shadowRadius={wp(1)}
+      mx={wp(4)}
+    >
+      <View top={-wp(24) + -hp(1.5)}>
         <PieChart
           data={data}
           donut
           centerLabelComponent={() => <ChartCenterLabel emiValue={+(calculationResult?.summary?.loan_emi || 0)} />}
           radius={wp(24)}
           innerRadius={wp(18)}
-          innerCircleColor={theme.backgroundHover.val}
+          innerCircleColor={theme.backgroundHover.get()}
         />
       </View>
-      <View style={styles.chartCardBody}>
-        <View style={styles.chartAgenda}>
+      <View t={-wp(20)} ai="center" h={hp(13)}>
+        <View fd="row" ai="center" columnGap={wp(8)}>
           <ChartAgendaItem
             color="#34c3ff"
             title="Principal"
@@ -85,8 +102,8 @@ const EmiCalculatorChartCard = () => {
             percentage={round(calculationResult?.assets.interest || 0, 2)}
           />
         </View>
-        <View style={[styles.chartAgenda, styles.chartInfoRow]}>
-          <View style={styles.chartInfoItem}>
+        <View fd="row" ai="center" columnGap={wp(12)} mt={hp(3)}>
+          <View ai="center" rowGap={hp(1)}>
             <Text fontFamily={'$heading'} fontSize={'$4'}>
               Total Interest Payable
             </Text>
@@ -94,7 +111,7 @@ const EmiCalculatorChartCard = () => {
               {formatNumberToCurrency(+(calculationResult?.summary?.total_interest_payable || 0))}
             </Text>
           </View>
-          <View style={styles.chartInfoItem}>
+          <View ai="center" rowGap={hp(1)}>
             <Text fontFamily={'$heading'} fontSize={'$4'}>
               Total Payment
             </Text>
@@ -103,7 +120,7 @@ const EmiCalculatorChartCard = () => {
             </Text>
           </View>
         </View>
-        <View style={[styles.chartAgenda, styles.chartActionButtons]}>
+        <View fd="row" ai="center" columnGap={wp(4)} mt={hp(4)}>
           <Button
             onPress={handleExportToExcel}
             disabled={!isValidInputs}
@@ -122,54 +139,3 @@ const EmiCalculatorChartCard = () => {
 }
 
 export default EmiCalculatorChartCard
-
-const styles = StyleSheet.create({
-  chartCenterLabel: {
-    alignItems: 'center',
-    rowGap: wp(2),
-    paddingHorizontal: wp(1),
-  },
-  chartCard: {
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1.5),
-    borderRadius: wp(4),
-    marginTop: hp(10),
-    alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowOffset: { height: 0, width: 0 },
-    shadowRadius: wp(1),
-    marginHorizontal: wp(4),
-  },
-  chartCardChartContainer: {
-    top: -wp(24) + -hp(1.5),
-  },
-  chartCardBody: {
-    top: -wp(20),
-    alignItems: 'center',
-    height: hp(13),
-  },
-  chartAgenda: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    columnGap: wp(8),
-  },
-  chartAgendaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    columnGap: wp(2),
-  },
-  chartInfoItem: {
-    alignItems: 'center',
-    rowGap: hp(1),
-  },
-  chartInfoRow: {
-    marginTop: hp(3),
-    columnGap: wp(12),
-  },
-  chartActionButtons: {
-    marginTop: hp(4),
-    columnGap: wp(4),
-  },
-})

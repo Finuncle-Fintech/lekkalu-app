@@ -1,18 +1,30 @@
 import React, { useContext } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { useTheme } from 'tamagui'
+import { View } from 'tamagui'
 import InputWithSlider from '@/components/input-with-slider'
 import { hp, wp } from '@/utils/responsive'
 import DatePickerWithLabelInfo from '../date-picker-with-label-info'
 import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
 
 const EmiCalculatorForm = () => {
-  const theme = useTheme()
   const { setEmiDay, setLoanPrinicipal, setLoanInterest, setLoanTenure, disbursementDate, setDisbursementDate } =
     useContext(EmiCalculatorContext)
 
   return (
-    <View style={[styles.configureEMICard, { backgroundColor: theme.background.val }]}>
+    <View
+      bg="$background"
+      px={wp(4)}
+      pt={hp(1.5)}
+      br={wp(4)}
+      mt={hp(2)}
+      rowGap={hp(1)}
+      pb={hp(3)}
+      elevationAndroid={3}
+      shadowColor={'black'}
+      shadowOpacity={0.1}
+      shadowOffset={{ height: 0, width: 0 }}
+      shadowRadius={wp(1)}
+      mx={wp(4)}
+    >
       <InputWithSlider
         label="Loan Principal"
         sliderMaxValue={10000000}
@@ -35,6 +47,7 @@ const EmiCalculatorForm = () => {
         showInfoTooltip
         tooltipText="This field represents the total duration, provided in months, over which you will be repaying the loan. For example, if you plan to repay the loan in 3 years, which is 36 months, you would enter 36 months as the loan tenure."
         sliderstep={1}
+        allowFractionDigits={false}
       />
       <InputWithSlider
         label="Emi Day"
@@ -43,6 +56,7 @@ const EmiCalculatorForm = () => {
         showInfoTooltip
         tooltipText="The EMI day is the day of each month on which you want to make your EMI payment. Different lenders may offer various options for selecting the EMI date."
         sliderstep={1}
+        allowFractionDigits={false}
       />
       <DatePickerWithLabelInfo
         label="Disbursement Date"
@@ -55,21 +69,3 @@ const EmiCalculatorForm = () => {
 }
 
 export default EmiCalculatorForm
-
-const styles = StyleSheet.create({
-  configureEMICard: {
-    paddingHorizontal: wp(4),
-    paddingTop: hp(1.5),
-    backgroundColor: 'white',
-    borderRadius: wp(4),
-    marginTop: hp(2),
-    rowGap: hp(1),
-    paddingBottom: hp(3),
-    elevation: 3,
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowOffset: { height: 0, width: 0 },
-    shadowRadius: wp(1),
-    marginHorizontal: wp(4),
-  },
-})

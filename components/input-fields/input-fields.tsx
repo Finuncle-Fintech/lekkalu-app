@@ -25,7 +25,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             placeholder={input.label}
             onChangeText={field.onChange}
             size={'md'}
-            color={tamagtheme.foreground?.val}
+            color={tamagtheme.foreground?.get()}
             {...field}
           />
         )
@@ -40,7 +40,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             placeholder={input.label}
             onChangeText={field.onChange}
             size={'md'}
-            color={tamagtheme.foreground?.val}
+            color={tamagtheme.foreground?.get()}
           />
         )
       }
@@ -61,7 +61,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             defaultValue={field.value?.toString()}
             selectedValue={field.value?.toString()}
             onValueChange={field.onChange}
-            color={tamagtheme.foreground?.val}
+            color={tamagtheme.foreground?.get()}
           >
             {input.options.map((option) => (
               <Select.Item key={option.id} label={option.label} value={option.id?.toString()} />
@@ -83,10 +83,10 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             tagTextColor={theme.colors.primary['500']}
             selectedItemTextColor={theme.colors.primary['500']}
             selectedItemIconColor={theme.colors.primary['500']}
-            itemTextColor={tamagtheme.foreground.val}
-            styleSelectorContainer={{ backgroundColor: tamagtheme.background.val }}
+            itemTextColor={tamagtheme.foreground.get()}
+            styleSelectorContainer={{ backgroundColor: tamagtheme.background.get() }}
             styleInputGroup={{
-              backgroundColor: tamagtheme.background.val,
+              backgroundColor: tamagtheme.background.get(),
               paddingLeft: wp(3),
               paddingRight: wp(3),
               paddingVertical: hp(1),
@@ -96,11 +96,11 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             styleTextDropdownSelected={{ paddingHorizontal: wp(3) }}
             styleDropdownMenuSubsection={{
               borderRadius: wp(1),
-              backgroundColor: tamagtheme.backgroundHover.val,
+              backgroundColor: tamagtheme.backgroundHover.get(),
               paddingRight: wp(1.5),
             }}
             flatListProps={{
-              contentContainerStyle: { backgroundColor: tamagtheme.background.val },
+              contentContainerStyle: { backgroundColor: tamagtheme.background.get() },
             }}
             styleIndicator={{ top: -4 }}
           />
@@ -116,7 +116,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             placeholder={input.label}
             onChangeText={field.onChange}
             h={20}
-            color={tamagtheme.foreground?.val}
+            color={tamagtheme.foreground?.get()}
           />
         )
       }
@@ -124,7 +124,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
       default: {
         return (
           <Input
-            color={tamagtheme.foreground?.val}
+            color={tamagtheme.foreground?.get()}
             size={'md'}
             placeholder={input.label}
             onChangeText={field.onChange}

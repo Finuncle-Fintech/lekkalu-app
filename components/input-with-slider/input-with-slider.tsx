@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons'
 import React, { Dispatch, FC, SetStateAction, memo, useState } from 'react'
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
-import { Input, Label, Text, useTheme } from 'tamagui'
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
+import { Input, Label, Text, View, useTheme } from 'tamagui'
 import { Popover } from 'native-base'
 import Slider from '@react-native-community/slider'
 import debounce from 'lodash/debounce'
@@ -16,6 +16,7 @@ interface IInputWithSliderProps {
   showInfoTooltip?: boolean
   tooltipText?: string
   sliderstep?: number
+  allowFractionDigits?: boolean
 }
 
 const InputWithSlider: FC<IInputWithSliderProps> = ({
@@ -27,6 +28,7 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
   tooltipText = '',
   showInfoTooltip = false,
   sliderstep = 0,
+  allowFractionDigits = true,
 }) => {
   const theme = useTheme()
   const [localvalue, setLocalValue] = useState(defaultValue)
@@ -34,7 +36,14 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
   const debouncedSetValue = debounce(setValue, 300)
 
   const handleInputValueChange = (text: string) => {
-    const parsedValue = text.trim().replace(' ', '')
+    let parsedValue = ''
+
+    if (allowFractionDigits) {
+      parsedValue = text.trim().replace(' ', '')
+    } else {
+      parsedValue = (+text.trim().replace(' ', '').replace('.', '')).toString()
+    }
+
     if (isNaN(+parsedValue)) {
       return
     }
@@ -43,29 +52,29 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
   }
 
   const handleSliderValueChange = (val: number) => {
-    const newVal = parseFloat(val.toString()).toFixed(2)
+    const newVal = allowFractionDigits ? parseFloat(val.toString()).toFixed(2) : val.toString()
     debouncedSetValue(newVal)
     setLocalValue(newVal)
   }
 
   return (
     <View style={containerStyle}>
-      <View style={styles.labelContainer}>
+      <View fd="row" ai="center" columnGap={wp(2)}>
         <Label fontSize={'$5'}>{label}</Label>
         {!!showInfoTooltip && (
           <Popover
             trigger={(triggerProps) => {
               return (
                 <TouchableOpacity hitSlop={15} {...triggerProps}>
-                  <Feather name="info" size={wp(5)} color={theme.foreground.val} />
+                  <Feather name="info" size={wp(5)} color={theme.foreground.get()} />
                 </TouchableOpacity>
               )
             }}
           >
             <Popover.Content accessibilityLabel="Delete Customerd" w="56">
-              <Popover.Arrow />
-              <Popover.Body>
-                <Text color={theme.foreground.val} fontFamily={'$heading'} fontSize={'$4'} lineHeight={'$1'}>
+              <Popover.Arrow bgColor={theme.backgroundHover.get()} />
+              <Popover.Body bgColor={theme.backgroundHover.get()}>
+                <Text color={'$foreground'} fontFamily={'$heading'} fontSize={'$4'} lineHeight={'$1'}>
                   {tooltipText}
                 </Text>
               </Popover.Body>
@@ -91,10 +100,8 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
 export default memo(InputWithSlider)
 
 const styles = StyleSheet.create({
-  labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    columnGap: wp(2),
+  slider: {
+    width: '100%',
+    height: 34,
   },
-  slider: { width: '100%', height: 34 },
 })

@@ -80,7 +80,7 @@ export default function UpdateExpense() {
   }
 
   return (
-    <VStack bgColor={theme.backgroundHover.val} flex={1} p={4} space={4}>
+    <VStack bgColor={theme.backgroundHover.get()} flex={1} p={4} space={4}>
       <View rowGap="$2.5">
         <InputFields control={control} errors={errors} inputs={inputs} />
       </View>

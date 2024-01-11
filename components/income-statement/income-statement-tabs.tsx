@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
-import { SizableText, Tabs, useTheme } from 'tamagui'
+import { SizableText, Tabs } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
 import IncomeExpenseItem from './income-expense-item'
 import { THEME_COLORS } from '@/utils/theme'
@@ -10,30 +10,18 @@ import AddEditExpenseIncomeModal from './AddEditExpenseIncomeModal'
 const IncomeStatementTabs = () => {
   const [activeTab, setActiveTab] = useState<'income' | 'expense'>('income')
 
-  const theme = useTheme()
-
   const deleteItemHandler = () => {}
 
   const editItemHandler = () => {}
 
   return (
-    <Tabs onValueChange={setActiveTab} defaultValue="income" style={styles.tabs}>
-      <Tabs.List style={styles.tabsList}>
-        <Tabs.Tab
-          backgroundColor={activeTab === 'income' ? THEME_COLORS.primary[50] : theme.background.val}
-          style={styles.tabTile}
-          value="income"
-        >
-          <SizableText color={activeTab === 'income' ? theme.background.val : theme.foreground.val}>Income</SizableText>
+    <Tabs onValueChange={setActiveTab} defaultValue="income" fd="column" width={'100%'} jc="center" mt={hp(4)}>
+      <Tabs.List px={wp(5)} pb={hp(1)} mt={hp(2)}>
+        <Tabs.Tab bg={activeTab === 'income' ? THEME_COLORS.primary[50] : '$background'} w={wp(45)} value="income">
+          <SizableText color={activeTab === 'income' ? '$background' : '$foreground'}>Income</SizableText>
         </Tabs.Tab>
-        <Tabs.Tab
-          backgroundColor={activeTab === 'expense' ? THEME_COLORS.primary[50] : theme.background.val}
-          style={styles.tabTile}
-          value="expense"
-        >
-          <SizableText color={activeTab === 'expense' ? theme.background.val : theme.foreground.val}>
-            Expense
-          </SizableText>
+        <Tabs.Tab bg={activeTab === 'expense' ? THEME_COLORS.primary[50] : '$background'} w={wp(45)} value="expense">
+          <SizableText color={activeTab === 'expense' ? '$background' : '$foreground'}>Expense</SizableText>
         </Tabs.Tab>
       </Tabs.List>
       <Tabs.Content value="income">
@@ -67,12 +55,6 @@ const IncomeStatementTabs = () => {
 export default IncomeStatementTabs
 
 const styles = StyleSheet.create({
-  tabs: {
-    flexDirection: 'column',
-    width: '100%',
-    justifyContent: 'center',
-    marginTop: hp(4),
-  },
   listContent: {
     marginTop: hp(1),
     paddingBottom: hp(49),
@@ -89,13 +71,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     bottom: 0,
     right: wp(2),
-  },
-  tabTile: {
-    width: wp(45),
-  },
-  tabsList: {
-    paddingHorizontal: wp(5),
-    paddingBottom: hp(1),
-    marginTop: hp(2),
   },
 })

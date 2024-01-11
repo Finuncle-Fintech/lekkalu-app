@@ -71,7 +71,7 @@ export default function CreateExpense() {
   }
 
   return (
-    <VStack flex={1} p={4} space={4} backgroundColor={theme.backgroundHover.val}>
+    <VStack flex={1} p={4} space={4} backgroundColor={theme.backgroundHover.get()}>
       <View rowGap="$2.5">
         <InputFields control={control} errors={errors} inputs={inputs} />
       </View>

@@ -9,13 +9,15 @@
     "web": "expo start --web",
     "ts:check": "tsc",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write *.{ts,tsx,js,tsx} app/*.{ts,tsx,js,tsx}"
+    "format": "prettier --write *.{ts,tsx,js,tsx} app/*.{ts,tsx,js,tsx}",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@hookform/resolvers": "^3.3.2",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-community/datetimepicker": "7.2.0",
+    "@react-native-community/slider": "4.4.2",
     "@react-navigation/drawer": "^6.6.6",
     "@tamagui/animations-react-native": "^1.79.12",
     "@tamagui/babel-plugin": "^1.79.12",
@@ -39,6 +41,7 @@
     "lodash": "^4.17.21",
     "native-base": "^3.4.28",
     "native-base-icons": "^1.0.14",
+    "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-hook-form": "^7.47.0",
     "react-native": "0.72.6",
@@ -54,8 +57,7 @@
     "react-native-svg": "13.9.0",
     "tamagui": "^1.79.12",
     "xlsx": "^0.18.5",
-    "zod": "^3.22.4",
-    "@react-native-community/slider": "4.4.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

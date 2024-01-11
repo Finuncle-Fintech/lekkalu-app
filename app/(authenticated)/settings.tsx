@@ -9,7 +9,7 @@ export default function Settings() {
   const theme = useTheme()
 
   return (
-    <VStack p={4} space={4} bg="white" flex={1} bgColor={theme.backgroundHover.val}>
+    <VStack p={4} space={4} bg="white" flex={1} bgColor={theme.backgroundHover.get()}>
       <Feedback />
 
       <Button endIcon={<Icon as={AntDesign} name="logout" />} mb={8} variant="outline" onPress={logout}>
