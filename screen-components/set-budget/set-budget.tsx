@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { useToastController } from '@tamagui/toast'
 import CustomButton from '@/components/custom-button'
 import { setBudgetSchema } from '@/schema/budget'
 import FormControl from '@/components/form-control'
@@ -14,8 +13,6 @@ import { setBudget } from '@/queries/budget'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 export default function SetBudget() {
-  const toast = useToastController()
-
   const {
     control,
     handleSubmit,
@@ -29,10 +26,10 @@ export default function SetBudget() {
     mutationFn: setBudget,
     onSuccess() {
       reset({})
-      toast.show('Budget set successfully!')
+      console.log('Budget set successfully!')
     },
     onError() {
-      toast.show('Something went wrong while setting budget. Please try again!')
+      console.log('Something went wrong while setting budget. Please try again!')
     },
   })
 
@@ -78,14 +75,6 @@ export default function SetBudget() {
         >
           <Dialog.Title>Set Budget</Dialog.Title>
           <Dialog.Description>Set and track your monthly budgets.</Dialog.Description>
-
-          <Button
-            onPress={() => {
-              toast.show('Testing')
-            }}
-          >
-            Test
-          </Button>
 
           <FormControl>
             <FormControl.Label isRequired>Month</FormControl.Label>
