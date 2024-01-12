@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
+import Toast from 'react-native-toast-message'
 import CustomButton from '@/components/custom-button'
 import { setBudgetSchema } from '@/schema/budget'
 import FormControl from '@/components/form-control'
@@ -26,10 +27,16 @@ export default function SetBudget() {
     mutationFn: setBudget,
     onSuccess() {
       reset({})
-      console.log('Budget set successfully!')
+      Toast.show({
+        type: 'success',
+        text1: 'Budget set successfully!',
+      })
     },
     onError() {
-      console.log('Something went wrong while setting budget. Please try again!')
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong while setting budget. Please try again!',
+      })
     },
   })
 

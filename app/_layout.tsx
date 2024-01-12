@@ -6,6 +6,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { TamaguiProvider, Theme } from 'tamagui'
 import { useColorScheme } from 'react-native'
 import { useFonts } from 'expo-font'
+import Toast from 'react-native-toast-message'
 import { THEME_COLORS } from '@/utils/theme'
 import { AuthProvider } from '@/hooks/use-auth'
 import { queryClient } from '@/utils/query-client'
@@ -36,6 +37,7 @@ export default function AppLayout() {
           <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
             <NativeBaseProvider theme={theme}>
               <Slot />
+              <Toast />
             </NativeBaseProvider>
           </Theme>
         </TamaguiProvider>
