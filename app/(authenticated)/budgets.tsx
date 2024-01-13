@@ -9,6 +9,7 @@ import { isAxiosError } from 'axios'
 import { deleteBudget, fetchBudgets } from '@/queries/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { Budget } from '@/types/budget'
+import UpdateBudget from '@/screen-components/update-budget'
 
 export default function Budgets() {
   const queryClient = useQueryClient()
@@ -81,26 +82,28 @@ export default function Budgets() {
           const month = dayjs(budget.month).format('MMMM')
 
           return (
-            <XStack
-              key={budget.id}
-              p="$4"
-              borderRadius="$5"
-              space="$4"
-              backgroundColor="$dark"
-              alignItems="center"
-              mb="$4"
-            >
-              <View w="$6" h="$6" bg="$background" borderRadius={9999} alignItems="center" justifyContent="center">
-                <Text fontWeight="bold" fontSize="$8" color="$primary">
-                  {month[0]}
-                </Text>
-              </View>
+            <UpdateBudget budget={budget}>
+              <XStack
+                key={budget.id}
+                p="$4"
+                borderRadius="$5"
+                space="$4"
+                backgroundColor="$dark"
+                alignItems="center"
+                mb="$4"
+              >
+                <View w="$6" h="$6" bg="$background" borderRadius={9999} alignItems="center" justifyContent="center">
+                  <Text fontWeight="bold" fontSize="$9" color="$primary">
+                    {month[0]}
+                  </Text>
+                </View>
 
-              <YStack space="$2">
-                <Heading fontWeight="bold">{month}</Heading>
-                <Text fontSize="$5">₹ {budget.limit}</Text>
-              </YStack>
-            </XStack>
+                <YStack space="$2">
+                  <Heading fontWeight="bold">{month}</Heading>
+                  <Text fontSize="$5">₹ {budget.limit}</Text>
+                </YStack>
+              </XStack>
+            </UpdateBudget>
           )
         }}
       />

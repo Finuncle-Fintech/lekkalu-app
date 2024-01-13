@@ -1,21 +1,28 @@
-import { X } from '@tamagui/lucide-icons'
-import { Button, Dialog, Input, Unspaced, XStack } from 'tamagui'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import dayjs from 'dayjs'
 import Toast from 'react-native-toast-message'
+import dayjs from 'dayjs'
+import { Dialog, Input, XStack, Unspaced, Button } from 'tamagui'
+import { X } from '@tamagui/lucide-icons'
 import { useState } from 'react'
-import CustomButton from '@/components/custom-button'
-import { setBudgetSchema } from '@/schema/budget'
-import FormControl from '@/components/form-control'
-import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
-import Select from '@/components/select'
-import { setBudget } from '@/queries/budget'
+import { Budget } from '@/types/budget'
+import { UpdateBudgetSchema, updateBudgetSchema } from '@/schema/budget'
+import { updateBudget } from '@/queries/budget'
+import { onError } from '@/utils/error'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import FormControl from '@/components/form-control'
+import CustomButton from '@/components/custom-button'
+import Select from '@/components/select'
+import { BUDGET_MONTH_OPTIONS } from '@/utils/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 
-export default function SetBudget() {
+type UpdateBudgetProps = {
+  budget: Budget
+  children: React.ReactNode // trigger
+}
+
+export default function UpdateBudget({ budget, children }: UpdateBudgetProps) {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
@@ -23,35 +30,33 @@ export default function SetBudget() {
     control,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<{ limit: string; month: string }>({
-    resolver: zodResolver(setBudgetSchema),
+    resolver: zodResolver(updateBudgetSchema),
+    defaultValues: {
+      limit: budget.limit,
+      month: dayjs(budget.month).month().toString(),
+    },
   })
 
-  const setBudgetMutation = useMutation({
-    mutationFn: setBudget,
+  const updateBudgetMutation = useMutation({
+    mutationFn: (dto: UpdateBudgetSchema) => updateBudget(budget.id, dto),
+    onError,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
       })
 
-      reset({})
       setOpen(false)
+
       Toast.show({
         type: 'success',
         text1: 'Budget set successfully!',
       })
     },
-    onError() {
-      Toast.show({
-        type: 'error',
-        text1: 'Something went wrong while setting budget. Please try again!',
-      })
-    },
   })
 
-  function handleSetBudget(values: { limit: string; month: string }) {
-    setBudgetMutation.mutate({
+  function handleUpdateBudget(values: { limit: string; month: string }) {
+    updateBudgetMutation.mutate({
       limit: Number(values.limit),
       month: dayjs().set('month', Number(values.month)).format(SERVER_DATE_FORMAT),
     })
@@ -59,9 +64,7 @@ export default function SetBudget() {
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>
-        <CustomButton>Set Budget</CustomButton>
-      </Dialog.Trigger>
+      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay
@@ -127,7 +130,7 @@ export default function SetBudget() {
           </FormControl>
 
           <XStack alignSelf="flex-end" gap="$4">
-            <CustomButton onPress={handleSubmit(handleSetBudget)} loading={setBudgetMutation.isPending}>
+            <CustomButton onPress={handleSubmit(handleUpdateBudget)} loading={updateBudgetMutation.isPending}>
               Save changes
             </CustomButton>
           </XStack>
