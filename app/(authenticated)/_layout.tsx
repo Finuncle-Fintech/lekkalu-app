@@ -6,11 +6,11 @@ import { cloneElement } from 'react'
 const TabBarIcon = ({ focused, icon }: { focused: boolean; icon: React.ReactElement<{ color: string }> }) => {
   const theme = useTheme()
 
-  return cloneElement(icon, { color: focused ? theme.primary.get() : theme.color.get() })
+  return cloneElement(icon, { color: focused ? theme.highlight.get() : theme.mutedForeground.get() })
 }
 
 const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => (
-  <Text color={focused ? '$primary' : '$color'} fontSize="$1">
+  <Text color={focused ? '$highlight' : '$mutedForeground'} fontSize="$2">
     {children}
   </Text>
 )
@@ -27,7 +27,7 @@ export default function AuthenticatedAppLayout() {
           paddingBottom: 10,
           height: 70,
           backgroundColor: theme.dark.get(),
-          borderTopColor: 'transparent',
+          borderTopWidth: 0,
         },
         header: ({ options }) => (
           <>
@@ -44,7 +44,7 @@ export default function AuthenticatedAppLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
+          title: 'Home',
           tabBarIcon: ({ focused }) => <TabBarIcon icon={<Home />} focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}

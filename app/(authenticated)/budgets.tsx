@@ -31,7 +31,6 @@ export default function Budgets() {
           <YStack
             key={budget.id}
             p="$4"
-            borderWidth="$1"
             borderRadius="$5"
             space="$2"
             backgroundColor={MONTH_COLOR_MAP[dayjs(budget.month).month()]}
