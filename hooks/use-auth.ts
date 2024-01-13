@@ -40,7 +40,6 @@ export function useAuth() {
   )
 
   const loginMutation = useMutation({
-    mutationKey: [AUTH.LOGIN],
     mutationFn: login,
     onSuccess: (data) => {
       toast.show({ title: 'Successfully logged in!' })
@@ -63,7 +62,6 @@ export function useAuth() {
   })
 
   const signupMutation = useMutation({
-    mutationKey: [AUTH.SIGNUP],
     mutationFn: signup,
     onSuccess: () => {
       toast.show({

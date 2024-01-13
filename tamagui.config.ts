@@ -27,6 +27,8 @@ const animations = createAnimations({
 const headingFont = createInterFont()
 const bodyFont = createInterFont()
 
+const PRIMARY = '#582FFF'
+
 const config = createTamagui({
   animations,
   shouldAddPrefersColorThemes: false,
@@ -43,15 +45,15 @@ const config = createTamagui({
       background: '#F5F6F7',
       dark: '#FFFFFF',
       mutedForeground: '#484C52',
-      primary: '#582FFF',
-      highlight: '#582FFF',
+      primary: PRIMARY,
+      highlight: PRIMARY,
     },
     dark: {
       ...themes.dark,
       background: '#131417',
       dark: '#1D1F24',
       mutedForeground: '#676D75',
-      primary: '#582FFF',
+      primary: PRIMARY,
       highlight: '#FFFFFF',
     },
   },

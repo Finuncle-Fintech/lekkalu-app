@@ -21121,6 +21121,7 @@
         "dark": "#1D1F24",
         "mutedForeground": "#676D75",
         "primary": "#582FFF",
+        "highlight": "#FFFFFF",
         "id": "dark"
       },
       "dark_Button": {
@@ -33392,6 +33393,7 @@
         "dark": "#FFFFFF",
         "mutedForeground": "#484C52",
         "primary": "#582FFF",
+        "highlight": "#582FFF",
         "id": "light"
       },
       "light_Button": {

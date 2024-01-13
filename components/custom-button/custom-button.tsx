@@ -8,7 +8,8 @@ type ButtonProps = React.ComponentProps<typeof TamaButton> & {
 export default function CustomButton({ children, loading, ...props }: ButtonProps) {
   return (
     <TamaButton {...props} bg="$primary" color="$color" disabled={loading} opacity={loading ? 0.5 : 1}>
-      {loading ? <Spinner color="$color" /> : null} {children}
+      {loading ? <Spinner color="$color" mr="$1" /> : null}
+      {children}
     </TamaButton>
   )
 }
