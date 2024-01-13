@@ -29,13 +29,16 @@ export default function AuthenticatedAppLayout() {
           backgroundColor: theme.dark.get(),
           borderTopWidth: 0,
         },
+
         header: ({ options }) => (
           <>
             <View width="100%" h="$1" bg="$dark" />
-            <View bg="$dark" jc="center" px="$4" py="$5">
-              <Text color="$color" fontSize="$8" fontWeight="bold">
-                {options.title}
-              </Text>
+            <View bg="$background">
+              <View bg="$dark" jc="center" px="$4" py="$5" borderBottomLeftRadius="$8" borderBottomRightRadius="$8">
+                <Text color="$color" fontSize="$8" fontWeight="bold">
+                  {options.title}
+                </Text>
+              </View>
             </View>
           </>
         ),
