@@ -5,6 +5,7 @@ import { useRef, useState } from 'react'
 import { Text, useTheme } from 'tamagui'
 import { deleteExpense } from '@/queries/expense'
 import { EXPENSES } from '@/utils/query-keys'
+import { FontSizes } from '@/utils/fonts'
 
 type DeleteExpenseProps = {
   id: number
@@ -41,7 +42,7 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
         _icon={{
           as: EvilIcons,
           name: 'trash',
-          size: 7,
+          size: 8,
         }}
         onPress={() => {
           setIsOpen(true)
@@ -53,12 +54,12 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
           <AlertDialog.CloseButton />
 
           <AlertDialog.Header backgroundColor={theme.backgroundHover.get()}>
-            <Text fontSize={'$5'} color={'$foreground'} fontFamily={'$heading'}>
+            <Text fontSize={FontSizes.size18} color={theme.foreground.get()} fontFamily={'$heading'}>
               Delete Expense
             </Text>
           </AlertDialog.Header>
           <AlertDialog.Body backgroundColor={theme.backgroundHover.get()}>
-            <Text color={'$foreground'} fontFamily={'$heading'}>
+            <Text fontSize={FontSizes.size15} color={theme.foreground.get()} fontFamily={'$heading'}>
               Are you sure you want to delete this expense ?
             </Text>
           </AlertDialog.Body>
@@ -73,12 +74,12 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
                 isLoading={deleteExpenseMutation.isPending}
                 color={theme.backgroundFocus.get()}
               >
-                <Text fontSize={'$5'} color={'$foreground'} fontFamily={'$heading'}>
+                <Text fontSize={FontSizes.size18} color={theme.foreground.get()} fontFamily={'$heading'}>
                   Cancel
                 </Text>
               </Button>
               <Button colorScheme="danger" onPress={handleDelete} isLoading={deleteExpenseMutation.isPending}>
-                <Text fontSize={'$5'} color={'white'} fontFamily={'$heading'}>
+                <Text fontSize={FontSizes.size18} color={'white'} fontFamily={'$heading'}>
                   Delete
                 </Text>
               </Button>

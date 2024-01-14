@@ -3,14 +3,15 @@ import { View, Text } from 'tamagui'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import FeatureCard from '@/components/feature-card'
-import { wp } from '@/utils/responsive'
+import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
+import { FontSizes } from '@/utils/fonts'
 
 const features = [
-  {
-    title: 'Income Statement',
-    image: <Feather name="dollar-sign" size={wp(6)} color={THEME_COLORS.primary[100]} />,
-  },
+  // {
+  //   title: 'Income Statement',
+  //   image: <Feather name="dollar-sign" size={wp(6)} color={THEME_COLORS.primary[100]} />,
+  // },
   {
     title: 'EMI Calculator',
     image: <FontAwesome name="calculator" size={wp(6)} color={THEME_COLORS.primary[100]} />,
@@ -32,12 +33,11 @@ const Dashboard = () => {
   }
 
   return (
-    <View p="$4" flex={1} bg="$backgroundHover">
-      <Text>Dashboard</Text>
-      <Text my="$4" fontSize={'$8'} fontFamily={'$heading'}>
+    <View p={wp(4)} f={1} bg="$backgroundHover">
+      <Text mb={hp(2)} fontSize={FontSizes.size26} fontFamily={'$heading'}>
         Browse Features
       </Text>
-      <View flexDirection="row" alignItems="center" columnGap={wp(3)}>
+      <View fd="row" ai="center" columnGap={wp(3)}>
         {features.map((item, index) => (
           <FeatureCard
             onPress={() => handleOnPressFeature(item.title)}

@@ -12,6 +12,8 @@ import { addExpense, fetchExpenses } from '@/queries/expense'
 import { AddExpenseSchema, addExpenseSchema } from '@/schema/expense'
 import { Success } from '@/utils/toast'
 import { checkIsExpenseExists, getExpenseInputs } from '@/utils/expense'
+import { hp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 export default function CreateExpense() {
   const toast = useToast()
@@ -80,6 +82,8 @@ export default function CreateExpense() {
         onPress={handleSubmit(handleAddExpense)}
         isDisabled={createExpenseMutation.isPending}
         isLoading={createExpenseMutation.isPending}
+        height={hp(5)}
+        _text={{ style: { fontSize: FontSizes.size15 } }}
       >
         Create
       </Button>

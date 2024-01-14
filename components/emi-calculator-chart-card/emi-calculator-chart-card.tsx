@@ -9,11 +9,12 @@ import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
 import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
 import { generateExcelFileForEmiCalculator } from '@/utils/emi-calculator-helpers'
+import { FontSizes } from '@/utils/fonts'
 
 const ChartCenterLabel: FC<{ emiValue: number }> = ({ emiValue }) => {
   return (
     <View bg="$backgroundHover" ai="center" rowGap={wp(2)} px={wp(1)} br={wp(50)}>
-      <Text textAlign="center" fontFamily="$heading" color="$foreground">
+      <Text fontSize={FontSizes.size15} textAlign="center" fontFamily="$heading" color="$foreground">
         Your EMI is
       </Text>
       <Text
@@ -21,12 +22,12 @@ const ChartCenterLabel: FC<{ emiValue: number }> = ({ emiValue }) => {
         numberOfLines={1}
         textAlign="center"
         adjustsFontSizeToFit
-        fontSize="$7"
+        fontSize={FontSizes.size22}
         fontFamily="$heading"
       >
         {formatNumberToCurrency(emiValue || 0)}
       </Text>
-      <Text color="$foreground" textAlign="center" fontFamily="$heading">
+      <Text fontSize={FontSizes.size15} color="$foreground" textAlign="center" fontFamily="$heading">
         per month
       </Text>
     </View>
@@ -37,7 +38,7 @@ const ChartAgendaItem = ({ color = '', title = '', percentage = 0 }) => {
   return (
     <View fd="row" ai="center" columnGap={wp(2)}>
       <View h={wp(3)} w={wp(3)} bg={color} />
-      <Text fontFamily={'$heading'} fontSize={'$4'}>
+      <Text fontFamily={'$heading'} fontSize={FontSizes.size15}>
         {title} :- {percentage || 0}%
       </Text>
     </View>
@@ -104,32 +105,40 @@ const EmiCalculatorChartCard = () => {
         </View>
         <View fd="row" ai="center" columnGap={wp(12)} mt={hp(3)}>
           <View ai="center" rowGap={hp(1)}>
-            <Text fontFamily={'$heading'} fontSize={'$4'}>
+            <Text fontFamily={'$heading'} fontSize={FontSizes.size15}>
               Total Interest Payable
             </Text>
-            <Text fontFamily={'$heading'} fontSize={'$6'}>
+            <Text fontFamily={'$heading'} fontSize={FontSizes.size20}>
               {formatNumberToCurrency(+(calculationResult?.summary?.total_interest_payable || 0))}
             </Text>
           </View>
           <View ai="center" rowGap={hp(1)}>
-            <Text fontFamily={'$heading'} fontSize={'$4'}>
+            <Text fontFamily={'$heading'} fontSize={FontSizes.size15}>
               Total Payment
             </Text>
-            <Text fontFamily={'$heading'} fontSize={'$6'}>
+            <Text fontFamily={'$heading'} fontSize={FontSizes.size20}>
               {formatNumberToCurrency(+(calculationResult?.summary?.total_payment || 0))}
             </Text>
           </View>
         </View>
         <View fd="row" ai="center" columnGap={wp(4)} mt={hp(4)}>
           <Button
+            fontSize={FontSizes.size15}
             onPress={handleExportToExcel}
             disabled={!isValidInputs}
             backgroundColor={THEME_COLORS.primary[50]}
             color={'white'}
+            h={hp(5.5)}
           >
             Export to Excel
           </Button>
-          <Button disabled={!isValidInputs} onPress={() => router.push('/emi-calculator-breakdown')} variant="outlined">
+          <Button
+            fontSize={FontSizes.size15}
+            disabled={!isValidInputs}
+            onPress={() => router.push('/emi-calculator-breakdown')}
+            variant="outlined"
+            h={hp(5.5)}
+          >
             View EMI Breakdown
           </Button>
         </View>

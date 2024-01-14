@@ -3,12 +3,13 @@ import { Text, View } from 'tamagui'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
+import { FontSizes } from '@/utils/fonts'
 
 const PercentageCard = ({ percentage = '0', subTitle = '' }) => {
   return (
     <View
       bg="$background"
-      br={wp(4)}
+      br={wp(3)}
       width={'48%'}
       elevationAndroid={4}
       shadowColor={'black'}
@@ -25,10 +26,10 @@ const PercentageCard = ({ percentage = '0', subTitle = '' }) => {
         <FontAwesome5 name="percent" size={wp(4)} color={THEME_COLORS.primary[50]} />
       </View>
       <View rowGap={hp(0.5)} f={1}>
-        <Text fontFamily={'$heading'} fontSize={'$5'} fontWeight={'bold'}>
+        <Text fontFamily={'$heading'} fontSize={FontSizes.size18} fontWeight={'bold'}>
           {percentage}%
         </Text>
-        <Text fontFamily={'$body'} fontSize={'$3'} color={'$gray9'} numberOfLines={1}>
+        <Text fontFamily={'$body'} fontSize={FontSizes.size14} color={'$gray9'} numberOfLines={1}>
           {subTitle}
         </Text>
       </View>

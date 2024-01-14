@@ -3,18 +3,26 @@ import { AntDesign } from '@expo/vector-icons'
 import { Text, View, useTheme } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => {
   const theme = useTheme()
-
   return <AntDesign name={name} size={wp(5)} color={focused ? theme.primary.get() : theme.color.get()} />
 }
 
-const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => (
-  <Text textAlign="center" fontSize={wp(3)} numberOfLines={1} color={focused ? '$primary' : '$color'}>
-    {children}
-  </Text>
-)
+const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => {
+  const theme = useTheme()
+  return (
+    <Text
+      textAlign="center"
+      fontSize={FontSizes.size15}
+      numberOfLines={1}
+      color={focused ? theme.primary.get() : theme.color.get()}
+    >
+      {children}
+    </Text>
+  )
+}
 
 export default function AuthenticatedAppLayout() {
   const theme = useTheme()
@@ -35,9 +43,9 @@ export default function AuthenticatedAppLayout() {
         header: ({ options }) => {
           return (
             <>
-              <View width="100%" h="$1" bg="$background" style={{ paddingTop: top }} />
-              <View flexDirection="row" bg="$background" jc="space-between" alignItems="center" px="$4" py="$3.5">
-                <Text color="$color" fontSize="$8" fontWeight="bold">
+              <View w="100%" h={wp(1)} bg="$background" pt={top} />
+              <View fd="row" bg="$background" jc="space-between" ai="center" px={wp(4)} py={hp(1.8)}>
+                <Text color="$color" fontSize={FontSizes.size26} fontWeight="bold">
                   {options.title}
                 </Text>
               </View>

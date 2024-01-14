@@ -12,6 +12,8 @@ import { fetchExpenses, updateExpense } from '@/queries/expense'
 import { AddExpenseSchema, addExpenseSchema } from '@/schema/expense'
 import { Success } from '@/utils/toast'
 import { getExpenseInputs } from '@/utils/expense'
+import { hp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 export default function UpdateExpense() {
   const toast = useToast()
@@ -89,6 +91,8 @@ export default function UpdateExpense() {
         onPress={handleSubmit(handleEditExpense)}
         isDisabled={editExpenseMutation.isPending}
         isLoading={editExpenseMutation.isPending}
+        height={hp(5)}
+        _text={{ style: { fontSize: FontSizes.size15 } }}
       >
         Update
       </Button>

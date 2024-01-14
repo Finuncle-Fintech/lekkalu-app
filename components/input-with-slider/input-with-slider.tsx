@@ -1,11 +1,12 @@
 import { Feather } from '@expo/vector-icons'
 import React, { Dispatch, FC, SetStateAction, memo, useState } from 'react'
-import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle, useColorScheme } from 'react-native'
 import { Input, Label, Text, View, useTheme } from 'tamagui'
 import { Popover } from 'native-base'
 import Slider from '@react-native-community/slider'
 import debounce from 'lodash/debounce'
-import { wp } from '@/utils/responsive'
+import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 interface IInputWithSliderProps {
   label: string
@@ -32,6 +33,7 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
 }) => {
   const theme = useTheme()
   const [localvalue, setLocalValue] = useState(defaultValue)
+  const systemTheme = useColorScheme()
 
   const debouncedSetValue = debounce(setValue, 300)
 
@@ -60,21 +62,28 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
   return (
     <View style={containerStyle}>
       <View fd="row" ai="center" columnGap={wp(2)}>
-        <Label fontSize={'$5'}>{label}</Label>
+        <Label fontSize={FontSizes.size18} pb={hp(0.8)}>
+          {label}
+        </Label>
         {!!showInfoTooltip && (
           <Popover
             trigger={(triggerProps) => {
               return (
-                <TouchableOpacity hitSlop={15} {...triggerProps}>
-                  <Feather name="info" size={wp(5)} color={theme.foreground.get()} />
+                <TouchableOpacity style={{ top: -4 }} hitSlop={15} {...triggerProps}>
+                  <Feather name="info" size={hp(2.5)} color={theme.foreground.get()} />
                 </TouchableOpacity>
               )
             }}
           >
-            <Popover.Content accessibilityLabel="Delete Customerd" w="56">
+            <Popover.Content accessibilityLabel="Delete Customerd" w={wp(60)}>
               <Popover.Arrow bgColor={theme.backgroundHover.get()} />
               <Popover.Body bgColor={theme.backgroundHover.get()}>
-                <Text color={'$foreground'} fontFamily={'$heading'} fontSize={'$4'} lineHeight={'$1'}>
+                <Text
+                  color={systemTheme === 'dark' ? '$foreground' : '$background'}
+                  fontFamily={'$heading'}
+                  fontSize={FontSizes.size15}
+                  lineHeight={'$1'}
+                >
                   {tooltipText}
                 </Text>
               </Popover.Body>
@@ -82,7 +91,13 @@ const InputWithSlider: FC<IInputWithSliderProps> = ({
           </Popover>
         )}
       </View>
-      <Input value={localvalue} onChangeText={handleInputValueChange} />
+      <Input
+        fontSize={FontSizes.size15}
+        height={hp(5)}
+        mb={hp(0.5)}
+        value={localvalue}
+        onChangeText={handleInputValueChange}
+      />
       <Slider
         style={styles.slider}
         minimumValue={0}

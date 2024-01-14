@@ -5,10 +5,11 @@ import { router } from 'expo-router'
 import { ScrollView, Text, View, useTheme } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { hp, wp } from '@/utils/responsive'
+import { hp, isTablet, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
 import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
 import { formatNumberToCurrency } from '@/utils/helpers'
+import { FontSizes } from '@/utils/fonts'
 
 const tableHeaderColumn = ['Month', 'Principal', 'Interest', 'Total Payment', 'Outstanding Principal']
 
@@ -31,7 +32,9 @@ const BodyCellItem: FC<IBodyCellItem> = ({ index, value, rowIndex, disableNumber
       w={widthArr[index]}
       pt={hp(2)}
     >
-      <Text numberOfLines={1}>{disableNumberFormat ? value : formatNumberToCurrency(value)}</Text>
+      <Text fontSize={FontSizes.size15} numberOfLines={1}>
+        {disableNumberFormat ? value : formatNumberToCurrency(value)}
+      </Text>
     </View>
   )
 }
@@ -45,9 +48,9 @@ const EmiCalculatorBreakdown: FC = () => {
     <View f={1} pt={top + hp(1.5)} bg={'$backgroundHover'}>
       <View fd="row" ai="center" columnGap={wp(4)} px={wp(5)}>
         <TouchableOpacity onPress={router.back} style={styles.back}>
-          <Entypo name="chevron-thin-left" size={wp(5)} color={theme.foreground.get()} />
+          <Entypo name="chevron-thin-left" size={isTablet ? hp(2) : wp(5)} color={theme.foreground.get()} />
         </TouchableOpacity>
-        <Text fontSize={'$6'} fontFamily={'$heading'}>
+        <Text fontSize={FontSizes.size20} fontFamily={'$heading'}>
           EMI Breakdown
         </Text>
       </View>
@@ -84,7 +87,9 @@ const EmiCalculatorBreakdown: FC = () => {
                     w={widthArr[index]}
                     pt={hp(2)}
                   >
-                    <Text numberOfLines={1}>{item}</Text>
+                    <Text fontSize={FontSizes.size18} numberOfLines={1}>
+                      {item}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -118,8 +123,8 @@ export default EmiCalculatorBreakdown
 
 const styles = StyleSheet.create({
   back: {
-    height: wp(10),
-    width: wp(10),
+    height: isTablet ? hp(5) : wp(10),
+    width: isTablet ? hp(5) : wp(10),
     backgroundColor: THEME_COLORS.primary[100] + 20,
     borderRadius: wp(6),
     justifyContent: 'center',

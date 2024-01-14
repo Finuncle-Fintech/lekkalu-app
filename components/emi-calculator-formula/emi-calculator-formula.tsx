@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { Text, View } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 interface IKeyValueTextProps {
   title: string
@@ -9,9 +10,9 @@ interface IKeyValueTextProps {
 
 const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
   return (
-    <Text>
+    <Text fontSize={FontSizes.size15}>
       -{' '}
-      <Text fontFamily={'$body'} fontWeight={'bold'}>
+      <Text fontSize={FontSizes.size15} fontFamily={'$body'} fontWeight={'bold'}>
         {title}:
       </Text>{' '}
       {value}
@@ -36,11 +37,15 @@ const EmiCalculatorFormula = () => {
       shadowRadius={wp(1)}
       mx={wp(4)}
     >
-      <Text fontFamily={'$heading'} fontSize={'$7'} fontWeight={'bold'}>
+      <Text fontFamily={'$heading'} fontSize={FontSizes.size24} fontWeight={'bold'}>
         EMI Formula
       </Text>
-      <Text fontFamily={'$body'}>EMI = P * (r * (1 + r)^n) / ((1 + r)^n - 1)</Text>
-      <Text fontFamily={'$body'}>Where:</Text>
+      <Text fontSize={FontSizes.size15} fontFamily={'$body'}>
+        EMI = P * (r * (1 + r)^n) / ((1 + r)^n - 1)
+      </Text>
+      <Text fontSize={FontSizes.size15} fontFamily={'$body'}>
+        Where:
+      </Text>
       <View ml={wp(2)} rowGap={hp(1)}>
         <KeyValueText title="EMI" value="Equated Monthly Installment, the fixed amount you need to pay every month." />
         <KeyValueText title="P" value="Loan Principal, the initial loan amount you receive." />
@@ -52,7 +57,7 @@ const EmiCalculatorFormula = () => {
         title="Total Payment"
         value="The total amount you repay, including both the principal and interest."
       />
-      <Text fontFamily={'$body'}>
+      <Text fontSize={FontSizes.size15} fontFamily={'$body'}>
         The EMI formula helps you calculate the monthly repayment amount for a loan based on the principal, interest
         rate, and loan tenure.
       </Text>
