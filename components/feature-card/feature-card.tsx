@@ -3,6 +3,7 @@ import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native
 import { Text, View, useTheme } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
+import { FontSizes } from '@/utils/fonts'
 
 interface IFeatureCardProps {
   containerStyle?: StyleProp<ViewStyle>
@@ -22,7 +23,7 @@ const FeatureCard: FC<IFeatureCardProps> = ({ containerStyle, image, title, onPr
       <View h={wp(12)} w={wp(12)} br={wp(7)} jc="center" ai="center" bg={THEME_COLORS.primary[50] + '20'}>
         {image}
       </View>
-      <Text numberOfLines={1} adjustsFontSizeToFit fontSize={'$2'} fontFamily={'$heading'}>
+      <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size14} fontFamily={'$heading'}>
         {title}
       </Text>
     </TouchableOpacity>

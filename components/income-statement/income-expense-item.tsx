@@ -4,6 +4,7 @@ import { Text, View, useTheme } from 'tamagui'
 import { Feather } from '@expo/vector-icons'
 import { Menu, MenuItem } from 'react-native-material-menu'
 import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 interface IIncomeExpenseItemProps {
   onEdit: () => void
@@ -48,10 +49,10 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
       jc="space-between"
     >
       <View f={1} rowGap={hp(0.5)} pr={wp(2)}>
-        <Text fontFamily={'$body'} color={'$foreground'} fontSize={'$6'}>
+        <Text fontFamily={'$body'} color={'$foreground'} fontSize={FontSizes.size20}>
           Hello
         </Text>
-        <Text color={'$gray9Dark'} fontFamily={'$body'} fontSize={'$4'}>
+        <Text color={'$gray9Dark'} fontFamily={'$body'} fontSize={FontSizes.size15}>
           Hello
         </Text>
       </View>
@@ -66,14 +67,14 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
           onRequestClose={hideMenu}
           style={{ backgroundColor: theme.backgroundHover.get() }}
         >
-          <MenuItem textStyle={{ color: theme.foreground.get() }} onPress={handleEditPress}>
+          <MenuItem textStyle={{ color: theme.foreground.get(), fontSize: FontSizes.size16 }} onPress={handleEditPress}>
             Edit
           </MenuItem>
-          <MenuItem textStyle={{ color: 'red' }} onPress={handleDeletePress}>
+          <MenuItem textStyle={{ color: 'red', fontSize: FontSizes.size16 }} onPress={handleDeletePress}>
             Delete
           </MenuItem>
         </Menu>
-        <Text fontFamily={'$body'} fontSize={'$5'}>
+        <Text fontFamily={'$body'} fontSize={FontSizes.size18}>
           $ 20,000
         </Text>
       </View>

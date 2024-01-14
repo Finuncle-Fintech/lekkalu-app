@@ -5,13 +5,16 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'tamagui'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { useColorScheme } from 'react-native'
+
 import InputFields from '../input-fields'
 import { FeedbackSchema, feedbackSchema } from '@/schema/feedback'
 import { submitFeedback } from '@/queries/feedback'
 import { FEEDBACK_FIELDS } from '@/utils/feedback'
-
 import When from '../when'
-import { hp } from '@/utils/responsive'
+import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
+import { THEME_COLORS } from '@/utils/theme'
 
 type FeedbackState = 'INITIAL' | 'SUBMITTED' | 'ERROR'
 
@@ -19,6 +22,7 @@ export default function Feedback() {
   const [status, setStatus] = useState<FeedbackState>('INITIAL')
   const [showModal, setShowModal] = useState(false)
   const theme = useTheme()
+  const systemTheme = useColorScheme()
 
   const {
     handleSubmit,
@@ -52,6 +56,8 @@ export default function Feedback() {
   return (
     <>
       <Button
+        height={hp(5)}
+        _text={{ fontSize: FontSizes.size15, color: systemTheme === 'dark' ? 'white' : THEME_COLORS.primary[600] }}
         variant="outline"
         onPress={() => {
           setShowModal(true)
@@ -65,16 +71,17 @@ export default function Feedback() {
         onClose={() => {
           setShowModal(false)
         }}
+        size="full"
       >
-        <Modal.Content bgColor={theme.backgroundHover.get()} maxW="sm" w="full">
-          <Modal.CloseButton />
+        <Modal.Content bgColor={theme.backgroundHover.get()} width={'94%'}>
+          <Modal.CloseButton _icon={{ size: wp(4) }} />
           <Modal.Header bgColor={theme.backgroundHover.get()}>
-            <Text color={theme.foreground.get()} fontFamily={'heading'} fontWeight={'bold'} fontSize={'lg'}>
+            <Text color={theme.foreground.get()} fontFamily={'heading'} fontWeight={'bold'} fontSize={FontSizes.size20}>
               Share your thoughts with us
             </Text>
           </Modal.Header>
 
-          <Modal.Body style={{ rowGap: hp(1.5) }}>
+          <Modal.Body style={{ rowGap: hp(1.5), paddingBottom: hp(2) }}>
             <When truthy={status === 'INITIAL'}>
               <InputFields control={control} errors={errors} inputs={FEEDBACK_FIELDS} />
             </When>
@@ -98,6 +105,14 @@ export default function Feedback() {
             <Modal.Footer bgColor={theme.backgroundHover.get()}>
               <Button.Group space={2}>
                 <Button
+                  _text={{
+                    style: {
+                      fontSize: FontSizes.size16,
+                      padding: wp(1),
+                      color: systemTheme === 'dark' ? 'white' : THEME_COLORS.primary[600],
+                    },
+                  }}
+                  h={hp(5)}
                   variant="ghost"
                   onPress={() => {
                     setShowModal(false)
@@ -105,7 +120,12 @@ export default function Feedback() {
                 >
                   Cancel
                 </Button>
-                <Button onPress={handleSubmit(handleFeedbackSubmit)} isLoading={feedbackMutation.isPending}>
+                <Button
+                  _text={{ style: { fontSize: FontSizes.size16, paddingHorizontal: wp(2) } }}
+                  h={hp(5)}
+                  onPress={handleSubmit(handleFeedbackSubmit)}
+                  isLoading={feedbackMutation.isPending}
+                >
                   Submit
                 </Button>
               </Button.Group>

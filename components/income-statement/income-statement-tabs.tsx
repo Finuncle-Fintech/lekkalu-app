@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { SizableText, Tabs } from 'tamagui'
-import { hp, wp } from '@/utils/responsive'
+import { hp, isTablet, wp } from '@/utils/responsive'
 import IncomeExpenseItem from './income-expense-item'
 import { THEME_COLORS } from '@/utils/theme'
 import AddEditExpenseIncomeModal from './AddEditExpenseIncomeModal'
+import { FontSizes } from '@/utils/fonts'
 
 const IncomeStatementTabs = () => {
   const [activeTab, setActiveTab] = useState<'income' | 'expense'>('income')
@@ -15,13 +16,27 @@ const IncomeStatementTabs = () => {
   const editItemHandler = () => {}
 
   return (
-    <Tabs onValueChange={setActiveTab} defaultValue="income" fd="column" width={'100%'} jc="center" mt={hp(4)}>
+    <Tabs onValueChange={setActiveTab} defaultValue="income" fd="column" w={'100%'} jc="center" mt={hp(4)}>
       <Tabs.List px={wp(5)} pb={hp(1)} mt={hp(2)}>
-        <Tabs.Tab bg={activeTab === 'income' ? THEME_COLORS.primary[50] : '$background'} w={wp(45)} value="income">
-          <SizableText color={activeTab === 'income' ? '$background' : '$foreground'}>Income</SizableText>
+        <Tabs.Tab
+          bg={activeTab === 'income' ? THEME_COLORS.primary[50] : '$background'}
+          w={wp(45)}
+          h={hp(5)}
+          value="income"
+        >
+          <SizableText fontSize={FontSizes.size15} color={activeTab === 'income' ? '$background' : '$foreground'}>
+            Income
+          </SizableText>
         </Tabs.Tab>
-        <Tabs.Tab bg={activeTab === 'expense' ? THEME_COLORS.primary[50] : '$background'} w={wp(45)} value="expense">
-          <SizableText color={activeTab === 'expense' ? '$background' : '$foreground'}>Expense</SizableText>
+        <Tabs.Tab
+          bg={activeTab === 'expense' ? THEME_COLORS.primary[50] : '$background'}
+          w={wp(45)}
+          h={hp(5)}
+          value="expense"
+        >
+          <SizableText fontSize={FontSizes.size15} color={activeTab === 'expense' ? '$background' : '$foreground'}>
+            Expense
+          </SizableText>
         </Tabs.Tab>
       </Tabs.List>
       <Tabs.Content value="income">
@@ -57,7 +72,7 @@ export default IncomeStatementTabs
 const styles = StyleSheet.create({
   listContent: {
     marginTop: hp(1),
-    paddingBottom: hp(49),
+    paddingBottom: isTablet ? hp(58) : hp(49),
     rowGap: hp(1.5),
     paddingHorizontal: wp(5),
   },

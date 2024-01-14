@@ -3,11 +3,13 @@ import { CheckIcon, FormControl, Input, Select, TextArea } from 'native-base'
 import { useCallback } from 'react'
 import { omit } from 'lodash'
 import MultiSelect from 'react-native-multiple-select'
+import { useColorScheme } from 'react-native'
 import { useTheme } from 'tamagui'
 import { InputField } from '@/types/input-fields'
 import DatePicker from '../date-picker'
 import { theme } from '@/app/_layout'
 import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 type InputFieldsProps = {
   inputs: InputField[]
@@ -17,6 +19,10 @@ type InputFieldsProps = {
 
 export default function InputFields({ inputs, control, errors }: InputFieldsProps) {
   const tamagtheme = useTheme()
+  const systemTheme = useColorScheme()
+
+  const inputColor = systemTheme === 'dark' ? 'white' : 'black'
+
   const getFieldInput = useCallback((input: InputField, field: ControllerRenderProps<FieldValues, string>) => {
     switch (input.type) {
       case 'text': {
@@ -24,8 +30,10 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
           <Input
             placeholder={input.label}
             onChangeText={field.onChange}
-            size={'md'}
-            color={tamagtheme.foreground?.get()}
+            color={inputColor}
+            fontSize={FontSizes.size15}
+            height={hp(5)}
+            borderRadius={wp(1)}
             {...field}
           />
         )
@@ -34,13 +42,15 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
       case 'number': {
         return (
           <Input
+            color={inputColor}
             {...field}
             value={field.value}
             keyboardType="numeric"
             placeholder={input.label}
             onChangeText={field.onChange}
-            size={'md'}
-            color={tamagtheme.foreground?.get()}
+            fontSize={FontSizes.size15}
+            height={hp(5)}
+            borderRadius={wp(1)}
           />
         )
       }
@@ -58,10 +68,12 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
               bg: 'blue.100',
               endIcon: <CheckIcon size={5} />,
             }}
+            height={hp(5)}
+            fontSize={FontSizes.size15}
             defaultValue={field.value?.toString()}
             selectedValue={field.value?.toString()}
             onValueChange={field.onChange}
-            color={tamagtheme.foreground?.get()}
+            _text={{ style: { color: tamagtheme.foreground?.get() } }}
           >
             {input.options.map((option) => (
               <Select.Item key={option.id} label={option.label} value={option.id?.toString()} />
@@ -76,6 +88,8 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             items={input.options}
             uniqueKey="id"
             displayKey="label"
+            fontSize={FontSizes.size15}
+            itemFontSize={FontSizes.size15}
             selectedItems={field.value}
             onSelectedItemsChange={field.onChange}
             tagRemoveIconColor={theme.colors.primary['500']}
@@ -115,8 +129,9 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             {...field}
             placeholder={input.label}
             onChangeText={field.onChange}
+            fontSize={FontSizes.size15}
             h={20}
-            color={tamagtheme.foreground?.get()}
+            color={inputColor}
           />
         )
       }
@@ -124,10 +139,12 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
       default: {
         return (
           <Input
-            color={tamagtheme.foreground?.get()}
-            size={'md'}
+            color={inputColor}
             placeholder={input.label}
             onChangeText={field.onChange}
+            fontSize={FontSizes.size15}
+            height={hp(5)}
+            borderRadius={wp(1)}
             {...field}
           />
         )
@@ -137,7 +154,9 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
 
   return inputs.map((input) => (
     <FormControl key={input.id} isRequired={input.required} isInvalid={input.id in errors}>
-      <FormControl.Label>{input.label}</FormControl.Label>
+      <FormControl.Label _text={{ style: { fontSize: FontSizes.size15, paddingBottom: hp(0.8) } }}>
+        {input.label}
+      </FormControl.Label>
       <Controller name={input.id} control={control} render={({ field }) => getFieldInput(input, field)} />
 
       <FormControl.ErrorMessage>{errors[input.id]?.message}</FormControl.ErrorMessage>
