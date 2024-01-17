@@ -86,8 +86,9 @@ export function useAuth() {
     setToken('refresh', undefined)
     setToken('access', undefined)
 
+    qc.clear() // Empties query cache
     router.replace('/login')
-  }, [])
+  }, [qc])
 
   const deleteAccountMutation = useMutation({
     mutationFn: deleteAccount,
