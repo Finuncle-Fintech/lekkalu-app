@@ -9,9 +9,9 @@ import { calculateCagr } from '@/queries/cagr-calculator'
 
 export default function cagrcalculator({ }) {
     const navigation = useNavigation()
-    const [absoluteReturn, setabsoluteReturn] = useState(400)
-    const [absoluteCAGR, setabsoluteCAGR] = useState(0.38)
-    const [cagrPercentage, setcagrPercentage] = useState(37.97)
+    const [AbsoluteReturn, setabsoluteReturn] = useState(400)
+    const [AbsoluteCAGR, setabsoluteCAGR] = useState(0.38)
+    const [CagrPercentage, setcagrPercentage] = useState(37.97)
     const [Initialvalue, setInitialvalue] = useState(5000)
     const [FinalValue, setFinalValue] = useState(25000)
     const [Duration, setDuration] = useState(5)
@@ -31,15 +31,15 @@ export default function cagrcalculator({ }) {
             </TouchableOpacity>
             <View style={styles.subContainer}>
                 <Text fontSize="sm" fontWeight="light" color={"white"}>Absolute returns</Text>
-                <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${absoluteReturn} ₹`}</Text>
+                <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${AbsoluteReturn} ₹`}</Text>
                 <View style={styles.rowContainer}>
                     <View style={{ alignItems: 'center' }}>
                         <Text fontSize="sm" fontWeight="light" color={"white"}>CAGR return</Text>
-                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${absoluteCAGR} ₹`}</Text>
+                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${AbsoluteCAGR} ₹`}</Text>
                     </View>
                     <View style={{ alignItems: 'center' }}>
                         <Text fontSize="sm" fontWeight="light" color={"white"}>CAGR percentage</Text>
-                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${cagrPercentage} %`}</Text>
+                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${CagrPercentage} %`}</Text>
                     </View>
                 </View>
             </View>
