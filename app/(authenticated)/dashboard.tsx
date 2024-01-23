@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text } from 'tamagui'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { Target } from '@tamagui/lucide-icons'
+
 import FeatureCard from '@/components/feature-card'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
@@ -16,16 +18,23 @@ const features = [
     title: 'EMI Calculator',
     image: <FontAwesome name="calculator" size={wp(6)} color={THEME_COLORS.primary[100]} />,
   },
+  {
+    title: 'Goals',
+    image: <Target size={wp(7)} color={THEME_COLORS.primary[100]} />,
+  },
 ]
 
 const Dashboard = () => {
   const handleOnPressFeature = (title: string) => {
     switch (title) {
       case 'Income Statement':
-        router.push('/income-statement')
+        router.push('/(authenticated)/income-statement')
         break
       case 'EMI Calculator':
-        router.push('/emi-calculator')
+        router.push('/(authenticated)/emi-calculator')
+        break
+      case 'Goals':
+        router.push('/(authenticated)/goals')
         break
       default:
         break
