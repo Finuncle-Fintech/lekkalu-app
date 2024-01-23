@@ -8,10 +8,10 @@ import { THEME_COLORS } from '@/utils/theme'
 import { FontSizes } from '@/utils/fonts'
 
 const features = [
-  // {
-  //   title: 'Income Statement',
-  //   image: <Feather name="dollar-sign" size={wp(6)} color={THEME_COLORS.primary[100]} />,
-  // },
+  {
+    title: 'Income Statement',
+    image: <Feather name="dollar-sign" size={wp(6)} color={THEME_COLORS.primary[100]} />,
+  },
   {
     title: 'EMI Calculator',
     image: <FontAwesome name="calculator" size={wp(6)} color={THEME_COLORS.primary[100]} />,
@@ -22,10 +22,10 @@ const Dashboard = () => {
   const handleOnPressFeature = (title: string) => {
     switch (title) {
       case 'Income Statement':
-        router.push('income-statement')
+        router.push('/income-statement')
         break
       case 'EMI Calculator':
-        router.push('emi-calculator')
+        router.push('/emi-calculator')
         break
       default:
         break

@@ -124,6 +124,13 @@ export default function AuthenticatedAppLayout() {
           headerShown: false,
         }}
       />
+      <Tabs.Screen
+        name="add-edit-income-expense"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   )
 }
