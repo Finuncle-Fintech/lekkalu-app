@@ -124,6 +124,27 @@ export default function AuthenticatedAppLayout() {
           headerShown: false,
         }}
       />
+      <Tabs.Screen
+        name="goals"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="add-goal"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="goal-details"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   )
 }

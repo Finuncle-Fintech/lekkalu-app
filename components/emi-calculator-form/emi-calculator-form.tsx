@@ -1,30 +1,16 @@
 import React, { useContext } from 'react'
-import { View } from 'tamagui'
 import InputWithSlider from '@/components/input-with-slider'
-import { hp, wp } from '@/utils/responsive'
+import { hp } from '@/utils/responsive'
 import DatePickerWithLabelInfo from '../date-picker-with-label-info'
 import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
+import Card from '../card/card'
 
 const EmiCalculatorForm = () => {
   const { setEmiDay, setLoanPrinicipal, setLoanInterest, setLoanTenure, disbursementDate, setDisbursementDate } =
     useContext(EmiCalculatorContext)
 
   return (
-    <View
-      bg="$background"
-      px={wp(4)}
-      pt={hp(1.5)}
-      br={wp(4)}
-      mt={hp(2)}
-      rowGap={hp(1)}
-      pb={hp(3)}
-      elevationAndroid={3}
-      shadowColor={'black'}
-      shadowOpacity={0.1}
-      shadowOffset={{ height: 0, width: 0 }}
-      shadowRadius={wp(1)}
-      mx={wp(4)}
-    >
+    <Card mt={hp(2)} pt={hp(1.5)} pb={hp(3)}>
       <InputWithSlider
         label="Loan Principal"
         sliderMaxValue={10000000}
@@ -64,7 +50,7 @@ const EmiCalculatorForm = () => {
         value={disbursementDate}
         onChangeDate={setDisbursementDate}
       />
-    </View>
+    </Card>
   )
 }
 

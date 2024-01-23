@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons'
 import { Menu, MenuItem } from 'react-native-material-menu'
 import { hp, wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
+import Card from '../card/card'
 
 interface IIncomeExpenseItemProps {
   onEdit: () => void
@@ -34,20 +35,7 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
   }
 
   return (
-    <View
-      bg="$background"
-      py={hp(1.5)}
-      px={wp(4)}
-      elevationAndroid={4}
-      shadowColor={'black'}
-      shadowOffset={{ height: 0, width: 0 }}
-      shadowOpacity={0.1}
-      shadowRadius={wp(4)}
-      br={wp(2)}
-      fd="row"
-      ai="center"
-      jc="space-between"
-    >
+    <Card mx={0} br={wp(2)} fd="row" ai="center" jc="space-between">
       <View f={1} rowGap={hp(0.5)} pr={wp(2)}>
         <Text fontFamily={'$body'} color={'$foreground'} fontSize={FontSizes.size20}>
           Hello
@@ -78,7 +66,7 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
           $ 20,000
         </Text>
       </View>
-    </View>
+    </Card>
   )
 }
 

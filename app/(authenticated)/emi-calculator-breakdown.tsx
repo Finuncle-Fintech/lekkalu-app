@@ -1,15 +1,14 @@
 import React, { FC, useContext } from 'react'
-import { DimensionValue, StyleSheet, TouchableOpacity } from 'react-native'
-import { Entypo } from '@expo/vector-icons'
-import { router } from 'expo-router'
-import { ScrollView, Text, View, useTheme } from 'tamagui'
+import { DimensionValue, StyleSheet } from 'react-native'
+import { ScrollView, Text, View } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { hp, isTablet, wp } from '@/utils/responsive'
-import { THEME_COLORS } from '@/utils/theme'
+import { hp, wp } from '@/utils/responsive'
 import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
 import { formatNumberToCurrency } from '@/utils/helpers'
 import { FontSizes } from '@/utils/fonts'
+import BackButton from '@/components/back-button'
+import Card from '@/components/card'
 
 const tableHeaderColumn = ['Month', 'Principal', 'Interest', 'Total Payment', 'Outstanding Principal']
 
@@ -41,15 +40,12 @@ const BodyCellItem: FC<IBodyCellItem> = ({ index, value, rowIndex, disableNumber
 
 const EmiCalculatorBreakdown: FC = () => {
   const { calculationResult } = useContext(EmiCalculatorContext)
-  const theme = useTheme()
   const { top } = useSafeAreaInsets()
 
   return (
     <View f={1} pt={top + hp(1.5)} bg={'$backgroundHover'}>
       <View fd="row" ai="center" columnGap={wp(4)} px={wp(5)}>
-        <TouchableOpacity onPress={router.back} style={styles.back}>
-          <Entypo name="chevron-thin-left" size={isTablet ? hp(2) : wp(5)} color={theme.foreground.get()} />
-        </TouchableOpacity>
+        <BackButton />
         <Text fontSize={FontSizes.size20} fontFamily={'$heading'}>
           EMI Breakdown
         </Text>
@@ -58,17 +54,7 @@ const EmiCalculatorBreakdown: FC = () => {
       <View>
         <ScrollView contentContainerStyle={styles.verticalScroll}>
           <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
-            <View
-              bg={'$background'}
-              my={hp(2)}
-              br={wp(3)}
-              px={wp(1)}
-              elevationAndroid={3}
-              shadowColor={'black'}
-              shadowOpacity={0.1}
-              shadowOffset={{ height: 0, width: 0 }}
-              shadowRadius={wp(1)}
-            >
+            <Card my={hp(2)} px={wp(1)}>
               <View
                 fd="row"
                 ai="center"
@@ -111,7 +97,7 @@ const EmiCalculatorBreakdown: FC = () => {
                   <BodyCellItem rowIndex={rowIndex} index={4} value={item.outstandingPrincipal} />
                 </View>
               ))}
-            </View>
+            </Card>
           </ScrollView>
         </ScrollView>
       </View>
@@ -122,14 +108,6 @@ const EmiCalculatorBreakdown: FC = () => {
 export default EmiCalculatorBreakdown
 
 const styles = StyleSheet.create({
-  back: {
-    height: isTablet ? hp(5) : wp(10),
-    width: isTablet ? hp(5) : wp(10),
-    backgroundColor: THEME_COLORS.primary[100] + 20,
-    borderRadius: wp(6),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   verticalScroll: { paddingBottom: hp(6) },
   horizontalScroll: { paddingHorizontal: wp(2) },
 })
