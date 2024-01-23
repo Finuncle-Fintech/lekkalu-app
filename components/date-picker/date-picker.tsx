@@ -1,9 +1,10 @@
+import React, { useState } from 'react'
 import { Button, Icon } from 'native-base'
 import { Fontisto } from '@expo/vector-icons'
-import { useState } from 'react'
 import dayjs from 'dayjs'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { useColorScheme } from 'react-native'
+import { View } from 'tamagui'
 
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { hp, isTablet, wp } from '@/utils/responsive'
@@ -14,9 +15,11 @@ export type DatePickerProps = {
   placeholder?: string
   value?: Date
   onChange?: (date: Date) => void
+  minimumDate?: Date
+  maximumDate?: Date
 }
 
-export default function DatePicker({ placeholder, value, onChange }: DatePickerProps) {
+export default function DatePicker({ placeholder, value, onChange, maximumDate, minimumDate }: DatePickerProps) {
   const [date, setDate] = useState(value ?? dayjs().toDate())
   const systemTheme = useColorScheme()
 
@@ -29,7 +32,7 @@ export default function DatePicker({ placeholder, value, onChange }: DatePickerP
   }
 
   return (
-    <>
+    <View>
       <Button
         height={hp(5)}
         _text={{
@@ -60,7 +63,9 @@ export default function DatePicker({ placeholder, value, onChange }: DatePickerP
           setIsDatePickerVisible(false)
         }}
         date={date}
+        minimumDate={minimumDate}
+        maximumDate={maximumDate}
       />
-    </>
+    </View>
   )
 }

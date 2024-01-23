@@ -1,8 +1,13 @@
 import { Heading, View } from 'native-base'
 import { Redirect } from 'expo-router'
 import { useColorScheme } from 'react-native'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import dayjs from 'dayjs'
+
 import { useAuthContext } from '@/hooks/use-auth'
 import { FontSizes } from '@/utils/fonts'
+
+dayjs.extend(relativeTime)
 
 export default function App() {
   const { isAuthenticationInProgress, userData } = useAuthContext()

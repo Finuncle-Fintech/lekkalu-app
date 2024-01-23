@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { Text, View } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
+import Card from '../card/card'
 
 interface IKeyValueTextProps {
   title: string
@@ -22,21 +23,7 @@ const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
 
 const EmiCalculatorFormula = () => {
   return (
-    <View
-      bg="$background"
-      px={wp(4)}
-      pt={hp(1.5)}
-      br={wp(4)}
-      mt={hp(2)}
-      rowGap={hp(1)}
-      pb={hp(3)}
-      elevationAndroid={3}
-      shadowColor={'black'}
-      shadowOpacity={0.1}
-      shadowOffset={{ height: 0, width: 0 }}
-      shadowRadius={wp(1)}
-      mx={wp(4)}
-    >
+    <Card pt={hp(1.5)} mt={hp(2)} rowGap={hp(1)} pb={hp(3)}>
       <Text fontFamily={'$heading'} fontSize={FontSizes.size24} fontWeight={'bold'}>
         EMI Formula
       </Text>
@@ -61,7 +48,7 @@ const EmiCalculatorFormula = () => {
         The EMI formula helps you calculate the monthly repayment amount for a loan based on the principal, interest
         rate, and loan tenure.
       </Text>
-    </View>
+    </Card>
   )
 }
 

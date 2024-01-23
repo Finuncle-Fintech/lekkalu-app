@@ -10,6 +10,7 @@ import { THEME_COLORS } from '@/utils/theme'
 import { EmiCalculatorContext } from '@/context/emi-calculator-provider'
 import { generateExcelFileForEmiCalculator } from '@/utils/emi-calculator-helpers'
 import { FontSizes } from '@/utils/fonts'
+import Card from '../card/card'
 
 const ChartCenterLabel: FC<{ emiValue: number }> = ({ emiValue }) => {
   return (
@@ -66,20 +67,7 @@ const EmiCalculatorChartCard = () => {
   }
 
   return (
-    <View
-      bg="$background"
-      px={wp(4)}
-      py={hp(1.5)}
-      br={wp(4)}
-      mt={hp(10)}
-      ai="center"
-      elevationAndroid={3}
-      shadowOffset={{ height: 0, width: 0 }}
-      shadowColor="black"
-      shadowOpacity={0.1}
-      shadowRadius={wp(1)}
-      mx={wp(4)}
-    >
+    <Card mt={hp(10)} ai="center">
       <View top={-wp(24) + -hp(1.5)}>
         <PieChart
           data={data}
@@ -143,7 +131,7 @@ const EmiCalculatorChartCard = () => {
           </Button>
         </View>
       </View>
-    </View>
+    </Card>
   )
 }
 
