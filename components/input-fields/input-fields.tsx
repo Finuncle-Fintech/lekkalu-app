@@ -76,7 +76,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             _text={{ style: { color: tamagtheme.foreground?.get() } }}
           >
             {input.options.map((option) => (
-              <Select.Item key={option.id} label={option.label} value={option.id?.toString()} />
+              <Select.Item key={option.id} label={option.label} value={option[input.valueKey || 'id']?.toString()} />
             ))}
           </Select>
         )
