@@ -15,15 +15,11 @@ export const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
-  if (!config.headers) {
-    config.headers = new AxiosHeaders()
-  }
-
+  config.headers = new AxiosHeaders(config.headers)
   const accessToken = getToken('access')
   if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`
+    config.headers.setAuthorization(`Bearer ${accessToken}`)
   }
-
   return config
 })
 

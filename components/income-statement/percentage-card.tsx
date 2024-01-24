@@ -5,7 +5,7 @@ import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
 import { FontSizes } from '@/utils/fonts'
 
-const PercentageCard = ({ percentage = '0', subTitle = '' }) => {
+const PercentageCard = ({ percentage = 0, subTitle = '' }) => {
   return (
     <View
       bg="$background"

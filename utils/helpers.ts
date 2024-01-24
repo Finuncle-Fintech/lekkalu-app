@@ -3,5 +3,5 @@ export const formatNumberToCurrency = (value: number = 0, options?: Intl.NumberF
     style: 'currency',
     currency: options?.currency || 'INR',
     compactDisplay: options?.compactDisplay || 'short',
-  }).format(value)
+  }).format(isNaN(value) ? 0 : value)
 }
