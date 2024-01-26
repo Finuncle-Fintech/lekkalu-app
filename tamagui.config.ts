@@ -47,6 +47,7 @@ const config = createTamagui({
       mutedForeground: '#484C52',
       primary: PRIMARY,
       highlight: PRIMARY,
+      foreground: '#09090b',
     },
     dark: {
       ...themes.dark,
@@ -55,6 +56,7 @@ const config = createTamagui({
       mutedForeground: '#676D75',
       primary: PRIMARY,
       highlight: '#FFFFFF',
+      foreground: '#f2f2f2',
     },
   },
   tokens,

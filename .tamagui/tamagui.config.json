@@ -33394,6 +33394,7 @@
         "mutedForeground": "#484C52",
         "primary": "#582FFF",
         "highlight": "#582FFF",
+        "foreground": "#09090b",
         "id": "light"
       },
       "light_Button": {
