@@ -135,6 +135,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           href: null,
           headerShown: false,
+          unmountOnBlur: true,
         }}
       />
       <Tabs.Screen
@@ -142,6 +143,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           href: null,
           headerShown: false,
+          unmountOnBlur: true,
         }}
       />
       <Tabs.Screen
@@ -149,6 +151,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           href: null,
           headerShown: false,
+          unmountOnBlur: true,
         }}
       />
     </Tabs>

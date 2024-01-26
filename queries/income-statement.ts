@@ -104,7 +104,7 @@ const useAddIncomeExpense = () => {
 }
 
 const updateIncomeSource = ({ id, payload }: { id: number; payload: APIAddIncomeStatementPayload }) => {
-  return apiClient.post(`/income_source/${id}`, payload)
+  return apiClient.put(`/income_source/${id}`, payload)
 }
 
 const useUpdateIncomeSource = () => {
@@ -112,7 +112,7 @@ const useUpdateIncomeSource = () => {
 }
 
 const updateIncomeExpense = ({ id, payload }: { id: number; payload: APIAddIncomeStatementPayload }) => {
-  return apiClient.post(`/income_expense/${id}`, payload)
+  return apiClient.put(`/income_expense/${id}`, payload)
 }
 
 const useUpdateIncomeExpense = () => {
