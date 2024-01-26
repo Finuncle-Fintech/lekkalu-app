@@ -30,6 +30,13 @@ interface ScreenParams {
   editItem?: APIIncomeSourceItemType | null
 }
 
+const dummyIncomeTypes = [{ id: 1, label: 'Salary' }]
+const dummyExpenseTypes = [
+  { id: 1, label: 'Personal' },
+  { id: 1, label: 'Investment' },
+  { id: 1, label: 'Loan_repayment' },
+]
+
 const AddEditIncomeExpense = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
@@ -110,10 +117,7 @@ const AddEditIncomeExpense = () => {
     }
   }
 
-  const inputs = useMemo(
-    () => getAddIncomeExpenseInputs(isIncome ? incomeSourceTypesQueryData?.data : incomeExpenseTypesQueryData?.data),
-    [incomeExpenseTypesQueryData, incomeSourceTypesQueryData, isIncome],
-  )
+  const inputs = useMemo(() => getAddIncomeExpenseInputs(isIncome ? dummyIncomeTypes : dummyExpenseTypes), [isIncome])
 
   const isLoading =
     isPendingAddIncomeSource || isPendingAddIncomeExpense || isPendingUpdateIncomeExpense || isPendingUpdateIncomeSource
