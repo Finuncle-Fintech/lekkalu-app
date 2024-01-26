@@ -3,7 +3,7 @@ import { useToast } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import constate from 'constate'
-import { fetchUser, login, refreshToken, signup } from '@/queries/auth'
+import { deleteAccount, fetchUser, login, refreshToken, signup } from '@/queries/auth'
 import { AUTH } from '@/utils/query-keys'
 import { setToken } from '@/utils/token'
 
@@ -71,6 +71,12 @@ export function useAuth() {
 
       router.replace('/login')
     },
+    onError: () => {
+      toast.show({
+        title: 'Error!',
+        description: 'Failed to create your account! Please try again after sometime',
+      })
+    },
   })
 
   const logout = useCallback(() => {
@@ -78,8 +84,26 @@ export function useAuth() {
     setToken('refresh', undefined)
     setToken('access', undefined)
 
+    qc.clear() // Empties query cache
     router.replace('/login')
-  }, [])
+  }, [qc])
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: deleteAccount,
+    onSuccess: () => {
+      toast.show({
+        title: 'Delete Success!',
+        description: 'Your account has been successfully deleted!',
+      })
+      logout()
+    },
+    onError: () => {
+      toast.show({
+        title: 'Error!',
+        description: 'Failed to delete your account!',
+      })
+    },
+  })
 
   return {
     isAuthenticated,
@@ -89,6 +113,7 @@ export function useAuth() {
     logout,
     signupMutation,
     userData,
+    deleteAccountMutation,
   }
 }
 

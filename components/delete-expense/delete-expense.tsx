@@ -2,8 +2,10 @@ import { EvilIcons } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertDialog, Button, IconButton } from 'native-base'
 import { useRef, useState } from 'react'
+import { Text, useTheme } from 'tamagui'
 import { deleteExpense } from '@/queries/expense'
 import { EXPENSES } from '@/utils/query-keys'
+import { FontSizes } from '@/utils/fonts'
 
 type DeleteExpenseProps = {
   id: number
@@ -13,6 +15,7 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
   const [isOpen, setIsOpen] = useState(false)
   const cancelRef = useRef(null)
   const qc = useQueryClient()
+  const theme = useTheme()
 
   const onClose = () => setIsOpen(false)
 
@@ -39,7 +42,7 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
         _icon={{
           as: EvilIcons,
           name: 'trash',
-          size: 7,
+          size: 8,
         }}
         onPress={() => {
           setIsOpen(true)
@@ -50,10 +53,18 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
 
-          <AlertDialog.Header>Delete Expense</AlertDialog.Header>
-          <AlertDialog.Body>Are you sure you want to delete this expense ?</AlertDialog.Body>
+          <AlertDialog.Header backgroundColor={theme.backgroundHover.get()}>
+            <Text fontSize={FontSizes.size18} color={theme.foreground.get()} fontFamily={'$heading'}>
+              Delete Expense
+            </Text>
+          </AlertDialog.Header>
+          <AlertDialog.Body backgroundColor={theme.backgroundHover.get()}>
+            <Text fontSize={FontSizes.size15} color={theme.foreground.get()} fontFamily={'$heading'}>
+              Are you sure you want to delete this expense ?
+            </Text>
+          </AlertDialog.Body>
 
-          <AlertDialog.Footer>
+          <AlertDialog.Footer backgroundColor={theme.backgroundHover.get()}>
             <Button.Group space={2}>
               <Button
                 variant="unstyled"
@@ -61,11 +72,16 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
                 onPress={onClose}
                 ref={cancelRef}
                 isLoading={deleteExpenseMutation.isPending}
+                color={theme.backgroundFocus.get()}
               >
-                Cancel
+                <Text fontSize={FontSizes.size18} color={theme.foreground.get()} fontFamily={'$heading'}>
+                  Cancel
+                </Text>
               </Button>
               <Button colorScheme="danger" onPress={handleDelete} isLoading={deleteExpenseMutation.isPending}>
-                Delete
+                <Text fontSize={FontSizes.size18} color={'white'} fontFamily={'$heading'}>
+                  Delete
+                </Text>
               </Button>
             </Button.Group>
           </AlertDialog.Footer>

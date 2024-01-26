@@ -5,6 +5,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 import { omit } from 'lodash'
+import { Text, useTheme } from 'tamagui'
+import { useColorScheme } from 'react-native'
+
 import { PhysicalAsset } from '@/types/balance-sheet'
 import { AddPhysicalAssetSchema, addPhysicalAssetSchema } from '@/schema/balance-sheet'
 import { AssetCreateOrEditDto, addPhysicalAsset, editPhysicalAsset } from '@/queries/balance-sheet'
@@ -13,6 +16,9 @@ import { monthsToSeconds, yearsToSeconds } from '@/utils/time'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import InputFields from '../input-fields'
 import { ASSET_INPUTS } from './config'
+import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
+import { THEME_COLORS } from '@/utils/theme'
 
 type CreateOrEditAssetProps = {
   trigger: React.ReactElement<{ onPress: () => void }>
@@ -25,6 +31,8 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
   const qc = useQueryClient()
   const isEdit = Boolean(asset)
   const title = isEdit ? 'Edit Asset' : 'Create Asset'
+  const theme = useTheme()
+  const systemTheme = useColorScheme()
 
   const {
     handleSubmit,
@@ -90,22 +98,36 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
       })}
 
       <Modal
+        avoidKeyboard
         isOpen={showModal}
         onClose={() => {
           setShowModal(false)
         }}
+        size="full"
       >
-        <Modal.Content maxW="sm" w="full">
-          <Modal.CloseButton />
-          <Modal.Header>{title}</Modal.Header>
+        <Modal.Content height={'75%'} width={'94%'} bg={theme.background.get()}>
+          <Modal.CloseButton _icon={{ size: wp(4) }} />
+          <Modal.Header bg={theme.background.get()}>
+            <Text fontFamily={'$heading'} fontSize={FontSizes.size20} color={theme.foreground.get()}>
+              {title}
+            </Text>
+          </Modal.Header>
 
-          <Modal.Body>
+          <Modal.Body style={{ rowGap: hp(1) }}>
             <InputFields control={control} errors={errors} inputs={ASSET_INPUTS} />
           </Modal.Body>
 
-          <Modal.Footer>
+          <Modal.Footer bg={theme.background.get()}>
             <Button.Group space={2}>
               <Button
+                _text={{
+                  style: {
+                    fontSize: FontSizes.size15,
+                    color: systemTheme === 'dark' ? 'white' : THEME_COLORS.primary[600],
+                  },
+                }}
+                height={hp(4.5)}
+                px={wp(4)}
                 variant="ghost"
                 onPress={() => {
                   setShowModal(false)
@@ -114,6 +136,9 @@ export default function CreateOrEditAsset({ trigger, asset }: CreateOrEditAssetP
                 Cancel
               </Button>
               <Button
+                _text={{ style: { fontSize: FontSizes.size15 } }}
+                height={hp(4.5)}
+                px={wp(4)}
                 onPress={handleSubmit(handleAddOrEditPhysicalAsset)}
                 isDisabled={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}
                 isLoading={addPhysicalAssetMutation.isPending || editPhysicalAssetMutation.isPending}

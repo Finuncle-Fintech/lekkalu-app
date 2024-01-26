@@ -1,9 +1,10 @@
-import { Button, Heading, VStack, useToast } from 'native-base'
+import { Button, VStack, useToast } from 'native-base'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
+import { View, useTheme } from 'tamagui'
 import InputFields from '@/components/input-fields'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchTags } from '@/queries/tag'
@@ -11,11 +12,14 @@ import { fetchExpenses, updateExpense } from '@/queries/expense'
 import { AddExpenseSchema, addExpenseSchema } from '@/schema/expense'
 import { Success } from '@/utils/toast'
 import { getExpenseInputs } from '@/utils/expense'
+import { hp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 export default function UpdateExpense() {
   const toast = useToast()
   const qc = useQueryClient()
   const { id } = useLocalSearchParams<{ id: string }>()
+  const theme = useTheme()
 
   const [tagsQuery, expensesQuery] = useQueries({
     queries: [
@@ -78,15 +82,17 @@ export default function UpdateExpense() {
   }
 
   return (
-    <VStack flex={1} p={4} space={4}>
-      <Heading>Create a new expense</Heading>
-
-      <InputFields control={control} errors={errors} inputs={inputs} />
+    <VStack bgColor={theme.backgroundHover.get()} flex={1} p={4} space={4}>
+      <View rowGap="$2.5">
+        <InputFields control={control} errors={errors} inputs={inputs} />
+      </View>
 
       <Button
         onPress={handleSubmit(handleEditExpense)}
         isDisabled={editExpenseMutation.isPending}
         isLoading={editExpenseMutation.isPending}
+        height={hp(5)}
+        _text={{ style: { fontSize: FontSizes.size15 } }}
       >
         Update
       </Button>
