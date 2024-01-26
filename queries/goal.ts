@@ -14,8 +14,45 @@ interface AddGoalPayloadType {
   target_date: string
 }
 
+interface GoalItemType {
+  created_at: string
+  current_value: number
+  goal_proportionality: string
+  id: number
+  name: string
+  reachable_by_days: number
+  target_contribution_source: number
+  target_date: string | null
+  target_value: number
+  track_kpi: string
+  updated_at: string
+  user: number
+}
+
+interface DropdownItemType {
+  id: number
+  label: string
+}
+
+interface GoalSourceItemType {
+  id: number
+  name: string
+  type: string
+  amount: string
+}
+
+interface GoalProgressType {
+  name: string
+  progress_percent: number
+}
+
+interface GoalTimelineItem {
+  time: string
+  kpi_value: number
+}
+
 const getGoalKpiData = () => {
-  return apiv2Client.get('/kpis_type')
+  return apiv2Client.get<DropdownItemType[]>('/kpis_type')
 }
 
 const useGetGoalKpiData = () => {
@@ -26,7 +63,7 @@ const useGetGoalKpiData = () => {
 }
 
 const getGoalProportionalityData = () => {
-  return apiv2Client.get('/goal_proportionality_type')
+  return apiv2Client.get<DropdownItemType[]>('/goal_proportionality_type')
 }
 
 const useGetProportionality = () => {
@@ -54,7 +91,7 @@ const useAddGoalMutation = () => {
 }
 
 const getGoalSources = () => {
-  return apiClient.get('/income_expense/')
+  return apiClient.get<GoalSourceItemType[]>('/income_expense/')
 }
 
 const useGetGoalSources = () => {
@@ -65,7 +102,7 @@ const useGetGoalSources = () => {
 }
 
 const getGoals = () => {
-  return apiv2Client.get('/financial_goal/')
+  return apiv2Client.get<GoalItemType[]>('/financial_goal/')
 }
 
 const useGetGoals = () => {
@@ -76,7 +113,7 @@ const useGetGoals = () => {
 }
 
 const getGoalProgress = (id: number) => {
-  return apiv2Client.get(`/financial_goal/progress/${id}`)
+  return apiv2Client.get<GoalProgressType[]>(`/financial_goal/progress/${id}`)
 }
 
 const useGetGoalProgress = (id: number) => {
@@ -87,7 +124,7 @@ const useGetGoalProgress = (id: number) => {
 }
 
 const getGoalDetails = (id: number) => {
-  return apiv2Client.get(`/financial_goal/${id}`)
+  return apiv2Client.get<GoalItemType>(`/financial_goal/${id}`)
 }
 
 const useGetGoalDetails = (id: number) => {
@@ -98,7 +135,7 @@ const useGetGoalDetails = (id: number) => {
 }
 
 const getGoalTimeline = (id: number) => {
-  return apiv2Client.get(`/financial_goal/timeline/${id}/`)
+  return apiv2Client.get<GoalTimelineItem[]>(`/financial_goal/timeline/${id}/`)
 }
 
 const useGetGoalTimeline = (id: number) => {
@@ -112,10 +149,15 @@ export {
   useGetGoalKpiData,
   useGetProportionality,
   useAddGoalMutation,
-  AddGoalPayloadType,
   useGetGoalSources,
   useGetGoals,
   useGetGoalProgress,
   useGetGoalDetails,
   useGetGoalTimeline,
+  AddGoalPayloadType,
+  GoalItemType,
+  DropdownItemType,
+  GoalSourceItemType,
+  GoalProgressType,
+  GoalTimelineItem,
 }
