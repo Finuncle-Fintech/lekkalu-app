@@ -3,9 +3,11 @@ import { useToast } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import constate from 'constate'
+import Toast from 'react-native-toast-message'
 import { deleteAccount, fetchUser, login, refreshToken, signup } from '@/queries/auth'
 import { AUTH } from '@/utils/query-keys'
 import { setToken } from '@/utils/token'
+import { onError } from '@/utils/error'
 
 export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -42,8 +44,6 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      toast.show({ title: 'Successfully logged in!' })
-
       /** Saving the tokens */
       setToken('refresh', data.refresh)
       setToken('access', data.access)
@@ -52,13 +52,13 @@ export function useAuth() {
       qc.setQueryData([AUTH.LOGGED_IN], data)
 
       fetchUserData()
-    },
-    onError: () => {
-      toast.show({
-        title: 'Invalid Credentials!',
-        description: 'You have entered the wrong credentials!',
+
+      Toast.show({
+        type: 'success',
+        text1: 'Successfully logged in!',
       })
     },
+    onError,
   })
 
   const signupMutation = useMutation({

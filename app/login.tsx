@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
-import { Button, Checkbox, Input, Label, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Button, Checkbox, H1, Input, Label, Stack, Text, XStack, YStack } from 'tamagui'
 import { Check as CheckIcon } from '@tamagui/lucide-icons'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -11,7 +11,6 @@ import { hp, wp } from '@/utils/responsive'
 
 export default function Login() {
   const { isAuthenticated, loginMutation } = useAuthContext()
-  const theme = useTheme()
 
   const {
     control,
@@ -33,15 +32,11 @@ export default function Login() {
   }
 
   return (
-    <Stack flex={1} bg="$background" alignItems="center" justifyContent="center" p={wp(4)}>
-      <YStack bg="$muted" w="100%" borderRadius={wp(4)} p={wp(4)} space={hp(2)}>
-        <YStack space={hp(1)}>
-          <Text fontSize={FontSizes.size48} fontFamily={'$heading'}>
-            Log in
-          </Text>
-          <Text fontSize={FontSizes.size18} color={theme.colorFocus.get()}>
-            Welcome back to finuncle!
-          </Text>
+    <Stack flex={1} bg="$background" alignItems="center" justifyContent="center" p="$4">
+      <YStack bg="$dark" w="100%" borderRadius="$4" p="$4" space="$4">
+        <YStack space="$2">
+          <H1 fontWeight="bold">Log in</H1>
+          <Text color="$colorFocus">Welcome back to finuncle!</Text>
         </YStack>
 
         <FormControl>
