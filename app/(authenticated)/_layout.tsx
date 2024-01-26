@@ -1,7 +1,10 @@
 import { Tabs } from 'expo-router/tabs'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, Entypo } from '@expo/vector-icons'
 import { Text, View, useTheme } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { TouchableOpacity } from 'react-native'
+import { router } from 'expo-router'
+
 import { hp, wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
 
@@ -40,11 +43,28 @@ export default function AuthenticatedAppLayout() {
           borderTopColor: 'transparent',
         },
         tabBarItemStyle: { paddingHorizontal: wp(2) },
-        header: ({ options }) => {
+        header: ({ options, route }) => {
+          const showBackbutton = ['create-expense', 'update-expense/[id]'].includes(route.name)
+
+          const backScreenKeys: Record<string, string> = {
+            'create-expense': 'expenses',
+            'update-expense/[id]': 'expenses',
+          }
+
           return (
             <>
               <View w="100%" h={wp(1)} bg="$background" pt={top} />
-              <View fd="row" bg="$background" jc="space-between" ai="center" px={wp(4)} py={hp(1.8)}>
+              <View fd="row" bg="$background" ai="center" px={wp(4)} py={hp(1.8)}>
+                {showBackbutton && (
+                  <TouchableOpacity onPress={() => router.push(backScreenKeys[route.name as any])}>
+                    <Entypo
+                      name="chevron-thin-left"
+                      size={wp(5)}
+                      color={theme.foreground.get()}
+                      style={{ marginRight: wp(4) }}
+                    />
+                  </TouchableOpacity>
+                )}
                 <Text color="$color" fontSize={FontSizes.size26} fontWeight="bold">
                   {options.title}
                 </Text>
