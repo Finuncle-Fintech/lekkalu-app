@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router, useNavigation } from 'expo-router'
+import dayjs from 'dayjs'
 
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
@@ -21,6 +22,7 @@ import {
   useGetProportionality,
 } from '@/queries/goal'
 import LoaderOverlay from '@/components/loader-overlay'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
 
 const AddGoal = () => {
   const insets = useSafeAreaInsets()
@@ -63,13 +65,14 @@ const AddGoal = () => {
 
   const handleAddGoal = (values: AddGoalSchemaType) => {
     try {
+      const target_date_value = dayjs(values.completionDate).format(SERVER_DATE_FORMAT)
       const payload: AddGoalPayloadType = {
         name: values.name,
         target_value: values.target,
         target_contribution_source: +values.source,
         track_kpi: values.kpi,
         goal_proportionality: values.proportionality,
-        target_date: values.completionDate.toISOString(),
+        target_date: target_date_value,
       }
       mutate(payload)
     } catch (error) {}
