@@ -65,8 +65,10 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             {...omit(field, 'ref', 'value')}
             placeholder={input.label}
             _selectedItem={{
-              bg: 'blue.100',
+              bg: tamagtheme.backgroundHover.get(),
               endIcon: <CheckIcon size={5} />,
+              borderRadius: wp(2),
+              _icon: { color: tamagtheme.foreground.get() },
             }}
             height={hp(5)}
             fontSize={FontSizes.size15}
@@ -74,9 +76,16 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             selectedValue={field.value?.toString()}
             onValueChange={field.onChange}
             _text={{ style: { color: tamagtheme.foreground?.get() } }}
+            color={tamagtheme.foreground.get()}
+            _actionSheetContent={{ bg: tamagtheme.backgroundHover.get() }}
           >
             {input.options.map((option) => (
-              <Select.Item key={option.id} label={option.label} value={option[input.valueKey || 'id']?.toString()} />
+              <Select.Item
+                _text={{ color: tamagtheme.foreground.get(), fontSize: FontSizes.size18 }}
+                key={option.id}
+                label={option.label}
+                value={option[input.valueKey || 'id']?.toString()}
+              />
             ))}
           </Select>
         )
