@@ -113,6 +113,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Create Expense',
           href: null,
+          unmountOnBlur: true,
         }}
       />
 
@@ -121,6 +122,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Update Expense',
           href: null,
+          unmountOnBlur: true,
         }}
       />
       <Tabs.Screen
@@ -128,6 +130,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Income Statement',
           href: null,
+          unmountOnBlur: true,
         }}
       />
       <Tabs.Screen
