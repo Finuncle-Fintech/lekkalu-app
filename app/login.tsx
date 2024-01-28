@@ -1,7 +1,8 @@
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, Redirect } from 'expo-router'
+import { Link, Redirect, router } from 'expo-router'
 import { Button, Checkbox, Input, Label, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
+import { TouchableOpacity } from 'react-native'
 import { Check as CheckIcon } from '@tamagui/lucide-icons'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
@@ -26,6 +27,10 @@ export default function Login() {
 
   const handleLogin = (values: LoginSchema) => {
     loginMutation.mutate(values)
+  }
+
+  const handleForgotPassword = () => {
+    router.push('/reset-password?isForgotPassword=true')
   }
 
   if (isAuthenticated) {
@@ -89,6 +94,12 @@ export default function Login() {
 
           <FormControl.ErrorMessage fontSize={FontSizes.size15}>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
+
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text textAlign="right" fontSize={FontSizes.size16} color={'$primary'}>
+            Forgot Password ?
+          </Text>
+        </TouchableOpacity>
 
         <FormControl>
           <Controller

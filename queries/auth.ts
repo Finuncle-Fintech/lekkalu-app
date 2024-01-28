@@ -1,8 +1,10 @@
+import { AxiosHeaders } from 'axios'
+import { useQuery } from '@tanstack/react-query'
 import { getToken } from '@/utils/token'
 import { tokenClient, userClient } from '@/utils/client'
 import { User } from '@/types/user'
 import { LoginSchema, SignupSchema } from '@/schema/auth'
-import { AxiosHeaders } from 'axios'
+import { AUTH } from '@/utils/query-keys'
 
 export async function refreshToken() {
   const { data } = await tokenClient.post<{ access: string; refresh: string }>('/refresh/', {
@@ -14,15 +16,11 @@ export async function refreshToken() {
 export async function fetchUser() {
   const token = getToken('access')
   if (!token) {
-    return
+    return null
   }
-
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  }
-
-  const { data } = await userClient.get<User>('/user_profile', { headers })
+  const headers = new AxiosHeaders()
+  headers.setAuthorization(`Bearer ${token}`)
+  const { data } = await userClient.get<User>('/users/detail', { headers })
   return data
 }
 
@@ -46,4 +44,8 @@ export const deleteAccount = async () => {
 
   const { data } = await userClient.delete('/delete_user_account', { headers })
   return data
+}
+
+export const useGetUserDetails = () => {
+  return useQuery({ queryFn: fetchUser, queryKey: [AUTH.USER_DATA] })
 }
