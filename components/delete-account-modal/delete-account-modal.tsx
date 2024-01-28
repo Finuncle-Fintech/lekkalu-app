@@ -1,32 +1,16 @@
 import React from 'react'
-import { Icon, Button as NBButton } from 'native-base'
-import { MaterialIcons } from '@expo/vector-icons'
 import { AlertDialog, Button, XStack, YStack } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
-import { hp, wp } from '@/utils/responsive'
+import { hp } from '@/utils/responsive'
 import CustomAlertDialog from '../custom-alert-dialog'
 import { useAuthContext } from '@/hooks/use-auth'
 
-const DeleteAccountModal = () => {
+const DeleteAccountModal = ({ trigger }: { trigger: JSX.Element }) => {
   const { deleteAccountMutation } = useAuthContext()
-
   const isLoading = deleteAccountMutation.isPending
 
-  const modalTrigger = (
-    <NBButton
-      height={hp(5)}
-      _text={{ fontSize: FontSizes.size15, color: 'red.500' }}
-      endIcon={<Icon as={MaterialIcons} name="delete" size={wp(4)} color="red.500" />}
-      mb={8}
-      variant="outline"
-      borderColor={'red.500'}
-    >
-      Delete Account
-    </NBButton>
-  )
-
   return (
-    <CustomAlertDialog trigger={modalTrigger}>
+    <CustomAlertDialog trigger={trigger}>
       <YStack space>
         <AlertDialog.Title fontSize={FontSizes.size24}>Are you sure ?</AlertDialog.Title>
         <AlertDialog.Description fontSize={FontSizes.size18} lineHeight={hp(2.5)}>
