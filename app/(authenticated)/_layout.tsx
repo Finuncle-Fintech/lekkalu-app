@@ -103,6 +103,7 @@ export default function AuthenticatedAppLayout() {
         name="settings"
         options={{
           title: 'Settings',
+          headerShown: false,
           tabBarIcon: ({ focused }) => <TabBarIcon name="setting" focused={focused} />,
           tabBarLabel: ({ focused, children }) => <TabBarLabel focused={focused}>{children}</TabBarLabel>,
         }}
@@ -151,6 +152,30 @@ export default function AuthenticatedAppLayout() {
       />
       <Tabs.Screen
         name="add-edit-income-expense"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="reset-password"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="submit-feedback"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="edit-profile"
         options={{
           href: null,
           headerShown: false,
