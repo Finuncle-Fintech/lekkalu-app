@@ -27,7 +27,7 @@ const PercentageCard = ({ percentage = 0, subTitle = '' }) => {
       </View>
       <View rowGap={hp(0.5)} f={1}>
         <Text fontFamily={'$heading'} fontSize={FontSizes.size18} fontWeight={'bold'}>
-          {percentage}%
+          {isNaN(percentage) ? 0 : percentage}%
         </Text>
         <Text fontFamily={'$body'} fontSize={FontSizes.size14} color={'$gray9'} numberOfLines={1}>
           {subTitle}
