@@ -63,7 +63,13 @@ export default function Settings() {
         <View bg={'$background'} py={hp(2)} br={wp(4)}>
           <View fd="row" ai="flex-start" jc="space-between" columnGap={wp(3)} px={wp(4)}>
             <View f={1} rowGap={hp(0.2)}>
-              <Text f={1} numberOfLines={1} fontSize={FontSizes.size18} fontFamily={'$heading'}>
+              <Text
+                textTransform="capitalize"
+                f={1}
+                numberOfLines={1}
+                fontSize={FontSizes.size18}
+                fontFamily={'$heading'}
+              >
                 {userData?.first_name} {userData?.last_name}
               </Text>
               <Text
