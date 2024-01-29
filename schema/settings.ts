@@ -3,7 +3,7 @@ import { z } from 'zod'
 const editProfileSchema = z.object({
   first_name: z.string().min(3, 'Please enter at least 3 characters!').max(150, 'Please enter at most 150 characters!'),
   last_name: z.string().min(3, 'Please enter at least 3 characters!').max(150, 'Please enter at most 150 characters!'),
-  username: z.string().min(3, 'Please enter at least 3 characters!').max(150, 'Please enter at most 150 characters!'),
+  username: z.string().min(6, 'Please enter at least 6 characters!').max(150, 'Please enter at most 150 characters!'),
 })
 
 type EditProfileSchema = z.infer<typeof editProfileSchema>
