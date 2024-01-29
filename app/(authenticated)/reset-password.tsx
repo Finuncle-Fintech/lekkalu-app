@@ -15,16 +15,20 @@ import KeyboardScrollView from '@/components/keyboard-scroll-view'
 import InputFields from '@/components/input-fields'
 import { RESET_PASSWORD_FIELDS } from '@/utils/settings'
 import { useResetPassword } from '@/queries/settings'
+import { useGetUserDetails } from '@/queries/auth'
 
 export default function ResetPassword() {
   const insets = useSafeAreaInsets()
+  const params = useLocalSearchParams()
+  const isForgotPassword = !!params?.isForgotPassword
+  const { data: userData } = useGetUserDetails()
   const { control, handleSubmit, formState, reset } = useForm<ChangePasswordSchema>({
     resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      email: isForgotPassword ? '' : userData?.email || '',
+    },
   })
   const { mutate, status } = useResetPassword(reset)
-  const params = useLocalSearchParams()
-
-  const isForgotPassword = !!params?.isForgotPassword
 
   const handleSendLink = (values: ChangePasswordSchema) => {
     mutate({ email: values.email })
