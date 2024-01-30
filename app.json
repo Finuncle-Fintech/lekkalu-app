@@ -22,7 +22,8 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lekkalu.finuncle",
-      "versionCode": 2
+      "versionCode": 2,
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "favicon": "./assets/favicon.png"
