@@ -39,7 +39,9 @@ export default function Settings() {
     router.push('/edit-profile')
   }
 
-  // const onPressVerifyEmail = () => {}
+  const onPressVerifyEmail = () => {
+    router.push('/email-verify')
+  }
 
   const onPressForgotPassword = () => {
     router.push('/reset-password')
@@ -95,7 +97,7 @@ export default function Settings() {
           </Text>
           <View px={wp(4)} rowGap={hp(2.5)} mt={hp(3)}>
             <TileItem title="Edit Profile" onPress={onPressEditProfile} />
-            {/* <TileItem title="Verify Email" onPress={onPressVerifyEmail} /> */}
+            <TileItem title="Verify Email" onPress={onPressVerifyEmail} />
             <TileItem title="Reset Password" onPress={onPressForgotPassword} />
           </View>
           <Separator my={hp(2)} />

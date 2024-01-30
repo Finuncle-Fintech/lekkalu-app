@@ -5,6 +5,7 @@ import { router } from 'expo-router'
 import { FeedbackSchema } from '@/schema/settings'
 import { BASE_URL, apiClient, userClient } from '@/utils/client'
 import { getAxiosHeaderWithToken } from '@/utils/helpers'
+import axios from 'axios'
 
 interface SubmitFeedbackResponseType {
   id: number
@@ -83,4 +84,23 @@ const useEditProfile = () => {
   })
 }
 
-export { useSubmitFeedback, useResetPassword, useEditProfile }
+const verifyEmail = () => {
+  const headers = getAxiosHeaderWithToken()
+  return axios.post(BASE_URL + '/users/dj-rest-auth/registration/resend-email/', { headers })
+}
+
+const useVerifyEmail = (resetForm: Function) => {
+  const toast = useToast()
+  return useMutation({
+    mutationFn: verifyEmail,
+    onError: () => {
+      toast.show({ title: 'Could not send email verification link, please try again later!' })
+    },
+    onSuccess: () => {
+      resetForm()
+      router.push('/(authenticated)/settings')
+    },
+  })
+}
+
+export { useSubmitFeedback, useResetPassword, useEditProfile, useVerifyEmail }
