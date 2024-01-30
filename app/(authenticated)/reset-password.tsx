@@ -1,13 +1,15 @@
 import React from 'react'
-import { Linking, Platform, StyleSheet } from 'react-native'
+import { Linking, StyleSheet } from 'react-native'
 import { Text, View, Button } from 'tamagui'
 import { useForm } from 'react-hook-form'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { IntentLauncherParams, startActivityAsync } from 'expo-intent-launcher'
+import { useToast } from 'native-base'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChangePasswordSchema, changePasswordSchema } from '@/schema/settings'
-import { hp, wp } from '@/utils/responsive'
+import { hp, isAndroid, isIOS, wp } from '@/utils/responsive'
 import LoaderOverlay from '@/components/loader-overlay'
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
@@ -20,6 +22,7 @@ import { useGetUserDetails } from '@/queries/auth'
 export default function ResetPassword() {
   const insets = useSafeAreaInsets()
   const params = useLocalSearchParams()
+  const toast = useToast()
   const isForgotPassword = !!params?.isForgotPassword
   const { data: userData } = useGetUserDetails()
   const { control, handleSubmit, formState, reset } = useForm<ChangePasswordSchema>({
@@ -34,13 +37,42 @@ export default function ResetPassword() {
     mutate({ email: values.email })
   }
 
-  const handleOpenMailApp = () => {
-    const mailAppLink = Platform.select({
-      ios: 'message://',
-      android: 'https://gmail.app.goo.gl',
-      default: '',
+  const handleOpenMailClientError = (e?: any) => {
+    console.log('🚀 ~ handleOpenMailClientError ~ e:', e)
+    toast.show({
+      title: 'Failed to open mail app! Please open it manually',
     })
-    Linking.openURL(mailAppLink)
+  }
+
+  const openMailClientIOS = () => {
+    Linking.canOpenURL('message:0')
+      .then((supported) => {
+        if (!supported) {
+          handleOpenMailClientError()
+        } else {
+          return Linking.openURL('message:0').catch(handleOpenMailClientError)
+        }
+      })
+      .catch(handleOpenMailClientError)
+  }
+
+  const openMailClientAndroid = () => {
+    const activityAction = 'android.intent.action.MAIN' // Intent.ACTION_MAIN
+    const intentParams: IntentLauncherParams = {
+      flags: 268435456, // Intent.FLAG_ACTIVITY_NEW_TASK
+      category: 'android.intent.category.APP_EMAIL', // Intent.CATEGORY_APP_EMAIL
+    }
+
+    startActivityAsync(activityAction, intentParams).catch(handleOpenMailClientError)
+  }
+
+  const handleOpenMailApp = () => {
+    if (isIOS) {
+      openMailClientIOS()
+    }
+    if (isAndroid) {
+      openMailClientAndroid()
+    }
   }
 
   const isSuccess = status === 'success'
