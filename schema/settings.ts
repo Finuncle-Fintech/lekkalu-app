@@ -30,8 +30,18 @@ const feedbackSchema = z.object({
     .max(1000, 'Please write at most 1000 characters!'),
 })
 
+const verifyEmailSchema = z.object({
+  email: z
+    .string({
+      required_error: 'Email is Required',
+    })
+    .email('Please enter valid email address'),
+})
+
+type VerifyEmailSchema = z.infer<typeof verifyEmailSchema>
+
 type FeedbackSchema = z.infer<typeof feedbackSchema>
 
-export { editProfileSchema, changePasswordSchema, feedbackSchema }
+export { editProfileSchema, changePasswordSchema, feedbackSchema, verifyEmailSchema }
 
-export type { EditProfileSchema, ChangePasswordSchema, FeedbackSchema }
+export type { EditProfileSchema, ChangePasswordSchema, FeedbackSchema, VerifyEmailSchema }

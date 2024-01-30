@@ -182,6 +182,14 @@ export default function AuthenticatedAppLayout() {
           unmountOnBlur: true,
         }}
       />
+      <Tabs.Screen
+        name="email-verify"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
     </Tabs>
   )
 }

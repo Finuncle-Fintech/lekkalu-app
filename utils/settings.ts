@@ -51,4 +51,13 @@ const EDIT_PROFILE_FIELDS: InputField[] = [
   },
 ]
 
-export { FEEDBACK_FIELDS, RESET_PASSWORD_FIELDS, EDIT_PROFILE_FIELDS }
+const VERIFY_EMAIL_FIELDS: InputField[] = [
+  {
+    id: 'email',
+    label: 'Email',
+    type: 'text',
+    required: true,
+  },
+]
+
+export { FEEDBACK_FIELDS, RESET_PASSWORD_FIELDS, EDIT_PROFILE_FIELDS, VERIFY_EMAIL_FIELDS }
