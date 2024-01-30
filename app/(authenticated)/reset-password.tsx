@@ -4,12 +4,10 @@ import { Text, View, Button } from 'tamagui'
 import { useForm } from 'react-hook-form'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { IntentLauncherParams, startActivityAsync } from 'expo-intent-launcher'
-import { useToast } from 'native-base'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChangePasswordSchema, changePasswordSchema } from '@/schema/settings'
-import { hp, isAndroid, isIOS, wp } from '@/utils/responsive'
+import { hp, wp } from '@/utils/responsive'
 import LoaderOverlay from '@/components/loader-overlay'
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
@@ -23,7 +21,6 @@ import { openDeviceMailClientApp } from '@/utils/helpers'
 export default function ResetPassword() {
   const insets = useSafeAreaInsets()
   const params = useLocalSearchParams()
-  const toast = useToast()
   const isForgotPassword = !!params?.isForgotPassword
   const { data: userData } = useGetUserDetails()
   const { control, handleSubmit, formState, reset } = useForm<ChangePasswordSchema>({
