@@ -10,7 +10,6 @@ import { fetchTags } from '@/queries/tag'
 import Loading from '../loading'
 import DeleteExpense from '../delete-expense'
 import { FontSizes } from '@/utils/fonts'
-import { wp } from '@/utils/responsive'
 
 export default function ExpenseList() {
   const theme = useTheme()
@@ -68,7 +67,7 @@ export default function ExpenseList() {
             </Text>
           </HStack>
 
-          <Button.Group>
+          <Button.Group display={'flex'} justifyContent="flex-end">
             <DeleteExpense id={item.id} />
             <Link href={`/update-expense/${item.id}`} asChild>
               <IconButton
