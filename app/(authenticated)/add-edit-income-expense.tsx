@@ -30,11 +30,14 @@ interface ScreenParams {
   editItem?: APIIncomeSourceItemType | null
 }
 
-const dummyIncomeTypes = [{ id: 1, label: 'Salary' }]
+const dummyIncomeTypes = [
+  { id: 1, label: 'Salary' },
+  { id: 2, label: 'Interest' },
+]
 const dummyExpenseTypes = [
   { id: 1, label: 'Personal' },
-  { id: 1, label: 'Investment' },
-  { id: 1, label: 'Loan_repayment' },
+  { id: 2, label: 'Investment' },
+  { id: 3, label: 'Loan_repayment' },
 ]
 
 const AddEditIncomeExpense = () => {
