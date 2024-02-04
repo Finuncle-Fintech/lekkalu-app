@@ -14,8 +14,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lekkalu.finuncle",
-      "googleServicesFile": "./firebase/GoogleService-Info.plist"
+      "bundleIdentifier": "com.lekkalu.finuncle"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,8 +22,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lekkalu.finuncle",
-      "versionCode": 2,
-      "googleServicesFile": "./firebase/google-services.json"
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
