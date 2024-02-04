@@ -17,7 +17,8 @@
       "env": {
         "EXPO_PUBLIC_TOKEN_BASE_URL": "https://api.finuncle.com/token",
         "EXPO_PUBLIC_USER_BASE_URL": "https://api.finuncle.com/users/api",
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1"
+        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1",
+        "EXPO_PUBLIC_API_V2_BASE_URL": "https://api.finuncle.com/api/v2"
       }
     },
     "preview": {
@@ -28,14 +29,16 @@
       "env": {
         "EXPO_PUBLIC_TOKEN_BASE_URL": "https://api.finuncle.com/token",
         "EXPO_PUBLIC_USER_BASE_URL": "https://api.finuncle.com/users/api",
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1"
+        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1",
+        "EXPO_PUBLIC_API_V2_BASE_URL": "https://api.finuncle.com/api/v2"
       }
     },
     "production": {
       "env": {
         "EXPO_PUBLIC_TOKEN_BASE_URL": "https://api.finuncle.com/token",
         "EXPO_PUBLIC_USER_BASE_URL": "https://api.finuncle.com/users/api",
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1"
+        "EXPO_PUBLIC_API_BASE_URL": "https://api.finuncle.com/api/v1",
+        "EXPO_PUBLIC_API_V2_BASE_URL": "https://api.finuncle.com/api/v2"
       }
     }
   },
