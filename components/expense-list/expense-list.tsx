@@ -3,7 +3,7 @@ import { Button, FlatList, HStack, IconButton, Text, VStack } from 'native-base'
 import { useCallback } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
 import { Link } from 'expo-router'
-import { useTheme } from 'tamagui'
+import { View, useTheme } from 'tamagui'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
 import { fetchExpenses } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
@@ -49,25 +49,36 @@ export default function ExpenseList() {
       keyExtractor={(item) => item.id.toString()}
       data={expenseQuery.data ?? []}
       renderItem={({ item }) => (
-        <VStack space={4} bg={theme.background.get()} rounded="md" p="4" shadow="sm" mb="4">
-          <HStack space={2}>
-            <Text color={theme.foreground.get()} fontSize={FontSizes.size20}>
-              Amount :{' '}
-            </Text>
-            <Text color={theme.foreground.get()} fontSize={FontSizes.size20} fontWeight="bold">
-              {item.amount}
-            </Text>
-          </HStack>
-          <HStack space={2}>
-            <Text color={theme.foreground.get()} fontSize={FontSizes.size20}>
-              Tags :{' '}
-            </Text>
-            <Text color={theme.foreground.get()} fontSize={FontSizes.size20} fontWeight="bold">
-              {getTagNames(item.tags)}
-            </Text>
-          </HStack>
-
-          <Button.Group display={'flex'} justifyContent="flex-end">
+        <VStack
+          space={4}
+          bg={theme.background.get()}
+          rounded="md"
+          p="4"
+          shadow="sm"
+          mb="4"
+          display={'flex'}
+          flexDirection={'row'}
+          justifyContent={'space-between'}
+        >
+          <View width={'$18'}>
+            <HStack space={2}>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size20}>
+                Amount :{' '}
+              </Text>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size20} fontWeight="bold">
+                {item.amount}
+              </Text>
+            </HStack>
+            <HStack space={2} display={'flex'} flexWrap={'wrap'}>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size20}>
+                Tags :{' '}
+              </Text>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size20} fontWeight="bold">
+                {getTagNames(item.tags)}
+              </Text>
+            </HStack>
+          </View>
+          <Button.Group display={'flex'} alignItems={'center'}>
             <DeleteExpense id={item.id} />
             <Link href={`/update-expense/${item.id}`} asChild>
               <IconButton
