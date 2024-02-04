@@ -95,11 +95,11 @@ export default function Login() {
           <FormControl.ErrorMessage fontSize={FontSizes.size15}>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <TouchableOpacity onPress={handleForgotPassword}>
+        {/* <TouchableOpacity onPress={handleForgotPassword}>
           <Text textAlign="right" fontSize={FontSizes.size16} color={'$primary'}>
             Forgot Password ?
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <FormControl>
           <Controller

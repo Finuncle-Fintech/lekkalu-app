@@ -98,7 +98,7 @@ export default function Settings() {
           <View px={wp(4)} rowGap={hp(2.5)} mt={hp(3)}>
             <TileItem title="Edit Profile" onPress={onPressEditProfile} />
             <TileItem title="Verify Email" onPress={onPressVerifyEmail} />
-            <TileItem title="Reset Password" onPress={onPressForgotPassword} />
+            {/* <TileItem title="Reset Password" onPress={onPressForgotPassword} /> */}
           </View>
           <Separator my={hp(2)} />
           <Text color="$mutedForeground" px={wp(4)} fontSize={FontSizes.size18} fontFamily={'$heading'}>
