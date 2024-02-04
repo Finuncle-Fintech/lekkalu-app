@@ -4,6 +4,13 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
@@ -34,10 +41,10 @@
   },
   "submit": {
     "production": {
-      "ios":{
-        "appleId":"bharathkumarchowdary006@gmail.com",
+      "ios": {
+        "appleId": "bharathkumarchowdary006@gmail.com",
         "ascAppId": "6475839395",
-        "appleTeamId":"8XRCQ5TVHW"
+        "appleTeamId": "8XRCQ5TVHW"
       }
     }
   }

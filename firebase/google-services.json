@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "237661035600",
+    "project_id": "causal-tracker-407915",
+    "storage_bucket": "causal-tracker-407915.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237661035600:android:88f9075d573fffd9cd0555",
+        "android_client_info": {
+          "package_name": "com.lekkalu.finuncle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237661035600-om3b59v08lifunovplio92ahg7tn63po.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgTSQwAOB3jzSpz-gdXS4BtaOeHoRg11Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237661035600-om3b59v08lifunovplio92ahg7tn63po.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
