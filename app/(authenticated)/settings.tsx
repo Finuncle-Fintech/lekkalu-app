@@ -40,7 +40,7 @@ export default function Settings() {
   }
 
   const onPressVerifyEmail = () => {
-    router.push('/email-verify')
+    router.push('/email-verify?email=' + userData?.email)
   }
 
   const onPressForgotPassword = () => {

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useToast } from 'native-base'
 import { useMutation } from '@tanstack/react-query'
 import { router } from 'expo-router'
@@ -5,7 +6,6 @@ import { router } from 'expo-router'
 import { FeedbackSchema } from '@/schema/settings'
 import { BASE_URL, apiClient, userClient } from '@/utils/client'
 import { getAxiosHeaderWithToken } from '@/utils/helpers'
-import axios from 'axios'
 
 interface SubmitFeedbackResponseType {
   id: number
@@ -22,6 +22,10 @@ interface EditProfilePayloadType {
   username: string
   first_name: string
   last_name: string
+}
+
+interface EmailVerifyPayloadType {
+  email: string
 }
 
 const submitFeedback = async (dto: FeedbackSchema) => {
@@ -84,9 +88,9 @@ const useEditProfile = () => {
   })
 }
 
-const verifyEmail = () => {
+const verifyEmail = (payload: EmailVerifyPayloadType) => {
   const headers = getAxiosHeaderWithToken()
-  return axios.post(BASE_URL + '/users/dj-rest-auth/registration/resend-email/', { headers })
+  return axios.post(BASE_URL + '/users/dj-rest-auth/registration/resend-email/', payload, { headers })
 }
 
 const useVerifyEmail = (resetForm: Function) => {
