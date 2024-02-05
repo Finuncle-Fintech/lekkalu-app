@@ -6,7 +6,6 @@ import { router } from 'expo-router'
 import { FeedbackSchema } from '@/schema/settings'
 import { BASE_URL, apiClient, userClient } from '@/utils/client'
 import { getAxiosHeaderWithToken } from '@/utils/helpers'
-import axios from 'axios'
 
 interface SubmitFeedbackResponseType {
   id: number
