@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Text, View, Button } from 'tamagui'
 import { useForm } from 'react-hook-form'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,16 +14,17 @@ import { FontSizes } from '@/utils/fonts'
 import KeyboardScrollView from '@/components/keyboard-scroll-view'
 import InputFields from '@/components/input-fields'
 import { VERIFY_EMAIL_FIELDS } from '@/utils/settings'
-import { useResetPassword } from '@/queries/settings'
+import { useVerifyEmail } from '@/queries/settings'
 import { openDeviceMailClientApp } from '@/utils/helpers'
 
 const EmailVerify = () => {
   const insets = useSafeAreaInsets()
+  const params = useLocalSearchParams()
   const { control, handleSubmit, formState, reset } = useForm<VerifyEmailSchema>({
     resolver: zodResolver(verifyEmailSchema),
-    defaultValues: { email: '' },
+    defaultValues: { email: params?.email || '' },
   })
-  const { mutate, status } = useResetPassword(reset)
+  const { mutate, status } = useVerifyEmail(reset)
 
   const handleSendLink = (values: VerifyEmailSchema) => {
     mutate({ email: values.email })
