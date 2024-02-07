@@ -11,12 +11,12 @@ export const formatNumberToCurrency = (value: number = 0, options?: Intl.NumberF
     style: 'currency',
     currency: options?.currency || 'INR',
     compactDisplay: options?.compactDisplay || 'short',
-  }).format(value)
+  }).format(isNaN(value) ? 0 : value)
 }
 
-export const getAxiosHeaderWithToken = () => {
+export const getAxiosHeaderWithToken = async () => {
   const headers = new AxiosHeaders()
-  const accessToken = getToken('access')
+  const accessToken = await getToken('access')
   if (accessToken) {
     headers.setAuthorization(`Bearer ${accessToken}`)
   }

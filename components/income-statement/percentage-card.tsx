@@ -5,7 +5,7 @@ import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
 import { FontSizes } from '@/utils/fonts'
 
-const PercentageCard = ({ percentage = '0', subTitle = '' }) => {
+const PercentageCard = ({ percentage = 0, subTitle = '' }) => {
   return (
     <View
       bg="$background"
@@ -27,7 +27,7 @@ const PercentageCard = ({ percentage = '0', subTitle = '' }) => {
       </View>
       <View rowGap={hp(0.5)} f={1}>
         <Text fontFamily={'$heading'} fontSize={FontSizes.size18} fontWeight={'bold'}>
-          {percentage}%
+          {isNaN(percentage) ? 0 : percentage}%
         </Text>
         <Text fontFamily={'$body'} fontSize={FontSizes.size14} color={'$gray9'} numberOfLines={1}>
           {subTitle}

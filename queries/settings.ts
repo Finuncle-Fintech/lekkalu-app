@@ -49,8 +49,8 @@ const useSubmitFeedback = (resetForm: Function) => {
   })
 }
 
-const resetPassword = (payload: ResetPasswordPayloadType) => {
-  const headers = getAxiosHeaderWithToken()
+const resetPassword = async (payload: ResetPasswordPayloadType) => {
+  const headers = await getAxiosHeaderWithToken()
   return userClient.post(BASE_URL + '/users/dj-rest-auth/password/reset/', payload, { headers })
 }
 
@@ -69,8 +69,8 @@ const useResetPassword = (resetForm: Function) => {
   })
 }
 
-const editProfile = (payload: EditProfilePayloadType) => {
-  const headers = getAxiosHeaderWithToken()
+const editProfile = async (payload: EditProfilePayloadType) => {
+  const headers = await getAxiosHeaderWithToken()
   return userClient.put('/users/detail', payload, { headers })
 }
 
@@ -88,8 +88,8 @@ const useEditProfile = () => {
   })
 }
 
-const verifyEmail = (payload: EmailVerifyPayloadType) => {
-  const headers = getAxiosHeaderWithToken()
+const verifyEmail = async (payload: EmailVerifyPayloadType) => {
+  const headers = await getAxiosHeaderWithToken()
   return axios.post(BASE_URL + '/users/dj-rest-auth/registration/resend-email/', payload, { headers })
 }
 
