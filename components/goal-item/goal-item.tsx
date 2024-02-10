@@ -4,11 +4,13 @@ import { Text, View, useTheme } from 'tamagui'
 import { PieChart } from 'react-native-gifted-charts'
 import { useNavigation } from 'expo-router/src/useNavigation'
 import dayjs from 'dayjs'
+import { router } from 'expo-router'
 
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
 import { FontSizes } from '@/utils/fonts'
-import { useGetGoalProgress } from '@/queries/goal'
+import { GoalItemType, useDeleteGoal, useGetGoalProgress } from '@/queries/goal'
+import EditDeleteMenu from '../edit-delete-menu'
 
 const ChartCenterLabel: FC<{ value: number }> = ({ value }) => {
   return (
@@ -28,19 +30,24 @@ const ChartCenterLabel: FC<{ value: number }> = ({ value }) => {
 }
 
 interface GoalItemProps {
-  id: number
-  goalTitle: string
-  category: string
-  createdAt: string
+  data: GoalItemType
 }
 
 const GoalItem: FC<GoalItemProps> = (props) => {
-  const { category, createdAt, goalTitle, id } = props
+  const { id, name, created_at, track_kpi } = props.data
   const theme = useTheme()
   const navigation = useNavigation()
   const { data: goalProgressQueryData } = useGetGoalProgress(id)
+  const { mutate: mutateDeleteGoal } = useDeleteGoal()
 
-  const progressValue = Math.abs(+parseFloat(goalProgressQueryData?.data?.progress_percent || 0).toFixed(2))
+  const progressValue = Math.min(
+    Math.abs(
+      +parseFloat(
+        goalProgressQueryData?.data?.progress_percent ? goalProgressQueryData?.data?.progress_percent.toString() : '0',
+      ).toFixed(2),
+    ),
+    100,
+  )
 
   const data = [
     {
@@ -52,6 +59,17 @@ const GoalItem: FC<GoalItemProps> = (props) => {
 
   const handleNavigateGoalDetails = () => {
     navigation.navigate('goal-details', { id })
+  }
+
+  const handleOnPressEditGoal = () => {
+    router.push({
+      pathname: '/(authenticated)/add-goal',
+      params: { edit: true, goalDetails: JSON.stringify(props.data) },
+    })
+  }
+
+  const handleOnPressDeleteGoal = () => {
+    mutateDeleteGoal(id)
   }
 
   return (
@@ -69,14 +87,17 @@ const GoalItem: FC<GoalItemProps> = (props) => {
       />
       <View f={1} rowGap={hp(0.6)}>
         <Text fontSize={FontSizes.size18} color={theme.foreground.get()} fontWeight={'bold'}>
-          {goalTitle}
+          {name}
         </Text>
         <Text color={theme.mutedForeground.get()} fontSize={FontSizes.size14} fontWeight={'500'}>
-          {category}
+          {track_kpi}
         </Text>
         <Text color={theme.mutedForeground.get()} fontWeight={'500'} fontSize={FontSizes.size12}>
-          {dayjs(createdAt).fromNow()}
+          {dayjs(created_at).fromNow()}
         </Text>
+      </View>
+      <View als={'flex-start'}>
+        <EditDeleteMenu onEdit={handleOnPressEditGoal} onDelete={handleOnPressDeleteGoal} />
       </View>
     </TouchableOpacity>
   )

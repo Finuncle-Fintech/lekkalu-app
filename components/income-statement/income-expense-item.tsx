@@ -1,12 +1,10 @@
-import React, { FC, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { Text, View, useTheme } from 'tamagui'
-import { Feather } from '@expo/vector-icons'
-import { Menu, MenuItem } from 'react-native-material-menu'
+import React, { FC } from 'react'
+import { Text, View } from 'tamagui'
 import { hp, wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
 import Card from '../card/card'
 import { formatNumberToCurrency } from '@/utils/helpers'
+import EditDeleteMenu from '../edit-delete-menu'
 
 interface IIncomeExpenseItemProps {
   onEdit: () => void
@@ -17,27 +15,7 @@ interface IIncomeExpenseItemProps {
 }
 
 const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = (props) => {
-  const { onDelete = () => {}, onEdit = () => {}, amount, title, type } = props
-  const [visible, setVisible] = useState(false)
-  const theme = useTheme()
-
-  const showMenu = () => {
-    setVisible(true)
-  }
-
-  const hideMenu = () => {
-    setVisible(false)
-  }
-
-  const handleEditPress = () => {
-    onEdit()
-    hideMenu()
-  }
-
-  const handleDeletePress = () => {
-    onDelete()
-    hideMenu()
-  }
+  const { onDelete, onEdit, amount, title, type } = props
 
   return (
     <Card mx={0} br={wp(2)} fd="row" ai="center" jc="space-between">
@@ -50,23 +28,7 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = (props) => {
         </Text>
       </View>
       <View ai="flex-end" rowGap={hp(1)}>
-        <Menu
-          visible={visible}
-          anchor={
-            <TouchableOpacity onPress={showMenu}>
-              <Feather size={wp(4)} name="more-vertical" color={theme.foreground.get()} />
-            </TouchableOpacity>
-          }
-          onRequestClose={hideMenu}
-          style={{ backgroundColor: theme.backgroundHover.get() }}
-        >
-          <MenuItem textStyle={{ color: theme.foreground.get(), fontSize: FontSizes.size16 }} onPress={handleEditPress}>
-            Edit
-          </MenuItem>
-          <MenuItem textStyle={{ color: 'red', fontSize: FontSizes.size16 }} onPress={handleDeletePress}>
-            Delete
-          </MenuItem>
-        </Menu>
+        <EditDeleteMenu onDelete={onDelete} onEdit={onEdit} />
         <Text fontFamily={'$body'} fontSize={FontSizes.size18}>
           {formatNumberToCurrency(+amount)}
         </Text>

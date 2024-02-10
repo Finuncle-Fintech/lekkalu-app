@@ -33,8 +33,8 @@ const GoalTrackItem: FC<GoalTrackItemProps> = ({ title, value, fillColor }) => {
   const theme = useTheme()
 
   const data = [
-    { value: 35, color: fillColor },
-    { value: 65, color: 'lightgray' },
+    { value, color: fillColor },
+    { value: 100 - value, color: 'lightgray' },
   ]
 
   return (

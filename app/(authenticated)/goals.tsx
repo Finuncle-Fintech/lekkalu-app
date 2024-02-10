@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Text, View } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import Carousel from 'react-native-reanimated-carousel'
 import { Plus } from '@tamagui/lucide-icons'
 import { router } from 'expo-router'
-import dayjs from 'dayjs'
 
 import { hp, wp } from '@/utils/responsive'
 import BackButton from '@/components/back-button'
@@ -15,29 +14,16 @@ import { THEME_COLORS } from '@/utils/theme'
 import GoalItem from '@/components/goal-item'
 import { useGetGoals } from '@/queries/goal'
 import { useRefetchOnFocus } from '@/hooks/use-refetch-on-focus'
-
-const chartData = [
-  {
-    title: 'On Track',
-    value: Math.floor(Math.random() * 100),
-    color: THEME_COLORS.green['500'],
-  },
-  {
-    title: 'Off Track',
-    value: Math.floor(Math.random() * 100),
-    color: THEME_COLORS.red['500'],
-  },
-  {
-    title: 'Completed',
-    value: Math.floor(Math.random() * 100),
-    color: THEME_COLORS.indigo['500'],
-  },
-]
+import { getGoalProgressData, getGoalsProgressChartData } from '@/utils/goal'
 
 const Goals = () => {
   const insets = useSafeAreaInsets()
   const { data, refetch } = useGetGoals()
   useRefetchOnFocus(refetch)
+
+  const goalProgressData = useMemo(() => getGoalProgressData(data?.data || []), [data])
+
+  const chartData = useMemo(() => getGoalsProgressChartData(goalProgressData), [goalProgressData])
 
   return (
     <View f={1} pt={insets.top + hp(2)} bg="$backgroundHover">
@@ -73,14 +59,7 @@ const Goals = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         data={data?.data || []}
-        renderItem={({ item }) => (
-          <GoalItem
-            goalTitle={item.name}
-            id={item.id}
-            category={item.track_kpi}
-            createdAt={dayjs(item.created_at).toISOString()}
-          />
-        )}
+        renderItem={({ item }) => <GoalItem data={item} />}
       />
 
       <TouchableOpacity style={styles.fab} onPress={() => router.push('/(authenticated)/add-goal')}>
@@ -101,7 +80,7 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: wp(5),
     rowGap: hp(1.5),
-    paddingBottom: hp(4),
+    paddingBottom: hp(10),
   },
   fab: {
     height: wp(12),
