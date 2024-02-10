@@ -4,7 +4,7 @@ import { Button, Text, View } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { router, useNavigation } from 'expo-router'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import dayjs from 'dayjs'
 
 import BackButton from '@/components/back-button'
@@ -16,7 +16,9 @@ import { AddGoalSchemaType, addGoalSchema } from '@/schema/goal'
 import { getAddGoalInputs } from '@/utils/goal'
 import {
   AddGoalPayloadType,
+  GoalItemType,
   useAddGoalMutation,
+  useEditGoal,
   useGetGoalKpiData,
   useGetGoalSources,
   useGetProportionality,
@@ -30,7 +32,21 @@ const AddGoal = () => {
   const { data: kpiQueryData } = useGetGoalKpiData()
   const { data: proportionalityQueryData } = useGetProportionality()
   const { data: sourcesQueryData } = useGetGoalSources()
-  const { mutate, isPending } = useAddGoalMutation()
+  const { mutate: mutateAddGoal, isPending: isPendingAddGoal } = useAddGoalMutation()
+  const { mutate: mutateEditGoal, isPending: isPendingEditGoal } = useEditGoal()
+  const params = useLocalSearchParams()
+
+  const isEdit: boolean = !!params?.edit
+  const editGoalDetails: GoalItemType = params?.goalDetails ? JSON.parse(params?.goalDetails as any) : null
+
+  const formDefaultValues = {
+    completionDate: isEdit ? dayjs(editGoalDetails.target_date || new Date()).toDate() : new Date(),
+    kpi: isEdit ? editGoalDetails.track_kpi : '',
+    name: isEdit ? editGoalDetails.name : '',
+    proportionality: isEdit ? editGoalDetails.goal_proportionality : undefined,
+    source: isEdit ? editGoalDetails.target_contribution_source.toString() : undefined,
+    target: isEdit ? editGoalDetails.target_value?.toString() : undefined,
+  }
 
   const {
     handleSubmit,
@@ -39,14 +55,7 @@ const AddGoal = () => {
     reset,
   } = useForm<AddGoalSchemaType>({
     resolver: zodResolver(addGoalSchema),
-    defaultValues: {
-      completionDate: new Date(),
-      kpi: '',
-      name: '',
-      proportionality: undefined,
-      source: undefined,
-      target: undefined,
-    },
+    defaultValues: formDefaultValues,
   })
 
   useEffect(() => {
@@ -74,17 +83,21 @@ const AddGoal = () => {
         goal_proportionality: values.proportionality,
         target_date: target_date_value,
       }
-      mutate(payload)
+      if (isEdit) {
+        mutateEditGoal({ id: editGoalDetails.id, payload })
+      } else {
+        mutateAddGoal(payload)
+      }
     } catch (error) {}
   }
 
   return (
     <View f={1} pt={insets.top + hp(2)} bg="$backgroundHover">
-      {!!isPending && <LoaderOverlay />}
+      {!!(isPendingAddGoal || isPendingEditGoal) && <LoaderOverlay />}
       <View fd="row" ai="center" columnGap={wp(4)} mx={wp(5)}>
         <BackButton onPress={() => router.push('/(authenticated)/goals')} />
         <Text fontSize={FontSizes.size20} fontFamily={'$heading'}>
-          Create a new goal
+          {isEdit ? 'Edit goal' : 'Create a new goal'}
         </Text>
       </View>
       <KeyboardScrollView contentContainerStyle={styles.scrollContent}>
@@ -97,7 +110,7 @@ const AddGoal = () => {
           color="white"
           mt={hp(2)}
         >
-          Create Goal
+          {isEdit ? 'Edit Goal' : 'Create Goal'}
         </Button>
       </KeyboardScrollView>
     </View>

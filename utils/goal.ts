@@ -1,5 +1,8 @@
 import dayjs from 'dayjs'
+import round from 'lodash/round'
 import { InputField } from '@/types/input-fields'
+import { THEME_COLORS } from './theme'
+import { GoalItemType } from '@/queries/goal'
 
 interface OptionItem {
   id: number
@@ -24,6 +27,12 @@ interface BarChartItem {
   frontColor: string
 }
 
+interface GoalsProgressDataType {
+  onTrackGoals: number
+  offTrackGoals: number
+  completedGoals: number
+}
+
 const getAddGoalInputs = (
   kpiData?: OptionItem[],
   proportionalityData?: OptionItem[],
@@ -32,13 +41,6 @@ const getAddGoalInputs = (
   const transformedSources = sourcesData
     ? sourcesData?.map((item) => ({ id: item.id?.toString(), label: item.name }))
     : []
-
-  const dummyProportionality = [
-    { id: 1, label: 'HigherTheBetter' },
-    { id: 2, label: 'LowerTheBetter' },
-  ]
-
-  const dummyKPI = [{ id: 1, label: 'LiabilityPercent' }]
 
   return [
     {
@@ -55,8 +57,8 @@ const getAddGoalInputs = (
       id: 'kpi',
       label: 'KPI',
       type: 'select',
-      options: dummyKPI || [], // ! replace dummyKPI with kpiData once api is fixed
-      valueKey: 'label',
+      options: kpiData || [],
+      valueKey: 'value',
     },
     {
       id: 'source',
@@ -68,8 +70,8 @@ const getAddGoalInputs = (
       id: 'proportionality',
       label: 'Proportionality',
       type: 'select',
-      options: dummyProportionality || [], // ! replace dummyProportionality with proportionalityData once api is fixed
-      valueKey: 'label',
+      options: proportionalityData || [],
+      valueKey: 'value',
     },
     {
       id: 'completionDate',
@@ -100,4 +102,54 @@ const getGoalTimelineData = (timelineData?: TimelineItem[], fromDate?: Date, toD
   return newTimelineData
 }
 
-export { getAddGoalInputs, getGoalTimelineData }
+const getGoalsProgressChartData = (progressData: GoalsProgressDataType) => {
+  return [
+    {
+      title: 'On Track',
+      value: progressData.onTrackGoals,
+      color: THEME_COLORS.green['500'],
+    },
+    {
+      title: 'Off Track',
+      value: progressData.offTrackGoals,
+      color: THEME_COLORS.red['500'],
+    },
+    {
+      title: 'Completed',
+      value: progressData.completedGoals,
+      color: THEME_COLORS.indigo['500'],
+    },
+  ]
+}
+
+const getGoalProgressData = (goals: GoalItemType[]): GoalsProgressDataType => {
+  const totalGoals = goals.length
+
+  let onTrackGoals = 0
+  let offTrackGoals = 0
+  let completedGoals = 0
+
+  goals.forEach((goalItem) => {
+    const goalCompletionDate = dayjs(goalItem.target_date)
+    if (dayjs().isBefore(goalCompletionDate) || dayjs().isSame(goalCompletionDate)) {
+      onTrackGoals++
+    } else if (dayjs().isAfter(goalCompletionDate)) {
+      offTrackGoals++
+    }
+    if (goalItem.met) {
+      completedGoals++
+    }
+  })
+
+  onTrackGoals = round((onTrackGoals / totalGoals) * 100)
+  offTrackGoals = round((offTrackGoals / totalGoals) * 100)
+  completedGoals = 100 - onTrackGoals - offTrackGoals
+
+  return {
+    onTrackGoals,
+    offTrackGoals,
+    completedGoals,
+  }
+}
+
+export { getAddGoalInputs, getGoalTimelineData, getGoalsProgressChartData, getGoalProgressData }

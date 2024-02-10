@@ -4,6 +4,7 @@ import { useToast } from 'native-base'
 
 import { GOAL_QUERY_KEYS } from '@/utils/query-keys/goal'
 import { apiClient, apiv2Client } from '@/utils/client'
+import { queryClient } from '@/utils/query-client'
 
 interface AddGoalPayloadType {
   name: string
@@ -27,6 +28,7 @@ interface GoalItemType {
   track_kpi: string
   updated_at: string
   user: number
+  met: boolean
 }
 
 interface DropdownItemType {
@@ -51,8 +53,13 @@ interface GoalTimelineItem {
   kpi_value: number
 }
 
+interface EditGoalPayloadType {
+  id: number
+  payload: AddGoalPayloadType
+}
+
 const getGoalKpiData = () => {
-  return apiv2Client.get<DropdownItemType[]>('/kpis_type')
+  return apiv2Client.get<DropdownItemType[]>('/financial_goal/kpis_type')
 }
 
 const useGetGoalKpiData = () => {
@@ -63,7 +70,7 @@ const useGetGoalKpiData = () => {
 }
 
 const getGoalProportionalityData = () => {
-  return apiv2Client.get<DropdownItemType[]>('/goal_proportionality_type')
+  return apiv2Client.get<DropdownItemType[]>('/financial_goal/goal_proportionality_type')
 }
 
 const useGetProportionality = () => {
@@ -113,7 +120,7 @@ const useGetGoals = () => {
 }
 
 const getGoalProgress = (id: number) => {
-  return apiv2Client.get<GoalProgressType[]>(`/financial_goal/progress/${id}`)
+  return apiv2Client.get<GoalProgressType>(`/financial_goal/progress/${id}`)
 }
 
 const useGetGoalProgress = (id: number) => {
@@ -145,6 +152,48 @@ const useGetGoalTimeline = (id: number) => {
   })
 }
 
+const editGoal = (data: EditGoalPayloadType) => {
+  return apiv2Client.put(`/financial_goal/${data.id}`, data.payload)
+}
+
+const useEditGoal = () => {
+  const toast = useToast()
+
+  return useMutation({
+    mutationFn: editGoal,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [GOAL_QUERY_KEYS.GOALS],
+      })
+      toast.show({ title: 'Goal updated successfully' })
+      router.push('/(authenticated)/goals')
+    },
+    onError: (e) => {
+      toast.show({ title: e.response?.data?.message || 'Failed to update goal' })
+    },
+  })
+}
+
+const deleteGoal = (id: number) => {
+  return apiv2Client.delete(`/financial_goal/${id}`)
+}
+
+const useDeleteGoal = () => {
+  const toast = useToast()
+  return useMutation({
+    mutationFn: deleteGoal,
+    onSuccess: () => {
+      toast.show({ title: 'Goal deleted successfully' })
+      queryClient.invalidateQueries({
+        queryKey: [GOAL_QUERY_KEYS.GOALS],
+      })
+    },
+    onError: () => {
+      toast.show({ title: 'Failed to delete goal' })
+    },
+  })
+}
+
 export {
   useGetGoalKpiData,
   useGetProportionality,
@@ -154,10 +203,13 @@ export {
   useGetGoalProgress,
   useGetGoalDetails,
   useGetGoalTimeline,
+  useEditGoal,
+  useDeleteGoal,
   AddGoalPayloadType,
   GoalItemType,
   DropdownItemType,
   GoalSourceItemType,
   GoalProgressType,
   GoalTimelineItem,
+  EditGoalPayloadType,
 }
