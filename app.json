@@ -11,9 +11,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lekkalu.finuncle"
@@ -24,13 +22,24 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.lekkalu.finuncle",
-      "versionCode": 2
+      "versionCode": 2,
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ],
     "scheme": "com.lekkalu-app.lekkalu-app",
     "experiments": {

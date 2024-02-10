@@ -6,13 +6,18 @@ import { Menu, MenuItem } from 'react-native-material-menu'
 import { hp, wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
 import Card from '../card/card'
+import { formatNumberToCurrency } from '@/utils/helpers'
 
 interface IIncomeExpenseItemProps {
   onEdit: () => void
   onDelete: () => void
+  title: string
+  type: string
+  amount: string
 }
 
-const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, onEdit = () => {} }) => {
+const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = (props) => {
+  const { onDelete = () => {}, onEdit = () => {}, amount, title, type } = props
   const [visible, setVisible] = useState(false)
   const theme = useTheme()
 
@@ -38,10 +43,10 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
     <Card mx={0} br={wp(2)} fd="row" ai="center" jc="space-between">
       <View f={1} rowGap={hp(0.5)} pr={wp(2)}>
         <Text fontFamily={'$body'} color={'$foreground'} fontSize={FontSizes.size20}>
-          Hello
+          {title}
         </Text>
         <Text color={'$gray9Dark'} fontFamily={'$body'} fontSize={FontSizes.size15}>
-          Hello
+          {type}
         </Text>
       </View>
       <View ai="flex-end" rowGap={hp(1)}>
@@ -63,7 +68,7 @@ const IncomeExpenseItem: FC<IIncomeExpenseItemProps> = ({ onDelete = () => {}, o
           </MenuItem>
         </Menu>
         <Text fontFamily={'$body'} fontSize={FontSizes.size18}>
-          $ 20,000
+          {formatNumberToCurrency(+amount)}
         </Text>
       </View>
     </Card>

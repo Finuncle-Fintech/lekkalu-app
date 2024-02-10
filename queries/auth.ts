@@ -1,18 +1,19 @@
+import { AxiosHeaders } from 'axios'
 import { getToken } from '@/utils/token'
 import { tokenClient, userClient } from '@/utils/client'
 import { User } from '@/types/user'
 import { LoginSchema, SignupSchema } from '@/schema/auth'
-import { AxiosHeaders } from 'axios'
 
 export async function refreshToken() {
+  const _refreshToken = await getToken('refresh')
   const { data } = await tokenClient.post<{ access: string; refresh: string }>('/refresh/', {
-    refresh: getToken('refresh'),
+    refresh: _refreshToken,
   })
   return data
 }
 
 export async function fetchUser() {
-  const token = getToken('access')
+  const token = await getToken('access')
   if (!token) {
     return
   }
@@ -38,7 +39,7 @@ export async function signup(dto: Omit<SignupSchema, 'termsAndConditions' | 'pri
 
 export const deleteAccount = async () => {
   const headers = new AxiosHeaders()
-  const accessToken = getToken('access')
+  const accessToken = await getToken('access')
 
   if (accessToken) {
     headers.setAuthorization(`Bearer ${accessToken}`)

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
@@ -6,6 +7,7 @@ import constate from 'constate'
 import { deleteAccount, fetchUser, login, refreshToken, signup } from '@/queries/auth'
 import { AUTH } from '@/utils/query-keys'
 import { setToken } from '@/utils/token'
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/utils/constants'
 
 export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -19,7 +21,7 @@ export function useAuth() {
   })
 
   const {
-    isLoading: isAuthenticationInProgress,
+    isFetching: isAuthenticationInProgress,
     data: tokenData,
     status: refreshTokenStatus,
   } = useQuery({
@@ -81,11 +83,9 @@ export function useAuth() {
     },
   })
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
     setIsAuthenticated(false)
-    setToken('refresh', undefined)
-    setToken('access', undefined)
-
+    await AsyncStorage.multiRemove([REFRESH_TOKEN_KEY, ACCESS_TOKEN_KEY])
     qc.clear() // Empties query cache
     router.replace('/login')
   }, [qc])

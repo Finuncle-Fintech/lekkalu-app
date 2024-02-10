@@ -22,7 +22,7 @@ type DateInput = BaseInput & {
   defaultDate?: Date
 }
 
-type Option = {
+export type Option = {
   id: string | number
   label: string
 }

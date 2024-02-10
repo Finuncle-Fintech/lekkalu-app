@@ -14,9 +14,9 @@ export const apiClient = axios.create({
   headers: BASIC_HEADER,
 })
 
-apiClient.interceptors.request.use((config) => {
+apiClient.interceptors.request.use(async (config) => {
   config.headers = new AxiosHeaders(config.headers)
-  const accessToken = getToken('access')
+  const accessToken = await getToken('access')
   if (accessToken) {
     config.headers.setAuthorization(`Bearer ${accessToken}`)
   }
@@ -28,9 +28,9 @@ export const apiv2Client = axios.create({
   headers: BASIC_HEADER,
 })
 
-apiv2Client.interceptors.request.use((config) => {
+apiv2Client.interceptors.request.use(async (config) => {
   config.headers = new AxiosHeaders(config.headers)
-  const accessToken = getToken('access')
+  const accessToken = await getToken('access')
   if (accessToken) {
     config.headers.setAuthorization(`Bearer ${accessToken}`)
   }
