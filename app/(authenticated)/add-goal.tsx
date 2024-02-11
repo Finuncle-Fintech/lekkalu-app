@@ -40,7 +40,7 @@ const AddGoal = () => {
   const editGoalDetails: GoalItemType = params?.goalDetails ? JSON.parse(params?.goalDetails as any) : null
 
   const formDefaultValues = {
-    completionDate: isEdit ? dayjs(editGoalDetails.target_date || new Date()).toDate() : new Date(),
+    targetDate: isEdit ? dayjs(editGoalDetails.target_date || new Date()).toDate() : new Date(),
     kpi: isEdit ? editGoalDetails.track_kpi : '',
     name: isEdit ? editGoalDetails.name : '',
     proportionality: isEdit ? editGoalDetails.goal_proportionality : undefined,
@@ -74,7 +74,7 @@ const AddGoal = () => {
 
   const handleAddGoal = (values: AddGoalSchemaType) => {
     try {
-      const target_date_value = dayjs(values.completionDate).format(SERVER_DATE_FORMAT)
+      const target_date_value = dayjs(values.targetDate).format(SERVER_DATE_FORMAT)
       const payload: AddGoalPayloadType = {
         name: values.name,
         target_value: values.target,

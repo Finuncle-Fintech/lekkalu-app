@@ -6,7 +6,7 @@ const addGoalSchema = z.object({
   kpi: z.string(),
   source: z.string(),
   proportionality: z.string(),
-  completionDate: z.date(),
+  targetDate: z.date(),
 })
 
 type AddGoalSchemaType = z.infer<typeof addGoalSchema>
