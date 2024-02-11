@@ -74,8 +74,8 @@ const getAddGoalInputs = (
       valueKey: 'value',
     },
     {
-      id: 'completionDate',
-      label: 'Completion Date',
+      id: 'targetDate',
+      label: 'Target Date',
       type: 'date',
     },
   ]
@@ -146,9 +146,9 @@ const getGoalProgressData = (goals: GoalItemType[]): GoalsProgressDataType => {
   completedGoals = 100 - onTrackGoals - offTrackGoals
 
   return {
-    onTrackGoals,
-    offTrackGoals,
-    completedGoals,
+    onTrackGoals: isNaN(onTrackGoals) ? 0 : onTrackGoals,
+    offTrackGoals: isNaN(offTrackGoals) ? 0 : offTrackGoals,
+    completedGoals: isNaN(completedGoals) ? 0 : completedGoals,
   }
 }
 
