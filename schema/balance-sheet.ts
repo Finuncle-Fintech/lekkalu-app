@@ -29,6 +29,59 @@ export const addLiabilitySchema = z.object({
   interest_rate: z.coerce.number({ required_error: 'Interest Rage is required!' }),
   closure_charges: z.coerce.number({ required_error: 'Closure Charges is required!' }),
 })
+
 export type AddLiabilitySchema = Omit<z.infer<typeof addLiabilitySchema>, 'disbursement_date'> & {
   disbursement_date: string
 }
+
+
+export const addCashAssetSchema = z.object({
+  name: z.string(),
+  amount: z.coerce.number({required_error: 'Amount is required'}).min(1, 'Amount is required'),
+})
+
+export type AddCashAssetSchema = z.infer<typeof addCashAssetSchema>
+
+export const addMutualFundAssetSchema = z.object({
+  name: z.string(),
+  invested_amount: z.coerce.number(),  
+  expected_return: z.coerce.number(),
+  purchase_date: z.string(),
+})
+
+export type AddMutualFundAssetSchema = z.infer<typeof addMutualFundAssetSchema>
+
+export const addGoldFundAssetSchema = z.object({
+  weight: z.coerce.number({required_error: 'Weight is required'}).min(1, 'Weight is required'),
+})
+
+export type AddGoldFundAssetSchema = z.infer<typeof addGoldFundAssetSchema>
+
+export const addAccountFundAssetSchema = z.object({
+  account_name: z.coerce.string(),
+  balance: z.coerce.number({required_error: 'Balance is required'}).min(1, 'Balance is required'),
+  interrest_rate: z.coerce.number(),
+})
+
+export type AddAccountFundAssetSchema = z.infer<typeof addAccountFundAssetSchema>
+
+export const addPropertyAssetSchema = z.object({
+  pincode: z.coerce.number(),
+  area: z.coerce.number(),
+  land: z.coerce.string(),
+  purchase_value: z.coerce.number(),    
+  purchase_date: z.string(),
+})
+
+export type AddPropertyAssetSchema = z.infer<typeof addPropertyAssetSchema>
+
+
+export const addNewPhysicalAssetSchema = z.object({
+  name: z.string(),
+  purchase_value: z.coerce.number(),  
+  type: z.coerce.string(),
+  purchase_date: z.string(),
+  rate: z.string(),
+})
+
+export type AddNewPhysicalAssetSchema = z.infer<typeof addNewPhysicalAssetSchema>
