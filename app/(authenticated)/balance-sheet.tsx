@@ -6,23 +6,24 @@ import { BALANCE_SHEET } from '@/utils/query-keys'
 import { fetchPhysicalAssets } from '@/queries/balance-sheet'
 import { wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
-import { useState } from 'react'
 
 export default function BalanceSheet() {
   const { data, isFetching } = useQuery({ queryKey: [BALANCE_SHEET.ASSETS], queryFn: fetchPhysicalAssets })
-  const theme = useTheme();
-  const [showModal,setShowModal] = useState(false);
+  const theme = useTheme()
 
   return (
     <VStack flex={1} p={4} space={4} backgroundColor={theme.backgroundHover.get()}>
       <HStack justifyContent="end">
-      <Button
-              _text={{ style: { fontSize: FontSizes.size16, } }}
+        <CreateOrEditAsset
+          trigger={
+            <Button
+              _text={{ style: { fontSize: FontSizes.size16, padding: wp(1) } }}
               startIcon={<AddIcon size={wp(4)} />}
-              onPress={()=>{setShowModal(!showModal)}}
             >
               Create Asset
-            </Button>    
+            </Button>
+          }
+        />
       </HStack>
 
       <Heading fontSize={FontSizes.size26} color={theme.foreground.get()}>
@@ -70,11 +71,6 @@ export default function BalanceSheet() {
           </VStack>
         )}
       />
-      <CreateOrEditAsset
-          showModal={showModal}
-          setShowModal={setShowModal}
-
-        />
     </VStack>
   )
 }

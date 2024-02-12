@@ -46,7 +46,14 @@
       "typedRoutes": true,
       "tsconfigPaths": true
     },
-    
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d4ea7189-29de-4332-9a7c-ea49681263d9"
+      }
+    },
     "owner": "finuncle"
   }
 }
