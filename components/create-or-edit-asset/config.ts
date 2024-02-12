@@ -73,3 +73,23 @@ export const ASSET_INPUTS: InputField[] = [
     options: ASSET_YEARS,
   },
 ]
+
+export const ASSET_TYPE = [
+  { name: 'Cash' },
+  { name: 'Account' },
+  { name: 'Mutual Fund/Equity' },
+  { name: 'Gold' },
+  { name: 'Real Estate Property' },
+  { name: 'Physical Assets' },
+]
+
+export const PHYSICAL_ASSET_TYPE = [
+  { name: 'Depreciation' },
+  { name: 'Appreciation' },
+]
+
+export const UNIT_OF_AREA = [
+  { name: 'Sq. Ft.' },
+  { name: 'Yard' },
+  { name: 'Hectare' },
+]
