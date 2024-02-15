@@ -23,8 +23,7 @@ export const getAxiosHeaderWithToken = async () => {
   return headers
 }
 
-const handleOpenMailClientError = (e?: any) => {
-  console.log('🚀 ~ handleOpenMailClientError ~ e:', e)
+const handleOpenMailClientError = () => {
   Toast.show({
     title: 'Failed to open mail app! Please open it manually',
   })
