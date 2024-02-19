@@ -1,5 +1,6 @@
-import { Box, Heading, VStack, View } from 'native-base'
-import Slider from '@react-native-community/slider';
+import Slider from '@react-native-community/slider'
+import { Box, VStack, View } from 'native-base'
+// import { Slider } from 'tamagui'
 
 type SliderProps = {
   defaultValue?: number,
@@ -14,14 +15,9 @@ export default function CommoneSlider({ defaultValue, maxValue, minValue, onChan
       <Box alignItems="center" w="100%">
         <VStack space={4} w="100%" maxW="300">
 
-          {/* <Slider removeClippedSubviews defaultValue={defaultValue} size="lg" maxValue={maxValue} minValue={minValue} onChange={(val)=>onChange(val)}>
-          <Slider.Track>
-            <Slider.FilledTrack />
-          </Slider.Track>
-          <Slider.Thumb />
-        </Slider> */}
-          <Slider
+        <Slider
             value={defaultValue}
+            step={1}
             style={{ width: "100%", height: 34 }}
             minimumValue={minValue}
             maximumValue={maxValue}
@@ -30,7 +26,6 @@ export default function CommoneSlider({ defaultValue, maxValue, minValue, onChan
             thumbTintColor='#003562'
             onValueChange={(val)=>onChange(parseInt(val))}
           />
-
         </VStack>
       </Box>
     </View>

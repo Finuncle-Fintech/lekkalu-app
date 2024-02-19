@@ -3,20 +3,20 @@ import { Box, Button, Heading, Icon, Popover, Slider, VStack, View } from 'nativ
 import { TouchableOpacity } from 'react-native';
 
 type PopOverProps = {
-  Content?: string
+  children?: string
 }
 
-export default function CommonePopOver({Content}: PopOverProps) {
+export default function CommonPopover({children}: PopOverProps) {
   return (
     <View alignItems="center" justifyContent="center">
      <Box w="100%" alignItems="center">
       <Popover trigger={triggerProps => {
       return  <TouchableOpacity hitSlop={15} {...triggerProps}><Icon as={AntDesign} name="infocirlceo" /></TouchableOpacity>;
     }}>
-        <Popover.Content accessibilityLabel="Delete Customerd" w="56">
+        <Popover.Content w="56">
           <Popover.Arrow />
           <Popover.Body>
-            {Content}
+            {children}
           </Popover.Body>
         </Popover.Content>
       </Popover>
