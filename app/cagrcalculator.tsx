@@ -1,45 +1,53 @@
-import { ImageBackground, StyleSheet, TouchableOpacity, View, Image, TextInput, Keyboard } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import {  StyleSheet, TouchableOpacity, View, TextInput, Keyboard } from 'react-native'
+import React, {  useMemo, useState } from 'react'
 import { useNavigation } from 'expo-router/src/useNavigation'
-import { Button, Icon, Text, Tooltip } from 'native-base'
+import { Text } from 'native-base'
 import CommoneSlider from '@/components/slider/slider'
-import { AntDesign } from '@expo/vector-icons'
-import CommonePopOver from '@/components/popover/popover'
+import CommonPopover from '@/components/popover/popover'
 import { calculateCagr } from '@/queries/cagr-calculator'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export default function cagrcalculator({ }) {
     const navigation = useNavigation()
-    const [AbsoluteReturn, setabsoluteReturn] = useState(400)
-    const [AbsoluteCAGR, setabsoluteCAGR] = useState(0.38)
-    const [CagrPercentage, setcagrPercentage] = useState(37.97)
     const [Initialvalue, setInitialvalue] = useState(5000)
     const [FinalValue, setFinalValue] = useState(25000)
     const [Duration, setDuration] = useState(5)
 
-    useEffect(() => {
-       const data = calculateCagr(Initialvalue, FinalValue, Duration)
-       console.log(data)
-       setabsoluteCAGR(data?.absoluteCAGR != "Infinity" ? data?.absoluteCAGR:"--")
-       setabsoluteReturn(data?.absoluteReturns != "Infinity" ? data?.absoluteReturns:"--")
-       setcagrPercentage(data?.percentageCAGR != "Infinity" ? data?.percentageCAGR:"--")
-    }, [Initialvalue, FinalValue, Duration])
+    const calculatedData = useMemo(() => {
+        return calculateCagr(Initialvalue, FinalValue, Duration);
+      }, [Initialvalue, FinalValue, Duration]);
+
+    const absoluteCAGR = useMemo(() => {
+        return calculatedData?.absoluteCAGR !== "Infinity" ? calculatedData?.absoluteCAGR : "--";
+      }, [calculatedData]);
+    
+      const absoluteReturn = useMemo(() => {
+        return calculatedData?.absoluteReturns !== "Infinity" ? calculatedData?.absoluteReturns : "--";
+      }, [calculatedData]);
+    
+      const cagrPercentage = useMemo(() => {
+        return calculatedData?.percentageCAGR !== "Infinity" ? calculatedData?.percentageCAGR : "--";
+      }, [calculatedData]);
+
+      console.log(absoluteCAGR, absoluteReturn, cagrPercentage);
+
     
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButtonBackground}>
-                <Image source={require('../assets/backarrow.png')} resizeMode='contain' style={styles.backButton} />
+                <MaterialCommunityIcons name="chevron-left" size={24} color="black" selectionColor={"white"} />
             </TouchableOpacity>
             <View style={styles.subContainer}>
                 <Text fontSize="sm" fontWeight="light" color={"white"}>Absolute returns</Text>
-                <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${AbsoluteReturn} ₹`}</Text>
+                <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${absoluteCAGR} ₹`}</Text>
                 <View style={styles.rowContainer}>
                     <View style={{ alignItems: 'center' }}>
                         <Text fontSize="sm" fontWeight="light" color={"white"}>CAGR return</Text>
-                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${AbsoluteCAGR} ₹`}</Text>
+                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${absoluteReturn} ₹`}</Text>
                     </View>
                     <View style={{ alignItems: 'center' }}>
                         <Text fontSize="sm" fontWeight="light" color={"white"}>CAGR percentage</Text>
-                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${CagrPercentage} %`}</Text>
+                        <Text fontSize="2xl" fontWeight="bold" color={"white"}>{`${cagrPercentage} %`}</Text>
                     </View>
                 </View>
             </View>
@@ -55,8 +63,8 @@ export default function cagrcalculator({ }) {
                                 onChangeText={(val) => val <= 10000000 ? setInitialvalue(val) : Keyboard.dismiss()}
                                 keyboardType='numeric'
                             />
-                            <CommonePopOver
-                                Content='This is the starting value or principal investment amount. It represents the value of your investment or asset at the beginning of the investment period.'
+                            <CommonPopover
+                                children='This is the starting value or principal investment amount. It represents the value of your investment or asset at the beginning of the investment period.'
                             />
                         </View>
                     </View>
@@ -78,8 +86,8 @@ export default function cagrcalculator({ }) {
                                 onChangeText={(val) => val <= 10000000 ? setFinalValue(val) : Keyboard.dismiss()}
                                 keyboardType='numeric'
                             />
-                            <CommonePopOver
-                                Content='This is the ending value or the current value of your investment after the specified duration. It represents the value of your investment at the end of the investment period.'
+                            <CommonPopover
+                                children='This is the ending value or the current value of your investment after the specified duration. It represents the value of your investment at the end of the investment period.'
                             />
                         </View>
                     </View>
@@ -101,8 +109,8 @@ export default function cagrcalculator({ }) {
                                 onChangeText={(val) => val <= 40 ? setDuration(val) : Keyboard.dismiss()}
                                 keyboardType='numeric'
                             />
-                            <CommonePopOver
-                                Content='This is the length of time, in years, for which you held the investment. It represents the time period between the initial and final values.'
+                            <CommonPopover
+                                children='This is the length of time, in years, for which you held the investment. It represents the time period between the initial and final values.'
                             />
                         </View>
                     </View>
@@ -113,9 +121,6 @@ export default function cagrcalculator({ }) {
                         onChange={(val) => setDuration(val)}
                     />
                 </View>
-                {/* <Text>{`CAGR Formula\nThe formula to calculate the Compound Annual Growth Rate (CAGR) is as follows:\nYour Absolute CAGR = (F/I)^(1 / D) - 1\nWhere:\n
-F(Final Value): is the ending value or the current value of your investment after the specified duration.\nI(Initial Value): is the starting value or principal investment amount.\nD(Duration): is the length of time, in years, for which you held the investment.\nYour Absolute CAGR: is the Compound Annual Growth Rate calculated based on the initial value, final value, and costs.\nYour Absolute CAGR Percentage: represents the annualized growth rate of your investment expressed as a percentage.\nYour Absolute Returns: is the total return on your investment, accounting for the initial value and final value`}
-                </Text> */}
                 <View style={{paddingHorizontal:32,paddingTop:18}}>
                 <Text fontWeight={'bold'}>{`CAGR Formula\n`}</Text>
                 <Text fontWeight={'light'}>{`The formula to calculate the Compound Annual Growth Rate (CAGR) is as follows:\n`}</Text>
@@ -154,7 +159,7 @@ const styles = StyleSheet.create({
     backButtonBackground: {
         backgroundColor: '#66c4fb54',
         marginHorizontal: 16,
-        padding: 8,
+        padding: 4,
         borderRadius: 100,
         width: 32,
         justifyContent: 'center',
