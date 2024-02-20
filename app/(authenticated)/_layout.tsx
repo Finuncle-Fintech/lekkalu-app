@@ -1,41 +1,77 @@
 import { Tabs } from 'expo-router/tabs'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, Entypo } from '@expo/vector-icons'
 import { Text, View, useTheme } from 'tamagui'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { TouchableOpacity } from 'react-native'
+import { router } from 'expo-router'
+
+import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 const TabBarIcon = ({ focused, name }: { focused: boolean; name: React.ComponentProps<typeof AntDesign>['name'] }) => {
   const theme = useTheme()
-
-  return <AntDesign name={name} size={24} color={focused ? theme.primary.get() : theme.color.get()} />
+  return <AntDesign name={name} size={wp(5)} color={focused ? theme.primary.get() : theme.color.get()} />
 }
 
-const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => (
-  <Text color={focused ? '$primary' : '$color'}>{children}</Text>
-)
+const TabBarLabel = ({ children, focused }: { children: string; focused: boolean }) => {
+  const theme = useTheme()
+  return (
+    <Text
+      textAlign="center"
+      fontSize={FontSizes.size15}
+      numberOfLines={1}
+      color={focused ? theme.primary.get() : theme.color.get()}
+    >
+      {children}
+    </Text>
+  )
+}
 
 export default function AuthenticatedAppLayout() {
   const theme = useTheme()
+  const { bottom, top } = useSafeAreaInsets()
 
   return (
     <Tabs
       initialRouteName="dashboard"
       screenOptions={{
         tabBarStyle: {
-          paddingTop: 10,
-          paddingBottom: 10,
-          height: 70,
-          backgroundColor: theme.dark.get(),
+          paddingTop: hp(1),
+          paddingBottom: bottom + 4,
+          height: hp(7.5) + bottom,
+          backgroundColor: theme.background.get(),
           borderTopColor: 'transparent',
         },
-        header: ({ options }) => (
-          <>
-            <View width="100%" h="$1" bg="$dark" />
-            <View bg="$dark" jc="center" px="$4" py="$5">
-              <Text color="$color" fontSize="$8" fontWeight="bold">
-                {options.title}
-              </Text>
-            </View>
-          </>
-        ),
+        tabBarItemStyle: { paddingHorizontal: wp(2) },
+        header: ({ options, route }) => {
+          const showBackbutton = ['create-expense', 'update-expense/[id]'].includes(route.name)
+
+          const backScreenKeys: Record<string, string> = {
+            'create-expense': 'expenses',
+            'update-expense/[id]': 'expenses',
+          }
+
+          return (
+            <>
+              <View w="100%" h={wp(1)} bg="$background" pt={top} />
+              <View fd="row" bg="$background" ai="center" px={wp(4)} py={hp(1.8)}>
+                {showBackbutton && (
+                  <TouchableOpacity onPress={() => router.push(backScreenKeys[route.name as any])}>
+                    <Entypo
+                      name="chevron-thin-left"
+                      size={wp(5)}
+                      color={theme.foreground.get()}
+                      style={{ marginRight: wp(4) }}
+                    />
+                  </TouchableOpacity>
+                )}
+                <Text color="$color" fontSize={FontSizes.size26} fontWeight="bold">
+                  {options.title}
+                </Text>
+              </View>
+            </>
+          )
+        },
       }}
     >
       <Tabs.Screen
@@ -77,6 +113,7 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Create Expense',
           href: null,
+          unmountOnBlur: true,
         }}
       />
 
@@ -85,6 +122,39 @@ export default function AuthenticatedAppLayout() {
         options={{
           title: 'Update Expense',
           href: null,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="income-statement"
+        options={{
+          title: 'Income Statement',
+          href: null,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="emi-calculator"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="emi-calculator-breakdown"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
+        name="add-edit-income-expense"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
         }}
       />
     </Tabs>

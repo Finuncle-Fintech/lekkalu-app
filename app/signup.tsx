@@ -1,12 +1,19 @@
-import { Button, Checkbox, FormControl, Input, Pressable, ScrollView, Text, VStack } from 'native-base'
+import { FormControl, Input, Pressable } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
+import { ScrollView, Text, View, XStack, useTheme, Checkbox, Label, Button } from 'tamagui'
+import { Check } from '@tamagui/lucide-icons'
+
 import { SignupSchema, signupSchema } from '@/schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
+import CustomFormControl from '@/components/form-control/form-control'
+import { hp, wp } from '@/utils/responsive'
+import { FontSizes } from '@/utils/fonts'
 
 export default function Signup() {
   const { isAuthenticated, signupMutation } = useAuthContext()
+  const theme = useTheme()
 
   const {
     control,
@@ -28,100 +35,186 @@ export default function Signup() {
     return <Redirect href="/dashboard" />
   }
 
+  const inputTextColor = theme.foreground.get()
+
   return (
-    <ScrollView bg="brand.900" contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-      <VStack maxW="sm" w="full" bg="white" rounded="lg" p="4" space={4}>
-        <Text fontSize="3xl" fontWeight="bold">
+    <ScrollView
+      bg="$background"
+      contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+      p={wp(4)}
+    >
+      <View bg="$muted" borderRadius={wp(4)} p={wp(4)} w={'100%'} rowGap={hp(2)}>
+        <Text fontSize={FontSizes.size34} fontWeight="bold">
           Sign Up
         </Text>
 
-        <FormControl isRequired isInvalid={'username' in errors}>
-          <FormControl.Label>Username</FormControl.Label>
-          <Controller
-            name="username"
-            control={control}
-            render={({ field }) => <Input placeholder="Enter your username" onChangeText={field.onChange} {...field} />}
-          />
+        <View rowGap={hp(1)}>
+          <FormControl isRequired isInvalid={'username' in errors}>
+            <CustomFormControl.Label fontSize={FontSizes.size15} isRequired>
+              Username
+            </CustomFormControl.Label>
+            <Controller
+              name="username"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  color={inputTextColor}
+                  fontSize={FontSizes.size15}
+                  h={hp(5)}
+                  borderRadius={wp(1.8)}
+                  selectionColor={inputTextColor}
+                  placeholder="Enter your username"
+                  onChangeText={field.onChange}
+                  size={'md'}
+                  {...field}
+                />
+              )}
+            />
 
-          <FormControl.ErrorMessage>{errors.username?.message}</FormControl.ErrorMessage>
-        </FormControl>
+            <FormControl.ErrorMessage _text={{ fontSize: FontSizes.size15 }}>
+              {errors.username?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
 
-        <FormControl isRequired isInvalid={'email' in errors}>
-          <FormControl.Label>Email</FormControl.Label>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <Input placeholder="Enter your email address" onChangeText={field.onChange} {...field} />
-            )}
-          />
+          <FormControl isRequired isInvalid={'email' in errors}>
+            <CustomFormControl.Label fontSize={FontSizes.size15} isRequired>
+              Email
+            </CustomFormControl.Label>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  color={inputTextColor}
+                  fontSize={FontSizes.size15}
+                  h={hp(5)}
+                  borderRadius={wp(1.8)}
+                  selectionColor={inputTextColor}
+                  placeholder="Enter your email address"
+                  onChangeText={field.onChange}
+                  size={'md'}
+                  {...field}
+                />
+              )}
+            />
 
-          <FormControl.ErrorMessage>{errors.email?.message}</FormControl.ErrorMessage>
-        </FormControl>
+            <FormControl.ErrorMessage _text={{ fontSize: FontSizes.size15 }}>
+              {errors.email?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
 
-        <FormControl isRequired isInvalid={'password' in errors}>
-          <FormControl.Label>Password</FormControl.Label>
-          <Controller
-            name="password"
-            control={control}
-            render={({ field }) => (
-              <Input type="password" placeholder="Enter your password" onChangeText={field.onChange} {...field} />
-            )}
-          />
+          <FormControl isRequired isInvalid={'password' in errors}>
+            <CustomFormControl.Label fontSize={FontSizes.size15} isRequired>
+              Password
+            </CustomFormControl.Label>
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  color={inputTextColor}
+                  fontSize={FontSizes.size15}
+                  h={hp(5)}
+                  borderRadius={wp(1.8)}
+                  selectionColor={inputTextColor}
+                  type="password"
+                  placeholder="Enter your password"
+                  onChangeText={field.onChange}
+                  size={'md'}
+                  {...field}
+                />
+              )}
+            />
 
-          <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
-        </FormControl>
+            <FormControl.ErrorMessage _text={{ fontSize: FontSizes.size15 }}>
+              {errors.password?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+        </View>
 
-        <FormControl isInvalid={'termsAndConditions' in errors}>
-          <Controller
-            name="termsAndConditions"
-            control={control}
-            render={({ field }) => (
-              <Checkbox
-                value="termsAndConditions"
-                isChecked={field.value}
-                onChange={(value) => {
-                  field.onChange(value)
-                }}
-              >
-                <Text mx={2}>I have read, understood and agreed to Finuncle&apos;s Terms and Conditions</Text>
-              </Checkbox>
-            )}
-          />
+        <View py={hp(1)} rowGap={hp(1.5)}>
+          <FormControl isInvalid={'termsAndConditions' in errors}>
+            <Controller
+              name="termsAndConditions"
+              control={control}
+              render={({ field }) => (
+                <XStack my={hp(0.5)} alignItems="center" space={wp(3)}>
+                  <Checkbox
+                    id="termsAndConditions"
+                    h={wp(5)}
+                    w={wp(5)}
+                    br={wp(1.2)}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    bg={'$muted'}
+                  >
+                    <Checkbox.Indicator>
+                      <Check size={wp(3)} />
+                    </Checkbox.Indicator>
+                  </Checkbox>
 
-          <FormControl.ErrorMessage>{errors.termsAndConditions?.message}</FormControl.ErrorMessage>
-        </FormControl>
+                  <Label f={1} fontSize={FontSizes.size15} lineHeight={hp(2.5)} htmlFor="termsAndConditions">
+                    I have read, understood and agreed to Finuncle&apos;s Terms and Conditions
+                  </Label>
+                </XStack>
+              )}
+            />
 
-        <FormControl isInvalid={'privacyPolicy' in errors}>
-          <Controller
-            name="privacyPolicy"
-            control={control}
-            render={({ field }) => (
-              <Checkbox
-                value="privacyPolicy"
-                isChecked={field.value}
-                onChange={(value) => {
-                  field.onChange(value)
-                }}
-              >
-                <Text mx={2}>I have read, understood and agreed to Finuncle&apos;s Privacy Policy</Text>
-              </Checkbox>
-            )}
-          />
+            <FormControl.ErrorMessage fontSize={FontSizes.size15}>
+              {errors.termsAndConditions?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
 
-          <FormControl.ErrorMessage>{errors.privacyPolicy?.message}</FormControl.ErrorMessage>
-        </FormControl>
+          <FormControl isInvalid={'privacyPolicy' in errors}>
+            <Controller
+              name="privacyPolicy"
+              control={control}
+              render={({ field }) => (
+                <XStack my={hp(0.5)} alignItems="center" space={wp(3)}>
+                  <Checkbox
+                    id="privacyPolicy"
+                    h={wp(5)}
+                    w={wp(5)}
+                    br={wp(1.2)}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    bg={'$muted'}
+                  >
+                    <Checkbox.Indicator>
+                      <Check size={wp(3)} />
+                    </Checkbox.Indicator>
+                  </Checkbox>
 
-        <Button onPress={handleSubmit(handleSignup)} isLoading={signupMutation.isPending}>
+                  <Label f={1} fontSize={FontSizes.size15} lineHeight={hp(2.5)} htmlFor="privacyPolicy">
+                    I have read, understood and agreed to Finuncle&apos;s Privacy Policy
+                  </Label>
+                </XStack>
+              )}
+            />
+
+            <FormControl.ErrorMessage fontSize={FontSizes.size15}>
+              {errors.privacyPolicy?.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+        </View>
+
+        <Button
+          fontSize={FontSizes.size15}
+          h={hp(5.5)}
+          onPress={handleSubmit(handleSignup)}
+          bg="$primary"
+          color="white"
+          disabled={signupMutation.isPending}
+        >
           Submit
         </Button>
 
         <Link href="/login" asChild>
           <Pressable>
-            <Text color="gray.500">Already have an account? Login</Text>
+            <Text fontSize={FontSizes.size15}>Already have an account? Login</Text>
           </Pressable>
         </Link>
-      </VStack>
+      </View>
     </ScrollView>
   )
 }

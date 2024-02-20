@@ -1,14 +1,17 @@
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
-import { Button, Checkbox, H1, Input, Label, Stack, Text, XStack, YStack } from 'tamagui'
+import { Button, Checkbox, Input, Label, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
 import { Check as CheckIcon } from '@tamagui/lucide-icons'
 import { LoginSchema, loginSchema } from '../schema/auth'
 import { useAuthContext } from '@/hooks/use-auth'
 import FormControl from '@/components/form-control'
+import { FontSizes } from '@/utils/fonts'
+import { hp, wp } from '@/utils/responsive'
 
 export default function Login() {
   const { isAuthenticated, loginMutation } = useAuthContext()
+  const theme = useTheme()
 
   const {
     control,
@@ -30,36 +33,61 @@ export default function Login() {
   }
 
   return (
-    <Stack flex={1} bg="$background" alignItems="center" justifyContent="center" p="$4">
-      <YStack bg="$muted" w="100%" borderRadius="$4" p="$4" space="$4">
-        <YStack space="$2">
-          <H1 fontWeight="bold">Log in</H1>
-          <Text color="$colorFocus">Welcome back to finuncle!</Text>
+    <Stack flex={1} bg="$background" alignItems="center" justifyContent="center" p={wp(4)}>
+      <YStack bg="$muted" w="100%" borderRadius={wp(4)} p={wp(4)} space={hp(2)}>
+        <YStack space={hp(1)}>
+          <Text fontSize={FontSizes.size48} fontFamily={'$heading'}>
+            Log in
+          </Text>
+          <Text fontSize={FontSizes.size18} color={theme.colorFocus.get()}>
+            Welcome back to finuncle!
+          </Text>
         </YStack>
 
         <FormControl>
-          <FormControl.Label isRequired>Username</FormControl.Label>
+          <FormControl.Label fontSize={FontSizes.size15} isRequired>
+            Username
+          </FormControl.Label>
 
           <Controller
             name="username"
             control={control}
-            render={({ field }) => <Input placeholder="Enter your username" onChangeText={field.onChange} {...field} />}
+            render={({ field }) => (
+              <Input
+                fontSize={FontSizes.size15}
+                h={hp(5)}
+                br={wp(1.8)}
+                placeholder="Enter your username"
+                onChangeText={field.onChange}
+                {...field}
+              />
+            )}
           />
 
-          <FormControl.ErrorMessage>{errors.username?.message}</FormControl.ErrorMessage>
+          <FormControl.ErrorMessage fontSize={FontSizes.size15}>{errors.username?.message}</FormControl.ErrorMessage>
         </FormControl>
 
         <FormControl>
-          <FormControl.Label isRequired>Password</FormControl.Label>
+          <FormControl.Label fontSize={FontSizes.size15} isRequired>
+            Password
+          </FormControl.Label>
           <Controller
             name="password"
             control={control}
             render={({ field }) => (
-              <Input secureTextEntry placeholder="Enter your password" onChangeText={field.onChange} {...field} />
+              <Input
+                fontSize={FontSizes.size15}
+                h={hp(5)}
+                br={wp(1.8)}
+                secureTextEntry
+                placeholder="Enter your password"
+                onChangeText={field.onChange}
+                {...field}
+              />
             )}
           />
 
-          <FormControl.ErrorMessage>{errors.password?.message}</FormControl.ErrorMessage>
+          <FormControl.ErrorMessage fontSize={FontSizes.size15}>{errors.password?.message}</FormControl.ErrorMessage>
         </FormControl>
 
         <FormControl>
@@ -67,30 +95,44 @@ export default function Login() {
             name="rememberMe"
             control={control}
             render={({ field }) => (
-              <XStack alignItems="center" space="$4">
-                <Checkbox id="rememberMe" size="$4" checked={field.value} onCheckedChange={field.onChange}>
+              <XStack my={hp(0.5)} alignItems="center" space={wp(3.4)}>
+                <Checkbox
+                  id="rememberMe"
+                  h={wp(5)}
+                  w={wp(5)}
+                  br={wp(1.2)}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                >
                   <Checkbox.Indicator>
-                    <CheckIcon />
+                    <CheckIcon size={wp(3)} />
                   </Checkbox.Indicator>
                 </Checkbox>
 
-                <Label size="$4" htmlFor="rememberMe">
+                <Label fontSize={FontSizes.size15} htmlFor="rememberMe">
                   Remember Me
                 </Label>
               </XStack>
             )}
           />
 
-          <FormControl.ErrorMessage>{errors.rememberMe?.message}</FormControl.ErrorMessage>
+          <FormControl.ErrorMessage fontSize={FontSizes.size15}>{errors.rememberMe?.message}</FormControl.ErrorMessage>
         </FormControl>
 
-        <Button onPress={handleSubmit(handleLogin)} disabled={loginMutation.isPending} bg="$primary" color="white">
+        <Button
+          fontSize={FontSizes.size15}
+          h={hp(5.5)}
+          onPress={handleSubmit(handleLogin)}
+          disabled={loginMutation.isPending}
+          bg="$primary"
+          color="white"
+        >
           Login
         </Button>
 
         <Link href="/signup" asChild>
           <Button variant="outlined">
-            <Text color="$color" ta="center">
+            <Text color="$color" fontSize={FontSizes.size15} ta="center">
               Don&rsquo;t have an account? Signup
             </Text>
           </Button>

@@ -22,8 +22,8 @@ type DateInput = BaseInput & {
   defaultDate?: Date
 }
 
-type Option = {
-  id: string
+export type Option = {
+  id: string | number
   label: string
 }
 
@@ -37,6 +37,7 @@ type SelectInput = BaseInput & {
   type: 'select'
   options: Option[]
   valueFormatter?: (value: string | number) => string | number
+  valueKey?: string
 }
 
 type TextInput = BaseInput & {
