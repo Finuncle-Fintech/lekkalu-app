@@ -34,8 +34,6 @@ const Dashboard = () => {
     }
   }
 
-
-export default function Dashboard() {
   const navigation  = useNavigation()
   const CAGRCalculator = () => {
     console.log("object")
