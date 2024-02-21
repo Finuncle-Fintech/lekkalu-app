@@ -6,7 +6,7 @@ import { View, useTheme } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
-import { StyleSheet } from 'react-native'
+import { RefreshControl, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import BackButton from '@/components/back-button'
 import LoaderOverlay from '@/components/loader-overlay'
@@ -35,7 +35,7 @@ export default function BudgetList() {
   const { top } = useSafeAreaInsets()
   const toast = useToast()
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching,isRefetching,refetch  } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
     queryFn: fetchBudgets,
   })
@@ -65,6 +65,10 @@ export default function BudgetList() {
     deleteBudgetMutation.mutate(id)
   }
 
+  const onRefresh = async () => {
+    await refetch();
+  };
+
   return (
     <>
       {isFetching || deleteBudgetMutation?.isPending && <LoaderOverlay />}
@@ -81,6 +85,14 @@ export default function BudgetList() {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={!isFetching ? <EmptyContent title="No budget has been set yet!" /> : null}
           contentContainerStyle={data?.length === 0 ? { flexGrow: 1, justifyContent: 'center' } : null}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={onRefresh}
+              colors={['#0000ff']} // Customize the refresh indicator colors
+              tintColor="#0000ff" // Customize the color of the refresh indicator
+            />
+          }
           renderItem={({ item }) => (
             <VStack
               space={4}
