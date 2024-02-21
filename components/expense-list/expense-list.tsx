@@ -10,6 +10,7 @@ import { fetchTags } from '@/queries/tag'
 import Loading from '../loading'
 import DeleteExpense from '../delete-expense'
 import { FontSizes } from '@/utils/fonts'
+import { wp } from '@/utils/responsive'
 
 export default function ExpenseList() {
   const theme = useTheme()
@@ -48,49 +49,50 @@ export default function ExpenseList() {
       refreshing={expenseQuery.isLoading || tagsQuery.isLoading}
       keyExtractor={(item) => item.id.toString()}
       data={expenseQuery.data ?? []}
+      showsVerticalScrollIndicator={false}      
       renderItem={({ item }) => (
         <VStack
           space={4}
           bg={theme.background.get()}
           rounded="md"
-          p="4"
+          p="3"
           shadow="sm"
           mb="4"
           display={'flex'}
           flexDirection={'row'}
-          justifyContent={'space-between'}
+          justifyContent={'space-between'}          
         >
-          <View width={'$18'}>
+          <View flex={1} mr={wp(3)}>
             <HStack space={2}>
-              <Text color={theme.foreground.get()} fontSize={FontSizes.size20}>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
                 Amount :{' '}
               </Text>
-              <Text color={theme.foreground.get()} fontSize={FontSizes.size20} fontWeight="bold">
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
                 {item.amount}
               </Text>
             </HStack>
             <HStack space={2} display={'flex'} flexWrap={'wrap'}>
-              <Text color={theme.foreground.get()} fontSize={FontSizes.size20}>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
                 Tags :{' '}
               </Text>
-              <Text color={theme.foreground.get()} fontSize={FontSizes.size20} fontWeight="bold">
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600" flex={1}>
                 {getTagNames(item.tags)}
               </Text>
             </HStack>
           </View>
           <Button.Group display={'flex'} alignItems={'center'}>
-            <DeleteExpense id={item.id} />
             <Link href={`/update-expense/${item.id}`} asChild>
               <IconButton
-                size={10}
+                size={6}
                 variant="solid"
                 _icon={{
                   as: EvilIcons,
                   name: 'pencil',
-                  size: 8,
+                  size: 5,
                 }}
               />
             </Link>
+            <DeleteExpense id={item.id} />
           </Button.Group>
         </VStack>
       )}

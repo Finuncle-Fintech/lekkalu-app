@@ -36,13 +36,13 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
   return (
     <>
       <IconButton
-        size={10}
+        size={6}
         variant="solid"
         colorScheme="danger"
         _icon={{
           as: EvilIcons,
           name: 'trash',
-          size: 8,
+          size: 5,
         }}
         onPress={() => {
           setIsOpen(true)
