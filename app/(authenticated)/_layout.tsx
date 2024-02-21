@@ -213,6 +213,14 @@ export default function AuthenticatedAppLayout() {
           unmountOnBlur: true,
         }}
       />
+      <Tabs.Screen
+        name="budget"
+        options={{          
+          href: null,
+          headerShown:false,          
+          unmountOnBlur: true,
+        }}
+      />
     </Tabs>
   )
 }
