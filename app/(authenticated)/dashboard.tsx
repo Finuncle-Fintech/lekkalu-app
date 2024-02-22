@@ -1,5 +1,3 @@
-import { useNavigation } from 'expo-router/src/useNavigation'
-import { Button } from 'native-base'
 import React from 'react'
 import { View, Text } from 'tamagui'
 import { Feather, FontAwesome } from '@expo/vector-icons'
@@ -39,13 +37,6 @@ const Dashboard = () => {
       default:
         break
     }
-  }
-
-  const navigation  = useNavigation()
-  const CAGRCalculator = () => {
-    console.log("object")
-    // return <Redirect href="/cagrcalculator" />
-    navigation.navigate('cagrcalculator')
   }
 
   return (
