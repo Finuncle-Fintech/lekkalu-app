@@ -31,16 +31,6 @@ export default function cagrcalculator({ }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#0058e2",
-        paddingTop: 50
-    },
-    subContainer: {
-        alignItems: 'center',
-        marginTop: 12,
-        marginHorizontal: 16,
-    },
     back: {
         height: wp(10),
         width: wp(10),
@@ -51,51 +41,4 @@ const styles = StyleSheet.create({
         marginHorizontal: wp(5),
       },
     scrollContent: { paddingBottom: hp(4) },
-    sliderContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: 40,
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    rowContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: "92%",
-        alignItems: 'center',
-        marginTop: 8
-    },
-    backButtonBackground: {
-        backgroundColor: '#66c4fb54',
-        marginHorizontal: 16,
-        padding: 4,
-        borderRadius: 100,
-        width: 32,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    backButton: {
-        height: 14,
-        width: 14,
-        tintColor: 'white'
-    },
-    whiteContainer: {
-        backgroundColor: "white",
-        flex: 1,
-        marginTop: 18,
-        borderTopRightRadius: 22,
-        borderTopLeftRadius: 22
-    },
-    inputFeildStyle: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderWidth: 1,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 8,
-        borderColor: "gray",
-        maxWidth: 140,
-        width: 120
-    },
 })
