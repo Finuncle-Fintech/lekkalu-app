@@ -18934,8 +18934,7 @@
             "isReactNative": false,
             "isText": false,
             "context": "Component",
-            "isStyledHOC": false,
-            "neverFlatten": true
+            "isStyledHOC": false
           }
         },
         "SwitchThumb": {
@@ -19218,8 +19217,7 @@
             "isReactNative": false,
             "isText": false,
             "context": "Component",
-            "isStyledHOC": false,
-            "neverFlatten": true
+            "isStyledHOC": false
           }
         },
         "Tabs": {

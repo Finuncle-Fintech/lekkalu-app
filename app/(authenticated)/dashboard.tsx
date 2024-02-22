@@ -22,6 +22,10 @@ const features = [
     title: 'Goals',
     image: <Target size={wp(7)} color={THEME_COLORS.primary[100]} />,
   },
+  {
+    title: 'CAGR Calculator',
+    image: <FontAwesome name="calculator" size={wp(6)} color={THEME_COLORS.primary[100]} />,
+  },
 ]
 
 const Dashboard = () => {
@@ -31,10 +35,13 @@ const Dashboard = () => {
         router.push('/(authenticated)/income-statement')
         break
       case 'EMI Calculator':
-        router.push('/(authenticated)/emi-calculator')
+        router.push('/emi-calculator')
         break
       case 'Goals':
-        router.push('/(authenticated)/goals')
+      router.push('/(authenticated)/goals')
+      break
+      case 'CAGR Calculator':
+        router.push('/cagr-calculator')
         break
       default:
         break
