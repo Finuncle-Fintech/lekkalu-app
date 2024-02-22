@@ -1,7 +1,7 @@
 import { Button, FlatList, HStack, IconButton, Text, VStack, useToast } from 'native-base'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
-import { router } from 'expo-router'
+import { router, useFocusEffect } from 'expo-router'
 import { View, useTheme } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
@@ -35,44 +35,57 @@ export default function BudgetList() {
   const { top } = useSafeAreaInsets()
   const toast = useToast()
 
-  const { data, isFetching,isRefetching,refetch  } = useQuery({
+  const { data, isFetching, isRefetching,isLoading, refetch } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
     queryFn: fetchBudgets,
   })
 
   const deleteBudgetMutation = useMutation({
     mutationFn: deleteBudget,
-    onSuccess: (_, deletedBudgetId) => {
-      queryClient.setQueryData<Budget[]>([BUDGET_QUERY_KEYS.BUDGETS], (prevData) => {
-        if (!prevData) return []
+    onMutate: async (deleteBudgetId: number) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: [BUDGET_QUERY_KEYS.BUDGETS] })
 
-        return prevData.filter((b) => b.id !== deletedBudgetId)
-      })
+      // Snapshot the previous value
+      const previousData = queryClient.getQueryData([BUDGET_QUERY_KEYS.BUDGETS])
 
-      toast.show({ title: 'Budget deleted successfully!' })
+      // Optimistically update to the new value
+      queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], (oldBudgetList: Budget[]) =>
+        oldBudgetList.filter((budget: Budget) => budget.id != deleteBudgetId),
+      )
+      return { previousData }
     },
-    onError: (error) => {
+    onSuccess: (_, deletedBudgetId) => {
+      console.log('Budget Deleted !! ')
+
+      // toast.show({ title: 'Budget deleted successfully!' })
+    },
+    onError: async (error, deleteBudgetId, context) => {
+      // queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], context?.previousData);
       if (isAxiosError(error)) {
-        toast.show({ title: error?.response?.data?.message })
+        console.log(error)
+        toast.show({ title: error?.message })
         return
       }
-      toast.show({ title: 'Something went wrong.' })
+      console.log(error)
+      toast.show({ title: `${error?.message}` })
+      await refetch()
     },
   })
-
 
   function handleDeleteBudget(id: number) {
     deleteBudgetMutation.mutate(id)
   }
 
   const onRefresh = async () => {
-    await refetch();
-  };
+    await refetch()
+  }
 
   return (
     <>
-      {isFetching || deleteBudgetMutation?.isPending && <LoaderOverlay />}
-      <View f={1} pt={top + hp(2)}  marginHorizontal={wp(5)}>
+      {isLoading || isFetching && <LoaderOverlay />}
+      <View f={1} pt={top + hp(2)} marginHorizontal={wp(5)}>
         <View flexDirection="row" gap={wp(4)} alignItems="center" marginBottom={hp(2)}>
           <BackButton onPress={() => router.replace('/expenses')} />
           <Text fontSize={FontSizes.size26} fontWeight={'500'}>
@@ -89,8 +102,8 @@ export default function BudgetList() {
             <RefreshControl
               refreshing={isRefetching}
               onRefresh={onRefresh}
-              colors={['#0000ff']} // Customize the refresh indicator colors
-              tintColor="#0000ff" // Customize the color of the refresh indicator
+              colors={[THEME_COLORS.brand[900]]} // Customize the refresh indicator colors
+              tintColor={THEME_COLORS.brand[900]} // Customize the color of the refresh indicator
             />
           }
           renderItem={({ item }) => (
@@ -110,8 +123,8 @@ export default function BudgetList() {
                   <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
                     Month :{' '}
                   </Text>
-                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">                    
-                    {dayjs(item?.month).format('MMMM')}
+                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
+                    {dayjs(item?.month).format('MMMM YYYY')}
                   </Text>
                 </HStack>
                 <HStack space={1} display={'flex'} flexWrap={'wrap'}>
@@ -119,7 +132,7 @@ export default function BudgetList() {
                     Limit :{' '}
                   </Text>
                   <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600" flex={1}>
-                  ₹ {item?.limit}
+                    ₹ {item?.limit}
                   </Text>
                 </HStack>
               </View>
@@ -150,7 +163,7 @@ export default function BudgetList() {
                       size: 5,
                     }}
                     onPress={() => {
-                      handleDeleteBudget(item?.id);
+                      handleDeleteBudget(item?.id)
                     }}
                   />
                 </View>

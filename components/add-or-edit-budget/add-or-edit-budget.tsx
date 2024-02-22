@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useToast } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { omit } from 'lodash'
+import { omit, round } from 'lodash'
 import { Text, View, useTheme, Input } from 'tamagui'
 import { CalendarDays, X } from '@tamagui/lucide-icons'
 import { Button, Dialog, XStack } from 'tamagui'
@@ -27,6 +27,7 @@ import { fetchBudgets, getSingleMonthBudget, setBudget, updateBudget } from '@/q
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import dayjs from 'dayjs'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { Budget } from '@/types/budget'
 const { width, height } = Dimensions.get('window')
 
 type AddOrEditBudgetProps = {
@@ -121,10 +122,19 @@ export default function CreateOrEditBudget({
       setShowModal(false)
       toast.show({ title: 'Something went wrong while edit budget. Please try again!' })
     },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
-      })
+    onSuccess(data) {      
+      queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], (oldBudgetList: Budget[]) =>
+        oldBudgetList.map((budget: Budget) => {
+          if (budget.id === data.data.id) {
+            return {              
+              ...data.data,
+              limit: Number(data.data.limit).toFixed(2)
+            }
+          }
+          return budget
+        }),
+      )
+
       setShowModal(false)
       toast.show({
         title: 'Budget edited successfully!',
@@ -148,28 +158,13 @@ export default function CreateOrEditBudget({
       <Dialog modal open={showModal}>
         <Dialog.Portal>
           <Dialog.Overlay
-            key="overlay"
-            // animation="bouncy"
-            // opacity={0.5}
-            // enterStyle={{ opacity: 0 }}
-            // exitStyle={{ opacity: 0 }}
+            key="overlay"            
           />
 
           <Dialog.Content
             bordered
             elevate
-            key="content"
-            // animateOnly={['transform', 'opacity']}
-            // animation={[
-            //   'bouncy',
-            //   {
-            //     opacity: {
-            //       overshootClamping: true,
-            //     },
-            //   },
-            // ]}
-            // enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
-            // exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+            key="content"            
             gap="$2"
           >
             <Dialog.Title>
@@ -224,7 +219,7 @@ export default function CreateOrEditBudget({
                           keyboardType="numeric"
                           placeholder="Select budget month"
                           defaultValue={asset?.month}
-                          value={dayjs(date).format('YYYY-MM-DD')}
+                          value={dayjs(date).format('MMMM YYYY')}
                           disabled={true}
                           flex={1}
                         />

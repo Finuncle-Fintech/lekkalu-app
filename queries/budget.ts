@@ -25,7 +25,8 @@ export async function updateBudget(id: number, dto: UpdateBudgetSchema) {
 export async function getSingleMonthBudget(date: Date,allBudgetList: SetBudgetSchema[]) {
   const data = allBudgetList?.filter((item) => {
     const itemMonth = new Date(item.month).getMonth()
-    return itemMonth === new Date(date).getMonth()
+    const itemYear = new Date(item.month).getFullYear()
+    return itemMonth === new Date(date).getMonth() && itemYear === new Date(date).getFullYear()
   })
   return data?.[0] || null;
 }
