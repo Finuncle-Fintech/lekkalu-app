@@ -28,20 +28,20 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   return (
     <Button
       themeInverse
-      size="$3"
-      paddingHorizontal={'$5'}
+      size={wp(10)}
+      paddingHorizontal={wp(10)}
       backgroundColor={THEME_COLORS.primary[700]}
       onPress={onPress}
       disabled={isDisable}
       flex={1}
       {...buttonStyle}
-      {...hasLikeOutline ? {borderColor:THEME_COLORS.primary[700],borderWidth:0.25,backgroundColor:'white'}: null}
+      {...hasLikeOutline ? {borderColor:THEME_COLORS.primary[700],borderWidth:0.5,backgroundColor:'white'}: null}
       {...(isLoading || isDisable) ? {opacity:0.5} : null}
       
     >
       <View flexDirection='row' gap={wp(1)}>
         {isLoading && <Spinner size="small" color={THEME_COLORS.primary[50]} />}
-        {!isLoading && <Text fontSize={FontSizes.size22} {...textStyle} {...hasLikeOutline ? {color:'black'} : {color:'white'}}>{text}</Text>}
+        {!isLoading && <Text fontSize={FontSizes.size20} {...textStyle} {...hasLikeOutline ? {color:'black'} : {color:'white'}}>{text}</Text>}
       </View>
     </Button>
   )

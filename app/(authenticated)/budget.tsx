@@ -17,12 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { deleteBudget, fetchBudgets } from '@/queries/budget'
 import { isAxiosError } from 'axios'
-
-export type Budget = {
-  id: number
-  limit: number
-  month: string
-}
+import { Budget } from '@/types/budget'
 
 export default function BudgetList() {
   const queryClient = useQueryClient()
@@ -39,6 +34,12 @@ export default function BudgetList() {
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
     queryFn: fetchBudgets,
   })
+
+  // useEffect(()=>{
+  //   queryClient.invalidateQueries({
+  //     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
+  //   })
+  // },[])
 
   const deleteBudgetMutation = useMutation({
     mutationFn: deleteBudget,
@@ -58,7 +59,6 @@ export default function BudgetList() {
     },
     onSuccess: (_, deletedBudgetId) => {
       console.log('Budget Deleted !! ')
-
       // toast.show({ title: 'Budget deleted successfully!' })
     },
     onError: async (error, deleteBudgetId, context) => {
@@ -84,7 +84,7 @@ export default function BudgetList() {
 
   return (
     <>
-      {isLoading || isFetching && <LoaderOverlay />}
+      {isLoading || isFetching || deleteBudgetMutation.isPending && <LoaderOverlay />}
       <View f={1} pt={top + hp(2)} marginHorizontal={wp(5)}>
         <View flexDirection="row" gap={wp(4)} alignItems="center" marginBottom={hp(2)}>
           <BackButton onPress={() => router.replace('/expenses')} />
@@ -139,12 +139,12 @@ export default function BudgetList() {
               <Button.Group display={'flex'} alignItems={'center'}>
                 <View>
                   <IconButton
-                    size={6}
+                    size={wp(6)}
                     variant="solid"
                     _icon={{
                       as: EvilIcons,
                       name: 'pencil',
-                      size: 5,
+                      size: 6,
                     }}
                     onPress={() => {
                       setShowModal(true)
@@ -154,13 +154,13 @@ export default function BudgetList() {
                 </View>
                 <View>
                   <IconButton
-                    size={6}
+                    size={wp(6)}
                     variant="solid"
                     colorScheme="danger"
                     _icon={{
                       as: EvilIcons,
                       name: 'trash',
-                      size: 5,
+                      size: 6,
                     }}
                     onPress={() => {
                       handleDeleteBudget(item?.id)
