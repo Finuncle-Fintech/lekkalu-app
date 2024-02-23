@@ -12,7 +12,7 @@ import { hp, wp } from '@/utils/responsive'
 import Card from '@/components/card'
 import { THEME_COLORS } from '@/utils/theme'
 import DatePicker from '@/components/date-picker'
-import { useGetGoalDetails, useGetGoalTimeline } from '@/queries/goal'
+import { useGetGoalDetails, useGetGoalSources, useGetGoalTimeline } from '@/queries/goal'
 import { getGoalTimelineData } from '@/utils/goal'
 
 interface IKeyValueTextProps {
@@ -46,7 +46,13 @@ const GoalDetails = () => {
     isLoading: isLoadingTimelineData,
   } = useGetGoalTimeline(+params?.id)
 
+  const { data: sourcesQueryData } = useGetGoalSources()
+
   const goalData = goalDetailsQueryData?.data || null
+
+  const SOURCE = useMemo(() => {
+    return sourcesQueryData?.data?.find((each) => each?.id === goalData?.target_contribution_source)
+  }, [sourcesQueryData?.data, goalData])
 
   const barData = useMemo(
     () => getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate),
@@ -68,11 +74,11 @@ const GoalDetails = () => {
           </Text>
           <Separator my={hp(1.5)} borderColor={THEME_COLORS.gray[200]} />
           <View rowGap={hp(2)}>
-            <KeyValueText title="Target" value={goalData?.target_value} />
-            <KeyValueText title="Source" value={goalData?.target_contribution_source} />
-            <KeyValueText title="KPI" value={goalData?.track_kpi} />
-            <KeyValueText title="Reachable by" value={`${Math.abs(goalData?.reachable_by_days)} Days`} />
-            <KeyValueText title="Proportionality" value={goalData?.goal_proportionality} />
+            <KeyValueText title="Target" value={String(goalData?.target_value)} />
+            <KeyValueText title="Source" value={String(SOURCE?.name)} />
+            <KeyValueText title="KPI" value={String(goalData?.track_kpi)} />
+            <KeyValueText title="Reachable by" value={`${Math.abs(goalData?.reachable_by_days || 0)} Days`} />
+            <KeyValueText title="Proportionality" value={String(goalData?.goal_proportionality)} />
           </View>
         </Card>
         <Card mt={hp(3)}>
