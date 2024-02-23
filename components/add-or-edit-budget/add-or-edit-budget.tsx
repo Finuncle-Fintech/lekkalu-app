@@ -12,22 +12,28 @@ import { THEME_COLORS } from '@/utils/theme'
 import {
   SetBudgetSchema,
   SetBudgetSchema2,
+  SetBudgetSchema3,
   UpdateBudgetSchema,
   setBudgetSchema,
   setBudgetSchema2,
+  setBudgetSchema3,
   updateBudgetSchema,
 } from '@/schema/budget'
 import FormControl from '../form-control/form-control'
 import { hp, wp } from '@/utils/responsive'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 import CustomButton from '../custom-button'
-import { formatDate } from '@/utils/fn'
+import { formatDate, getLastTenYears, getMonthIndex } from '@/utils/fn'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchBudgets, getSingleMonthBudget, setBudget, updateBudget } from '@/queries/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import dayjs from 'dayjs'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { Budget } from '@/types/budget'
+import { SelectMonthYearItem } from './select-month-year'
+import Label from '../form-control/components/label'
+import { isAxiosError } from 'axios'
+import { monthName } from '@/utils/constant/constant'
 const { width, height } = Dimensions.get('window')
 
 type AddOrEditBudgetProps = {
@@ -46,9 +52,6 @@ export default function CreateOrEditBudget({
   isEdit = false,
 }: AddOrEditBudgetProps) {
   const queryClient = useQueryClient()
-  const [date, setDate] = useState(new Date())
-  const [isOpenDatePicker, setOpenDatePicker] = useState(false)
-  const [isSelectedMonthExist, setSelectedMonthExist] = useState(false)
 
   const toast = useToast()
 
@@ -59,23 +62,43 @@ export default function CreateOrEditBudget({
 
   useEffect(() => {
     if (showModal && asset) {
-      setDate(new Date(asset.month))
+      setDate(new Date(asset.month).toString())
+    }
+    if(!showModal){
+      setSelectedMonthExist(false)
     }
   }, [showModal])
+
+  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'))
+  const [isOpenDatePicker, setOpenDatePicker] = useState(false)
+  const [isSelectedMonthExist, setSelectedMonthExist] = useState(false)
+  const [showMonthPicker, setShowMonthPicker] = useState(false)
+  const [showYearPicker, setShowYearPicker] = useState(false)
+  const monthData: string[] = monthName;
+  const yearData: string[] = getLastTenYears()
+
+  const [selectedMonth, setSelectedMonth] = useState<string>(monthData[new Date().getMonth()])
+  const [selectedYear, setSelectedYear] = useState<string>(yearData[0])
+
+  useEffect(() => {
+    console.log(selectedMonth)
+    setSelectedMonthExist(false)
+    const month = getMonthIndex(selectedMonth)
+    const customDate = dayjs(new Date(`${Number(selectedYear)}-${month+1}`)).format('YYYY-MM-DD')
+    setDate(customDate)
+    console.log('customDate',customDate)
+  }, [selectedMonth, selectedYear])
 
   const {
     handleSubmit,
     control,
     formState: { errors },
     reset,
-  } = useForm<SetBudgetSchema2>({
-    resolver: zodResolver(setBudgetSchema2),
+  } = useForm<SetBudgetSchema3>({
+    resolver: zodResolver(setBudgetSchema3),
     defaultValues: {
       ...omit(asset, 'id'),
       limit: asset?.limit ? Number(asset.limit) : undefined,
-      month: asset?.month
-        ? dayjs().set('month', Number(asset.month)).format(SERVER_DATE_FORMAT)
-        : dayjs().set('month', Number(new Date().getMonth())).format(SERVER_DATE_FORMAT),
     },
   })
 
@@ -86,16 +109,25 @@ export default function CreateOrEditBudget({
         queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
       })
       reset({})
+      setSelectedMonth(monthData[new Date().getMonth()])
+      setSelectedYear(yearData[0])
       setShowModal(false)
       toast.show({ title: 'Budget set successfully!' })
     },
-    onError() {
+    onError: async (error) => {
+      // queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], context?.previousData);
       setShowModal(false)
+      if (isAxiosError(error)) {
+        console.log(error)
+        toast.show({ title: error?.message })
+        return
+      }
+      console.log(error)
       toast.show({ title: 'Something went wrong while setting budget. Please try again!' })
     },
   })
 
-  const handleAddBudget = async (values: SetBudgetSchema2) => {
+  const handleAddBudget = async (values: SetBudgetSchema3) => {
     console.log(values)
 
     const isExist = await getSingleMonthBudget(new Date(date), data || [])
@@ -104,6 +136,7 @@ export default function CreateOrEditBudget({
       setBudgetMutation.mutate({
         limit: parseFloat(Number(values.limit).toFixed(2)),
         month: dayjs(date).format('YYYY-MM-DD'),
+        year: selectedYear,
       })
     } else {
       setSelectedMonthExist(true)
@@ -118,17 +151,24 @@ export default function CreateOrEditBudget({
         throw new Error('Asset ID is undefined')
       }
     },
-    onError() {
+    onError: async (error) => {
+      // queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], context?.previousData);
       setShowModal(false)
+      if (isAxiosError(error)) {
+        console.log(error)
+        toast.show({ title: error?.message })
+        return
+      }
+      console.log(error)
       toast.show({ title: 'Something went wrong while edit budget. Please try again!' })
     },
-    onSuccess(data) {      
+    onSuccess(data) {
       queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], (oldBudgetList: Budget[]) =>
         oldBudgetList.map((budget: Budget) => {
           if (budget.id === data.data.id) {
-            return {              
+            return {
               ...data.data,
-              limit: Number(data.data.limit).toFixed(2)
+              limit: Number(data.data.limit).toFixed(2),
             }
           }
           return budget
@@ -142,10 +182,11 @@ export default function CreateOrEditBudget({
     },
   })
 
-  function handleUpdateBudget(values: SetBudgetSchema2) {
+  function handleUpdateBudget(values: SetBudgetSchema3) {
     updateBudgetMutation.mutate({
       limit: parseFloat(Number(values.limit).toFixed(2)),
-      month: values.month,
+      month: asset?.month || '',
+      year: asset?.year || '',
     })
   }
 
@@ -157,19 +198,12 @@ export default function CreateOrEditBudget({
     <>
       <Dialog modal open={showModal}>
         <Dialog.Portal>
-          <Dialog.Overlay
-            key="overlay"            
-          />
+          <Dialog.Overlay key="overlay" />
 
-          <Dialog.Content
-            bordered
-            elevate
-            key="content"            
-            gap="$2"
-          >
+          <Dialog.Content bordered elevate key="content" gap={wp(2)}>
             <Dialog.Title>
               <View flexDirection="row" justifyContent="space-between" width={width - 50} alignItems="center">
-                <Text fontSize={FontSizes.size30}>{title}</Text>
+                <Text fontSize={FontSizes.size26}>{title}</Text>
                 <Dialog.Close asChild>
                   <Button size="$2" circular icon={X} onPress={() => setShowModal(false)} />
                 </Dialog.Close>
@@ -177,7 +211,11 @@ export default function CreateOrEditBudget({
             </Dialog.Title>
             <View>
               <FormControl>
-                <FormControl.Label fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired>
+                <FormControl.Label
+                  fontSize={FontSizes.size16}
+                  lineHeight={FontSizes.size20}
+                  isRequired                 
+                >
                   Limit
                 </FormControl.Label>
                 <Controller
@@ -196,49 +234,61 @@ export default function CreateOrEditBudget({
                     />
                   )}
                 />
-
                 <FormControl.ErrorMessage fontSize={FontSizes.size15}>{errors.limit?.message}</FormControl.ErrorMessage>
               </FormControl>
             </View>
 
             {!isEdit && (
-              <View>
-                <FormControl>
-                  <FormControl.Label fontSize={FontSizes.size16} lineHeight={FontSizes.size20}>
-                    Month
-                  </FormControl.Label>
-                  <Controller
-                    name="month"
-                    control={control}
-                    render={({ field }) => (
-                      <View flexDirection="row" alignItems="center">
-                        <Input
-                          fontSize={FontSizes.size15}
-                          h={hp(6)}
-                          br={wp(1.8)}
-                          keyboardType="numeric"
-                          placeholder="Select budget month"
-                          defaultValue={asset?.month}
-                          value={dayjs(date).format('MMMM YYYY')}
-                          disabled={true}
-                          flex={1}
-                        />
-                        <CalendarDays
-                          onPress={() => setOpenDatePicker(true)}
-                          size="$1"
-                          style={{ position: 'absolute', right: 8 }}
-                          color={THEME_COLORS.primary[700]}
-                        />
-                      </View>
-                    )}
-                  />
+              <>
+                <View>
+                  <Label children={'Month'} fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired />
+                  <View flexDirection="row" alignItems="center">
+                    <Input
+                      fontSize={FontSizes.size15}
+                      h={hp(6)}
+                      br={wp(1.8)}
+                      keyboardType="numeric"
+                      placeholder="Select month please"
+                      value={selectedMonth}
+                      disabled={true}
+                      flex={1}
+                    />
+                    <CalendarDays
+                      onPress={() => setShowMonthPicker(true)}
+                      size="$1"
+                      style={{ position: 'absolute', right: 8 }}
+                      color={THEME_COLORS.primary[700]}
+                    />
+                  </View>
                   {isSelectedMonthExist && (
                     <FormControl.ErrorMessage fontSize={FontSizes.size15}>
                       Budget already alloted for this month.
                     </FormControl.ErrorMessage>
                   )}
-                </FormControl>
-              </View>
+                </View>
+                
+                <View>
+                  <Label children={'Year'} fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired />
+                  <View flexDirection="row" alignItems="center">
+                    <Input
+                      fontSize={FontSizes.size15}
+                      h={hp(6)}
+                      br={wp(1.8)}
+                      keyboardType="numeric"
+                      placeholder="Enter year please"
+                      value={selectedYear}
+                      disabled={true}
+                      flex={1}
+                    />
+                    <CalendarDays
+                      onPress={() => setShowYearPicker(true)}
+                      size="$1"
+                      style={{ position: 'absolute', right: 8 }}
+                      color={THEME_COLORS.primary[700]}
+                    />
+                  </View>                 
+                </View>
+              </>
             )}
 
             <XStack marginTop={'$2'} gap={10} justifyContent="space-between">
@@ -257,20 +307,24 @@ export default function CreateOrEditBudget({
             </XStack>
           </Dialog.Content>
         </Dialog.Portal>
-        {isOpenDatePicker && (
-          <RNDateTimePicker
-            value={date}
-            display="calendar"
-            onChange={(event, selectedDate) => {
-              if (selectedDate !== undefined) {
-                setOpenDatePicker(false)
-                setDate(selectedDate)
-                setSelectedMonthExist(false)
-              }
-            }}
-          />
-        )}
       </Dialog>
+      <SelectMonthYearItem
+        items={monthData}
+        placeHolder="Select month"
+        selectedItem={selectedMonth}
+        setSelectedItem={setSelectedMonth}
+        showPicker={showMonthPicker}
+        setShowPicker={setShowMonthPicker}
+      />
+
+      <SelectMonthYearItem
+        items={yearData}
+        placeHolder="Select year"
+        selectedItem={selectedYear}
+        setSelectedItem={setSelectedYear}
+        showPicker={showYearPicker}
+        setShowPicker={setShowYearPicker}
+      />
     </>
   )
 }

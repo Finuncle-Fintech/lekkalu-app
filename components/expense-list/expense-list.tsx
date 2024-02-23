@@ -83,12 +83,12 @@ export default function ExpenseList() {
           <Button.Group display={'flex'} alignItems={'center'}>
             <Link href={`/update-expense/${item.id}`} asChild>
               <IconButton
-                size={6}
+                size={wp(6)}
                 variant="solid"
                 _icon={{
                   as: EvilIcons,
                   name: 'pencil',
-                  size: 5,
+                  size: 6,
                 }}
               />
             </Link>

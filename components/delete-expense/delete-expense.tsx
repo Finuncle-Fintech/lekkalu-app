@@ -6,6 +6,7 @@ import { Text, useTheme } from 'tamagui'
 import { deleteExpense } from '@/queries/expense'
 import { EXPENSES } from '@/utils/query-keys'
 import { FontSizes } from '@/utils/fonts'
+import { wp } from '@/utils/responsive'
 
 type DeleteExpenseProps = {
   id: number
@@ -36,13 +37,13 @@ export default function DeleteExpense({ id }: DeleteExpenseProps) {
   return (
     <>
       <IconButton
-        size={6}
+        size={wp(6)}
         variant="solid"
         colorScheme="danger"
         _icon={{
           as: EvilIcons,
           name: 'trash',
-          size: 5,
+          size: 6,
         }}
         onPress={() => {
           setIsOpen(true)
