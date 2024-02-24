@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Separator, Spinner, Text, View } from 'tamagui'
@@ -36,8 +36,14 @@ const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
 const GoalDetails = () => {
   const insets = useSafeAreaInsets()
 
-  const [fromDate, setFromDate] = useState<Date | undefined>(dayjs().subtract(6, 'day').toDate())
-  const [toDate, setToDate] = useState<Date | undefined>(dayjs().toDate())
+  const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
+  const [toDate, setToDate] = useState<Date | undefined>(undefined)
+
+  const [timelineSpan, setTimelineSpan] = useState({
+    firstGoalDay: dayjs().toDate(),
+    lastGoalDay: dayjs().toDate(),
+  })
+
   const params = useLocalSearchParams()
 
   const { data: goalDetailsQueryData } = useGetGoalDetails(+params?.id)
@@ -55,10 +61,27 @@ const GoalDetails = () => {
     return sourcesQueryData?.data?.find((each) => each?.id === goalData?.target_contribution_source)
   }, [sourcesQueryData?.data, goalData])
 
-  const barData = useMemo(
-    () => getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate),
-    [fromDate, goalTimelineQueryData, toDate],
-  )
+  const barData = useMemo(() => {
+    if (fromDate && toDate && goalTimelineQueryData?.data) {
+      return getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate)
+    } else {
+      return []
+    }
+  }, [fromDate, goalTimelineQueryData, toDate])
+
+  useEffect(() => {
+    if (!isLoadingTimelineData) {
+      const firstGoalDay = dayjs(goalTimelineQueryData?.data[0]?.time).toDate()
+      const lastGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 1].time).toDate()
+
+      setFromDate(firstGoalDay)
+      setToDate(lastGoalDay)
+      setTimelineSpan({
+        firstGoalDay,
+        lastGoalDay,
+      })
+    }
+  }, [goalTimelineQueryData, isLoadingTimelineData])
 
   return (
     <View f={1} pt={insets.top + hp(2)} bg="$backgroundHover">
@@ -115,13 +138,25 @@ const GoalDetails = () => {
                   <Text fontSize={FontSizes.size16} fontWeight={'bold'}>
                     From :-
                   </Text>
-                  <DatePicker value={fromDate} onChange={setFromDate} maximumDate={toDate} />
+                  <DatePicker
+                    key={fromDate?.toISOString()}
+                    value={fromDate}
+                    onChange={setFromDate}
+                    minimumDate={timelineSpan?.firstGoalDay}
+                    maximumDate={timelineSpan?.lastGoalDay}
+                  />
                 </View>
                 <View rowGap={hp(1)} f={1}>
                   <Text fontSize={FontSizes.size16} fontWeight={'bold'}>
                     To :-
                   </Text>
-                  <DatePicker value={toDate} onChange={setToDate} minimumDate={fromDate} />
+                  <DatePicker
+                    key={toDate?.toISOString()}
+                    value={toDate}
+                    onChange={setToDate}
+                    minimumDate={timelineSpan?.firstGoalDay}
+                    maximumDate={timelineSpan?.lastGoalDay}
+                  />
                 </View>
               </View>
               <BarChart
