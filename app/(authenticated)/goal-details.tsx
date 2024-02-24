@@ -14,6 +14,7 @@ import { THEME_COLORS } from '@/utils/theme'
 import DatePicker from '@/components/date-picker'
 import { useGetGoalDetails, useGetGoalSources, useGetGoalTimeline } from '@/queries/goal'
 import { getGoalTimelineData } from '@/utils/goal'
+import { convertDays, goalReachedString } from '@/utils/dateTime'
 
 interface IKeyValueTextProps {
   title: string
@@ -77,7 +78,10 @@ const GoalDetails = () => {
             <KeyValueText title="Target" value={String(goalData?.target_value)} />
             <KeyValueText title="Source" value={String(SOURCE?.name)} />
             <KeyValueText title="KPI" value={String(goalData?.track_kpi)} />
-            <KeyValueText title="Reachable by" value={`${Math.abs(goalData?.reachable_by_days || 0)} Days`} />
+            <KeyValueText
+              title={Number(goalData?.reachable_by_days) < 0 ? 'Reached' : 'Reachable by'}
+              value={goalReachedString(convertDays(goalData?.reachable_by_days || 0))}
+            />
             <KeyValueText title="Proportionality" value={String(goalData?.goal_proportionality)} />
           </View>
         </Card>
