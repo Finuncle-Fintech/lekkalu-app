@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Separator, Spinner, Text, View } from 'tamagui'
 import { LineChart, BarChart } from 'react-native-gifted-charts'
@@ -15,14 +15,22 @@ import { THEME_COLORS } from '@/utils/theme'
 import DatePicker from '@/components/date-picker'
 import { useGetGoalDetails, useGetGoalSources, useGetGoalTimeline } from '@/queries/goal'
 import { getGoalTimelineData } from '@/utils/goal'
-import { convertDays, goalReachedString } from '@/utils/dateTime'
+import {
+  convertDays,
+  getDataByDay,
+  getDataByMonth,
+  getDataByWeek,
+  getDataByYear,
+  goalReachedString,
+} from '@/utils/dateTime'
 
 interface IKeyValueTextProps {
   title: string
   value: string
 }
 
-type ChartType = 'Bar' | 'Line'
+type ChartType = 'bar' | 'line'
+type ChartViewBy = 'day' | 'week' | 'month' | 'year'
 
 const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
   return (
@@ -41,7 +49,8 @@ const GoalDetails = () => {
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
-  const [chartType, setChartType] = useState<ChartType>('Bar')
+  const [chartType, setChartType] = useState<ChartType>('bar')
+  const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('day')
 
   const [timelineSpan, setTimelineSpan] = useState({
     firstGoalDay: dayjs().toDate(),
@@ -67,15 +76,26 @@ const GoalDetails = () => {
 
   const barData = useMemo(() => {
     if (fromDate && toDate && goalTimelineQueryData?.data) {
-      return getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate)
-    } else {
-      return []
+      const _barData = getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate)
+      switch (viewChartBy) {
+        case 'day':
+          return getDataByDay(_barData)
+        case 'month':
+          return getDataByMonth(_barData)
+        case 'week':
+          return getDataByWeek(_barData)
+        case 'year':
+          return getDataByYear(_barData)
+        default:
+          return _barData
+      }
     }
-  }, [fromDate, goalTimelineQueryData, toDate])
+    return []
+  }, [fromDate, goalTimelineQueryData, toDate, viewChartBy])
 
   useEffect(() => {
     if (!isLoadingTimelineData) {
-      const firstGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 10]?.time).toDate()
+      const firstGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 100]?.time).toDate()
       const lastGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 1].time).toDate()
 
       setFromDate(firstGoalDay)
@@ -123,15 +143,15 @@ const GoalDetails = () => {
               <View>
                 <BarChart4
                   size={40}
-                  onPress={() => setChartType('Bar')}
-                  color={chartType === 'Bar' ? THEME_COLORS.primary[200] : ''}
+                  onPress={() => setChartType('bar')}
+                  color={chartType === 'bar' ? THEME_COLORS.primary[200] : ''}
                 />
               </View>
               <View>
                 <LineChartIcon
                   size={40}
-                  color={chartType === 'Line' ? THEME_COLORS.primary[200] : ''}
-                  onPress={() => setChartType('Line')}
+                  color={chartType === 'line' ? THEME_COLORS.primary[200] : ''}
+                  onPress={() => setChartType('line')}
                 />
               </View>
             </View>
@@ -157,7 +177,7 @@ const GoalDetails = () => {
 
           {!!barData.length && !timelineError && (
             <>
-              <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)}>
+              <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)} visibility="hidden">
                 <View rowGap={hp(1)} f={1}>
                   <Text fontSize={FontSizes.size16} fontWeight={'bold'}>
                     From :-
@@ -183,8 +203,40 @@ const GoalDetails = () => {
                   />
                 </View>
               </View>
+              <View display="flex" flexDirection="row" mb={10}>
+                <TouchableOpacity
+                  style={StyleSheet.compose(
+                    { ...styles.span, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
+                    viewChartBy === 'day' ? styles.activeSpanButton : {},
+                  )}
+                  onPress={() => setViewChartBy('day')}
+                >
+                  <Text>Days</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={StyleSheet.compose({ ...styles.span }, viewChartBy === 'week' ? styles.activeSpanButton : {})}
+                  onPress={() => setViewChartBy('week')}
+                >
+                  <Text>Weeks</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={StyleSheet.compose(styles.span, viewChartBy === 'month' ? styles.activeSpanButton : {})}
+                  onPress={() => setViewChartBy('month')}
+                >
+                  <Text>Months</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={StyleSheet.compose(
+                    { ...styles.span, borderTopRightRadius: 5, borderBottomRightRadius: 5 },
+                    viewChartBy === 'year' ? styles.activeSpanButton : {},
+                  )}
+                  onPress={() => setViewChartBy('year')}
+                >
+                  <Text>Years</Text>
+                </TouchableOpacity>
+              </View>
               <View overflow="hidden">
-                {chartType === 'Bar' ? (
+                {chartType === 'bar' ? (
                   <BarChart
                     barWidth={22}
                     noOfSections={3}
@@ -195,7 +247,14 @@ const GoalDetails = () => {
                     xAxisThickness={0}
                   />
                 ) : (
-                  <LineChart data={barData} color1={String(THEME_COLORS.primary[200])} />
+                  <LineChart
+                    data={barData}
+                    color1={String(THEME_COLORS.primary[200])}
+                    xAxisColor={'red'}
+                    xAxisLabelTextStyle={{ color: 'green' }}
+                    yAxisColor={'red'}
+                    areaChart
+                  />
                 )}
               </View>
             </>
@@ -205,5 +264,19 @@ const GoalDetails = () => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  span: {
+    padding: 10,
+    backgroundColor: THEME_COLORS.primary[600],
+    margin: 0,
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  activeSpanButton: {
+    backgroundColor: THEME_COLORS.primary[200],
+  },
+})
 
 export default GoalDetails

@@ -21,7 +21,7 @@ interface TimelineItem {
   kpi_value: number
 }
 
-interface BarChartItem {
+export interface BarChartItem {
   value: number
   label: string
   frontColor: string
@@ -95,7 +95,7 @@ const getGoalTimelineData = (timelineData?: TimelineItem[], fromDate?: Date, toD
     })
     .map((tItem) => ({
       value: tItem.kpi_value,
-      label: `${dayjs(tItem.time).get('date')}/${dayjs(tItem.time).get('month') + 1}`,
+      label: tItem.time,
       frontColor: THEME_COLORS.primary[200],
     }))
 
