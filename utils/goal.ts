@@ -96,7 +96,7 @@ const getGoalTimelineData = (timelineData?: TimelineItem[], fromDate?: Date, toD
     .map((tItem) => ({
       value: tItem.kpi_value,
       label: `${dayjs(tItem.time).get('date')}/${dayjs(tItem.time).get('month') + 1}`,
-      frontColor: '#177AD5',
+      frontColor: THEME_COLORS.primary[200],
     }))
 
   return newTimelineData
