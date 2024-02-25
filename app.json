@@ -45,20 +45,19 @@
             "useFrameworks": "static"
           }
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/adaptive-icon.png",
+          "color":"#0F4B8F"
+        }
       ]
     ],
     "scheme": "com.lekkalu-app.lekkalu-app",
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "d4ea7189-29de-4332-9a7c-ea49681263d9"
-      }
     },
     "owner": "finuncle"
   }
