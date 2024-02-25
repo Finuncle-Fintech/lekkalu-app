@@ -2,10 +2,11 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Separator, Spinner, Text, View } from 'tamagui'
-import { BarChart } from 'react-native-gifted-charts'
+import { LineChart, BarChart } from 'react-native-gifted-charts'
 import { router, useLocalSearchParams } from 'expo-router'
 import dayjs from 'dayjs'
 
+import { LineChart as LineChartIcon, BarChart4 } from '@tamagui/lucide-icons'
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
@@ -20,6 +21,8 @@ interface IKeyValueTextProps {
   title: string
   value: string
 }
+
+type ChartType = 'Bar' | 'Line'
 
 const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
   return (
@@ -38,6 +41,7 @@ const GoalDetails = () => {
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
+  const [chartType, setChartType] = useState<ChartType>('Bar')
 
   const [timelineSpan, setTimelineSpan] = useState({
     firstGoalDay: dayjs().toDate(),
@@ -71,7 +75,7 @@ const GoalDetails = () => {
 
   useEffect(() => {
     if (!isLoadingTimelineData) {
-      const firstGoalDay = dayjs(goalTimelineQueryData?.data[0]?.time).toDate()
+      const firstGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 10]?.time).toDate()
       const lastGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 1].time).toDate()
 
       setFromDate(firstGoalDay)
@@ -109,9 +113,29 @@ const GoalDetails = () => {
           </View>
         </Card>
         <Card mt={hp(3)}>
-          <Text fontSize={FontSizes.size20} fontWeight={'bold'}>
-            Timeline
-          </Text>
+          <View display="flex" flexDirection="row" justifyContent="space-between">
+            <View alignSelf="center">
+              <Text fontSize={FontSizes.size20} fontWeight={'bold'}>
+                Timeline
+              </Text>
+            </View>
+            <View display="flex" flexDirection="row" gap={20}>
+              <View>
+                <BarChart4
+                  size={40}
+                  onPress={() => setChartType('Bar')}
+                  color={chartType === 'Bar' ? THEME_COLORS.primary[200] : ''}
+                />
+              </View>
+              <View>
+                <LineChartIcon
+                  size={40}
+                  color={chartType === 'Line' ? THEME_COLORS.primary[200] : ''}
+                  onPress={() => setChartType('Line')}
+                />
+              </View>
+            </View>
+          </View>
           <Separator my={hp(1.5)} borderColor={THEME_COLORS.gray[200]} />
 
           {isLoadingTimelineData && (
@@ -159,15 +183,21 @@ const GoalDetails = () => {
                   />
                 </View>
               </View>
-              <BarChart
-                barWidth={22}
-                noOfSections={3}
-                barBorderRadius={4}
-                frontColor="lightgray"
-                data={barData}
-                yAxisThickness={0}
-                xAxisThickness={0}
-              />
+              <View overflow="hidden">
+                {chartType === 'Bar' ? (
+                  <BarChart
+                    barWidth={22}
+                    noOfSections={3}
+                    barBorderRadius={4}
+                    frontColor="lightgray"
+                    data={barData}
+                    yAxisThickness={0}
+                    xAxisThickness={0}
+                  />
+                ) : (
+                  <LineChart data={barData} color1={String(THEME_COLORS.primary[200])} />
+                )}
+              </View>
             </>
           )}
         </Card>
