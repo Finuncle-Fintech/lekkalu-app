@@ -1,9 +1,6 @@
-type Timeline = {
-  kpi_value: number
-  time: string
-}
-
-type GoalTimelineWithTarget = Timeline & { target: number }
+import dayjs from 'dayjs'
+import { BarChartItem } from './goal'
+import { THEME_COLORS } from './theme'
 
 type dayUnit = 'day' | 'month' | 'week' | 'year'
 
@@ -98,32 +95,36 @@ function getNextISODate(currentISODate: string): string {
   return nextISODate
 }
 
-export const getDataByWeek = (arr: Array<Timeline>, target: number) => {
-  const result: Array<GoalTimelineWithTarget> = []
+export const getDataByWeek = (arr: Array<BarChartItem>) => {
+  const result: Array<BarChartItem> = []
   const current = {
     totalDays: 0,
     aggValue: 0,
-    date: arr[0].time,
+    date: arr[0].label,
   }
 
   arr.forEach((item: any, index: number) => {
     /** for first item and is not end of week.
     /*  for example: if first time of array is 8th january and 8th january is not the end of the week.
     */
-    if (index === 0 && !isEndOfWeek(item.time)) {
-      current.date = item.time
-      result.push({ time: item.time, kpi_value: item.kpi_value, target })
+    if (index === 0 && !isEndOfWeek(item.label)) {
+      current.date = item.label
+      result.push({
+        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        value: item.value,
+        frontColor: THEME_COLORS.primary[200],
+      })
     } else {
-      current.aggValue += item.kpi_value
+      current.aggValue += item.value
       current.totalDays += 1
     }
 
     // for the last item of the array.
     if (index + 1 === arr.length) {
       result.push({
-        time: item.time,
-        kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
-        target,
+        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
+        frontColor: THEME_COLORS.primary[200],
       })
       return
     }
@@ -131,12 +132,16 @@ export const getDataByWeek = (arr: Array<Timeline>, target: number) => {
     /**
      * for the date which is the end of the week.
      */
-    if (isEndOfWeek(item.time)) {
-      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2), target })
+    if (isEndOfWeek(item.label)) {
+      result.push({
+        label: `${dayjs(current.date).get('date')}/${dayjs(current.date).get('month') + 1}`,
+        value: +(current.aggValue / current.totalDays).toFixed(2),
+        frontColor: THEME_COLORS.primary[200],
+      })
       current.totalDays = 0
       current.aggValue = 0
     } else {
-      current.aggValue += item.kpi_value
+      current.aggValue += item.value
       current.totalDays += 1
     }
 
@@ -145,40 +150,50 @@ export const getDataByWeek = (arr: Array<Timeline>, target: number) => {
   return result
 }
 
-export const getDataByMonth = (arr: Array<Timeline>, target: number) => {
-  const result: Array<GoalTimelineWithTarget> = []
+export const getDataByMonth = (arr: Array<BarChartItem>) => {
+  const result: Array<BarChartItem> = []
   const current = {
     totalDays: 0,
     aggValue: 0,
-    date: arr[0].time,
+    date: arr[0]?.label,
   }
 
   arr.forEach((item: any, index: number) => {
     // for the first item of the array which is not the start of the month
-    if (index === 0 && !isStartOfMonth(item.time)) {
-      current.date = item.time
-      result.push({ time: item.time, kpi_value: item.kpi_value, target })
+    if (index === 0 && !isStartOfMonth(item.label)) {
+      current.date = item.label
+      result.push({
+        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        value: item.value,
+        frontColor: THEME_COLORS.primary[200],
+      })
     } else {
-      current.aggValue += item.kpi_value
+      current.aggValue += item.value
       current.totalDays += 1
     }
 
     // for last day in the given array.
     if (index + 1 === arr.length) {
       result.push({
-        time: item.time,
-        kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
-        target,
+        // label: item.label,
+        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
+        frontColor: THEME_COLORS.primary[200],
       })
       return
     }
 
-    if (isStartOfMonth(item.time)) {
-      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2), target })
+    if (isStartOfMonth(item.label)) {
+      result.push({
+        // label: current.date,
+        label: `${dayjs(current.date).get('date')}/${dayjs(current.date).get('month') + 1}`,
+        value: +(current.aggValue / current.totalDays).toFixed(2),
+        frontColor: THEME_COLORS.primary[200],
+      })
       current.totalDays = 0
       current.aggValue = 0
     } else {
-      current.aggValue += item.kpi_value
+      current.aggValue += item.value
       current.totalDays += 1
     }
     current.date = getNextISODate(current.date)
@@ -186,43 +201,58 @@ export const getDataByMonth = (arr: Array<Timeline>, target: number) => {
   return result
 }
 
-export const getDataByYear = (arr: Array<Timeline>, target: number) => {
-  const result: Array<GoalTimelineWithTarget> = []
+export const getDataByYear = (arr: Array<BarChartItem>) => {
+  const result: Array<BarChartItem> = []
   const current = {
     totalDays: 0,
     aggValue: 0,
-    date: arr[0].time,
+    date: arr[0].label,
   }
 
   arr.forEach((item: any, index: number) => {
     // for the first item of the array which is not the start of the month
-    if (index === 0 && !isStartOfYear(item.time)) {
-      current.date = item.time
-      result.push({ time: item.time, kpi_value: item.kpi_value, target })
+    if (index === 0 && !isStartOfYear(item.label)) {
+      current.date = item.label
+      result.push({
+        label: `${dayjs(item?.label).get('year')}`,
+        value: item.value,
+        frontColor: THEME_COLORS.primary[200],
+      })
     } else {
-      current.aggValue += item.kpi_value
+      current.aggValue += item.value
       current.totalDays += 1
     }
 
     // for last day in the given array.
     if (index + 1 === arr.length) {
       result.push({
-        time: item.time,
-        kpi_value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
-        target,
+        label: `${dayjs(item?.label).get('year')}`,
+        value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
+        frontColor: THEME_COLORS.primary[200],
       })
       return
     }
 
-    if (isStartOfYear(item.time)) {
-      result.push({ time: current.date, kpi_value: +(current.aggValue / current.totalDays).toFixed(2), target })
+    if (isStartOfYear(item.label)) {
+      result.push({
+        label: `${dayjs(current?.date).get('year')}`,
+        value: +(current.aggValue / current.totalDays).toFixed(2),
+        frontColor: THEME_COLORS.primary[200],
+      })
       current.totalDays = 0
       current.aggValue = 0
     } else {
-      current.aggValue += item.kpi_value
+      current.aggValue += item.value
       current.totalDays += 1
     }
     current.date = getNextISODate(current.date)
   })
   return result
+}
+
+export const getDataByDay = (arr: Array<BarChartItem>) => {
+  return arr.map((item) => ({
+    ...item,
+    label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+  }))
 }
