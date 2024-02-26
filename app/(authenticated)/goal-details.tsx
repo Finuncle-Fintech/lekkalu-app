@@ -61,7 +61,7 @@ const GoalDetails = () => {
 
   const params = useLocalSearchParams()
 
-  const { data: goalDetailsQueryData } = useGetGoalDetails(+params?.id)
+  const { data: goalDetailsQueryData, isLoading: isLoadingGoalData } = useGetGoalDetails(+params?.id)
   const {
     data: goalTimelineQueryData,
     error: timelineError,
@@ -89,7 +89,7 @@ const GoalDetails = () => {
         case 'year':
           return getDataByYear(_barData)
         default:
-          return _barData
+          return getDataByDay(_barData)
       }
     }
     return []
@@ -109,6 +109,10 @@ const GoalDetails = () => {
     }
   }, [goalTimelineQueryData, isLoadingTimelineData])
 
+  const changeViewChartBy = (type: ChartViewBy) => {
+    setViewChartBy(type)
+  }
+
   return (
     <View f={1} pt={insets.top + hp(2)} bg="$backgroundHover">
       <View fd="row" ai="center" columnGap={wp(4)} mx={wp(5)}>
@@ -118,22 +122,34 @@ const GoalDetails = () => {
         </Text>
       </View>
       <ScrollView contentContainerStyle={{ paddingBottom: hp(2) }}>
-        <Card mt={hp(3)}>
-          <Text fontSize={FontSizes.size20} fontWeight={'bold'}>
-            Details
-          </Text>
-          <Separator my={hp(1.5)} borderColor={THEME_COLORS.gray[200]} />
-          <View rowGap={hp(2)}>
-            <KeyValueText title="Target" value={String(goalData?.target_value)} />
-            <KeyValueText title="Source" value={String(SOURCE?.name)} />
-            <KeyValueText title="KPI" value={String(goalData?.track_kpi)} />
-            <KeyValueText
-              title={Number(goalData?.reachable_by_days) < 0 ? 'Reached' : 'Reachable by'}
-              value={goalReachedString(convertDays(goalData?.reachable_by_days || 0))}
-            />
-            <KeyValueText title="Proportionality" value={String(goalData?.goal_proportionality)} />
-          </View>
-        </Card>
+        {isLoadingGoalData ? (
+          <Card mt={hp(3)}>
+            <View f={1} py={hp(2)} ai="center">
+              <Spinner size="large" color={THEME_COLORS.primary[100]} />
+              <Text mt={hp(1.5)} fontFamily={'$heading'} fontSize={FontSizes.size18}>
+                Loading Goal Detail...
+              </Text>
+            </View>
+          </Card>
+        ) : (
+          <Card mt={hp(3)}>
+            <Text fontSize={FontSizes.size20} fontWeight={'bold'}>
+              Details
+            </Text>
+            <Separator my={hp(1.5)} borderColor={THEME_COLORS.gray[200]} />
+            <View rowGap={hp(2)}>
+              <KeyValueText title="Target" value={String(goalData?.target_value)} />
+              <KeyValueText title="Source" value={String(SOURCE?.name)} />
+              <KeyValueText title="KPI" value={String(goalData?.track_kpi)} />
+              <KeyValueText
+                title={Number(goalData?.reachable_by_days) < 0 ? 'Reached' : 'Reachable by'}
+                value={goalReachedString(convertDays(goalData?.reachable_by_days || 0))}
+              />
+              <KeyValueText title="Proportionality" value={String(goalData?.goal_proportionality)} />
+            </View>
+          </Card>
+        )}
+
         <Card mt={hp(3)}>
           <View display="flex" flexDirection="row" justifyContent="space-between">
             <View alignSelf="center">
@@ -160,15 +176,6 @@ const GoalDetails = () => {
           </View>
           <Separator my={hp(1.5)} borderColor={THEME_COLORS.gray[200]} />
 
-          {isLoadingTimelineData && (
-            <View f={1} py={hp(2)} ai="center">
-              <Spinner size="large" color={THEME_COLORS.primary[100]} />
-              <Text mt={hp(1.5)} fontFamily={'$heading'} fontSize={FontSizes.size18}>
-                Loading Timeline...
-              </Text>
-            </View>
-          )}
-
           {!!timelineError && (
             <View f={1} py={hp(2)} ai="center">
               <Text fontFamily={'$heading'} fontSize={FontSizes.size18}>
@@ -177,7 +184,7 @@ const GoalDetails = () => {
             </View>
           )}
 
-          {!!barData.length && !timelineError && (
+          {!!barData.length && !timelineError ? (
             <>
               <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)}>
                 <View rowGap={hp(1)} f={1}>
@@ -211,19 +218,19 @@ const GoalDetails = () => {
                     { ...styles.span, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
                     viewChartBy === 'day' ? styles.activeSpanButton : {},
                   )}
-                  onPress={() => setViewChartBy('day')}
+                  onPress={() => changeViewChartBy('day')}
                 >
                   <Text color={'white'}>Days</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={StyleSheet.compose({ ...styles.span }, viewChartBy === 'week' ? styles.activeSpanButton : {})}
-                  onPress={() => setViewChartBy('week')}
+                  onPress={() => changeViewChartBy('week')}
                 >
                   <Text color={'white'}>Weeks</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={StyleSheet.compose(styles.span, viewChartBy === 'month' ? styles.activeSpanButton : {})}
-                  onPress={() => setViewChartBy('month')}
+                  onPress={() => changeViewChartBy('month')}
                 >
                   <Text color={'white'}>Months</Text>
                 </TouchableOpacity>
@@ -232,7 +239,7 @@ const GoalDetails = () => {
                     { ...styles.span, borderTopRightRadius: 5, borderBottomRightRadius: 5 },
                     viewChartBy === 'year' ? styles.activeSpanButton : {},
                   )}
-                  onPress={() => setViewChartBy('year')}
+                  onPress={() => changeViewChartBy('year')}
                 >
                   <Text color={'white'}>Years</Text>
                 </TouchableOpacity>
@@ -269,6 +276,13 @@ const GoalDetails = () => {
                 )}
               </View>
             </>
+          ) : (
+            <View f={1} py={hp(2)} ai="center">
+              <Spinner size="large" color={THEME_COLORS.primary[100]} />
+              <Text mt={hp(1.5)} fontFamily={'$heading'} fontSize={FontSizes.size18}>
+                {isLoadingTimelineData ? 'Loading...' : 'Calculating...'}
+              </Text>
+            </View>
           )}
         </Card>
       </ScrollView>

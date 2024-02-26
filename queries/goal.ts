@@ -136,7 +136,7 @@ const getGoalDetails = (id: number) => {
 
 const useGetGoalDetails = (id: number) => {
   return useQuery({
-    queryKey: [GOAL_QUERY_KEYS.GOAL_DETAILS, id],
+    queryKey: [`${GOAL_QUERY_KEYS.GOAL_DETAILS}-${id}`, id],
     queryFn: () => getGoalDetails(id),
   })
 }
@@ -147,7 +147,7 @@ const getGoalTimeline = (id: number) => {
 
 const useGetGoalTimeline = (id: number) => {
   return useQuery({
-    queryKey: [GOAL_QUERY_KEYS.GOAL_TIMELINE, id],
+    queryKey: [`${GOAL_QUERY_KEYS.GOAL_TIMELINE}-${id}`, id],
     queryFn: () => getGoalTimeline(id),
   })
 }
@@ -168,7 +168,7 @@ const useEditGoal = () => {
       toast.show({ title: 'Goal updated successfully' })
       router.push('/(authenticated)/goals')
     },
-    onError: (e) => {
+    onError: (e: any) => {
       toast.show({ title: e.response?.data?.message || 'Failed to update goal' })
     },
   })
