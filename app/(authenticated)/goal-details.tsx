@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Separator, Spinner, Text, View } from 'tamagui'
+import { Separator, Spinner, Text, View, useTheme } from 'tamagui'
 import { LineChart, BarChart } from 'react-native-gifted-charts'
 import { router, useLocalSearchParams } from 'expo-router'
 import dayjs from 'dayjs'
@@ -56,6 +56,8 @@ const GoalDetails = () => {
     firstGoalDay: dayjs().toDate(),
     lastGoalDay: dayjs().toDate(),
   })
+
+  const t = useTheme()
 
   const params = useLocalSearchParams()
 
@@ -144,13 +146,13 @@ const GoalDetails = () => {
                 <BarChart4
                   size={40}
                   onPress={() => setChartType('bar')}
-                  color={chartType === 'bar' ? THEME_COLORS.primary[200] : ''}
+                  color={chartType === 'bar' ? THEME_COLORS.primary[200] : THEME_COLORS.gray[300]}
                 />
               </View>
               <View>
                 <LineChartIcon
                   size={40}
-                  color={chartType === 'line' ? THEME_COLORS.primary[200] : ''}
+                  color={chartType === 'line' ? THEME_COLORS.primary[200] : THEME_COLORS.gray[300]}
                   onPress={() => setChartType('line')}
                 />
               </View>
@@ -177,7 +179,7 @@ const GoalDetails = () => {
 
           {!!barData.length && !timelineError && (
             <>
-              <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)} visibility="hidden">
+              <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)}>
                 <View rowGap={hp(1)} f={1}>
                   <Text fontSize={FontSizes.size16} fontWeight={'bold'}>
                     From :-
@@ -211,19 +213,19 @@ const GoalDetails = () => {
                   )}
                   onPress={() => setViewChartBy('day')}
                 >
-                  <Text>Days</Text>
+                  <Text color={'white'}>Days</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={StyleSheet.compose({ ...styles.span }, viewChartBy === 'week' ? styles.activeSpanButton : {})}
                   onPress={() => setViewChartBy('week')}
                 >
-                  <Text>Weeks</Text>
+                  <Text color={'white'}>Weeks</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={StyleSheet.compose(styles.span, viewChartBy === 'month' ? styles.activeSpanButton : {})}
                   onPress={() => setViewChartBy('month')}
                 >
-                  <Text>Months</Text>
+                  <Text color={'white'}>Months</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={StyleSheet.compose(
@@ -232,7 +234,7 @@ const GoalDetails = () => {
                   )}
                   onPress={() => setViewChartBy('year')}
                 >
-                  <Text>Years</Text>
+                  <Text color={'white'}>Years</Text>
                 </TouchableOpacity>
               </View>
               <View overflow="hidden">
@@ -242,6 +244,10 @@ const GoalDetails = () => {
                     noOfSections={3}
                     barBorderRadius={4}
                     frontColor="lightgray"
+                    xAxisLabelTextStyle={{ color: t.foreground.val }}
+                    yAxisTextStyle={{ color: t.foreground.val }}
+                    xAxisColor={t.foreground.val}
+                    yAxisColor={t.foreground.val}
                     data={barData}
                     yAxisThickness={0}
                     xAxisThickness={0}
@@ -250,10 +256,15 @@ const GoalDetails = () => {
                   <LineChart
                     data={barData}
                     color1={String(THEME_COLORS.primary[200])}
-                    xAxisColor={'red'}
-                    xAxisLabelTextStyle={{ color: 'green' }}
-                    yAxisColor={'red'}
-                    areaChart
+                    xAxisColor={t.foreground.val}
+                    yAxisColor={t.foreground.val}
+                    xAxisLabelTextStyle={{ color: t.foreground.val }}
+                    dataPointsColor={String(THEME_COLORS.primary[200])}
+                    curved
+                    initialSpacing={8}
+                    spacing={50}
+                    color="white"
+                    yAxisTextStyle={{ color: t.foreground.val }}
                   />
                 )}
               </View>
@@ -268,14 +279,14 @@ const GoalDetails = () => {
 const styles = StyleSheet.create({
   span: {
     padding: 10,
-    backgroundColor: THEME_COLORS.primary[600],
+    backgroundColor: THEME_COLORS.primary[400],
     margin: 0,
     flex: 1,
     display: 'flex',
     alignItems: 'center',
   },
   activeSpanButton: {
-    backgroundColor: THEME_COLORS.primary[200],
+    backgroundColor: THEME_COLORS.primary[100],
   },
 })
 
