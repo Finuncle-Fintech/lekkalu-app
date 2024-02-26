@@ -34,7 +34,7 @@ const CAGRCalculatorForm = () => {
       />
       <InputWithSlider
        defaultValue='25000'
-        label="Final Value Costs (₹)"
+        label="Final value costs (₹)"
         sliderMaxValue={10000000}
         sliderMinValue={1000}
         setValue={setFinalValue}

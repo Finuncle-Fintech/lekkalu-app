@@ -11,11 +11,11 @@ import { FontSizes } from '@/utils/fonts'
 import { CagrCalculatorContext } from '@/context/cagr-calculator-provider'
 import { generateExcelFileForCagrCalculator } from '@/utils/cagr-calculator-helpers'
 
-const ChartCenterLabel: FC<{ absoluteReturnValue: number }> = ({ absoluteReturnValue }) => {
+const ChartCenterLabel: FC<{ CAGRReturnsValue: number }> = ({ CAGRReturnsValue }) => {
   return (
     <View bg="$backgroundHover" ai="center" rowGap={wp(2)} px={wp(1)} br={wp(50)}>
-      <Text fontSize={FontSizes.size15} textAlign="center" fontFamily="$heading" color="$foreground">
-      absolute returns
+      <Text fontSize={FontSizes.size16} textAlign="center" fontFamily="$heading" color="$foreground">
+      CAGR
       </Text>
       <Text
         color="$foreground"
@@ -25,7 +25,7 @@ const ChartCenterLabel: FC<{ absoluteReturnValue: number }> = ({ absoluteReturnV
         fontSize={FontSizes.size22}
         fontFamily="$heading"
       >
-        {formatNumberToCurrency(absoluteReturnValue || 0)}
+        {(CAGRReturnsValue|| 0) + '% p.a'}
       </Text>
     </View>
   )
@@ -80,7 +80,7 @@ const CagrCalculatorChartCard = () => {
         <PieChart
           data={data}
           donut
-          centerLabelComponent={() => <ChartCenterLabel absoluteReturnValue={+(calculationResults?.absoluteReturns || 0)} />}
+          centerLabelComponent={() => <ChartCenterLabel CAGRReturnsValue={+(calculationResults?.percentageCAGR || 0)} />}
           radius={wp(24)}
           innerRadius={wp(18)}
           innerCircleColor={theme.backgroundHover.get()}
@@ -89,12 +89,12 @@ const CagrCalculatorChartCard = () => {
       <View t={-wp(20)} ai="center" h={hp(13)}>
         <View fd="row" ai="center" columnGap={wp(4)}>
           <ChartAgendaItem
-            color="#34c3ff"
+            color="#9e54dd"
             title="Initial Value"
             percentage={initialValue}
           />
           <ChartAgendaItem
-            color="#9e54dd"
+            color="#34c3ff"
             title="Final Value"
             percentage={finalValue}
           />
@@ -102,18 +102,10 @@ const CagrCalculatorChartCard = () => {
         <View fd="row" ai="center" columnGap={wp(12)} mt={hp(3)}>
           <View ai="center" rowGap={hp(1)}>
             <Text fontFamily={'$heading'} fontSize={FontSizes.size15}>
-            CAGR return
+            Absolute returns
             </Text>
             <Text fontFamily={'$heading'} fontSize={FontSizes.size20}>
-              {formatNumberToCurrency(+(calculationResults?.absoluteCAGR || 0))}
-            </Text>
-          </View>
-          <View ai="center" rowGap={hp(1)}>
-            <Text fontFamily={'$heading'} fontSize={FontSizes.size15}>
-            CAGR percentage
-            </Text>
-            <Text fontFamily={'$heading'} fontSize={FontSizes.size20}>
-              {(calculationResults?.percentageCAGR || 0) + '%'}
+              {(calculationResults?.absoluteReturns || 0) + ' %'}
             </Text>
           </View>
         </View>
