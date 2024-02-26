@@ -28,6 +28,7 @@ const EmiCalculatorForm = () => {
       <InputWithSlider
         label="Loan Principal"
         sliderMaxValue={10000000}
+        sliderMinValue={0}
         setValue={setLoanPrinicipal}
         showInfoTooltip
         tooltipText="This is the total amount of money you wish to borrow.It's the initial loan amount you receive. For example, if you want to borrow Rs 50,000 this is your loan principal."
@@ -35,6 +36,7 @@ const EmiCalculatorForm = () => {
       <InputWithSlider
         label="Loan Interest"
         sliderMaxValue={30}
+        sliderMinValue={0}
         setValue={setLoanInterest}
         showInfoTooltip
         tooltipText="The loan interest rate is the annual rate at which you are borrowing money. It's expressed as a percentage. For instance, if your loan carries an annual interest rate of 5%, you'd enter 5 as the interest rate."
@@ -43,6 +45,7 @@ const EmiCalculatorForm = () => {
       <InputWithSlider
         label="Loan Tenure (in Months)"
         sliderMaxValue={240}
+        sliderMinValue={0}
         setValue={setLoanTenure}
         showInfoTooltip
         tooltipText="This field represents the total duration, provided in months, over which you will be repaying the loan. For example, if you plan to repay the loan in 3 years, which is 36 months, you would enter 36 months as the loan tenure."
@@ -52,6 +55,7 @@ const EmiCalculatorForm = () => {
       <InputWithSlider
         label="Emi Day"
         sliderMaxValue={31}
+        sliderMinValue={0}
         setValue={setEmiDay}
         showInfoTooltip
         tooltipText="The EMI day is the day of each month on which you want to make your EMI payment. Different lenders may offer various options for selecting the EMI date."

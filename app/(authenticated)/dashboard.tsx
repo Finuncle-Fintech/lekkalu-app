@@ -16,6 +16,10 @@ const features = [
     title: 'EMI Calculator',
     image: <FontAwesome name="calculator" size={wp(6)} color={THEME_COLORS.primary[100]} />,
   },
+  {
+    title: 'CAGR Calculator',
+    image: <FontAwesome name="calculator" size={wp(6)} color={THEME_COLORS.primary[100]} />,
+  },
 ]
 
 const Dashboard = () => {
@@ -26,6 +30,9 @@ const Dashboard = () => {
         break
       case 'EMI Calculator':
         router.push('/emi-calculator')
+        break
+      case 'CAGR Calculator':
+        router.push('/cagr-calculator')
         break
       default:
         break
