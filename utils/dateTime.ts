@@ -110,7 +110,7 @@ export const getDataByWeek = (arr: Array<BarChartItem>) => {
     if (index === 0 && !isEndOfWeek(item.label)) {
       current.date = item.label
       result.push({
-        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        label: dayjs(item?.label).format('YYYY-MM-DD'),
         value: item.value,
         frontColor: THEME_COLORS.primary[200],
       })
@@ -122,7 +122,7 @@ export const getDataByWeek = (arr: Array<BarChartItem>) => {
     // for the last item of the array.
     if (index + 1 === arr.length) {
       result.push({
-        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        label: dayjs(item?.label).format('YYYY-MM-DD'),
         value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
         frontColor: THEME_COLORS.primary[200],
       })
@@ -134,7 +134,7 @@ export const getDataByWeek = (arr: Array<BarChartItem>) => {
      */
     if (isEndOfWeek(item.label)) {
       result.push({
-        label: `${dayjs(current.date).get('date')}/${dayjs(current.date).get('month') + 1}`,
+        label: dayjs(current.date).format('YYYY-MM-DD'),
         value: +(current.aggValue / current.totalDays).toFixed(2),
         frontColor: THEME_COLORS.primary[200],
       })
@@ -163,7 +163,7 @@ export const getDataByMonth = (arr: Array<BarChartItem>) => {
     if (index === 0 && !isStartOfMonth(item.label)) {
       current.date = item.label
       result.push({
-        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        label: dayjs(item?.label).format('YYYY-MM'),
         value: item.value,
         frontColor: THEME_COLORS.primary[200],
       })
@@ -175,8 +175,7 @@ export const getDataByMonth = (arr: Array<BarChartItem>) => {
     // for last day in the given array.
     if (index + 1 === arr.length) {
       result.push({
-        // label: item.label,
-        label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+        label: dayjs(item?.label).format('YYYY-MM-DD'),
         value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
         frontColor: THEME_COLORS.primary[200],
       })
@@ -185,8 +184,7 @@ export const getDataByMonth = (arr: Array<BarChartItem>) => {
 
     if (isStartOfMonth(item.label)) {
       result.push({
-        // label: current.date,
-        label: `${dayjs(current.date).get('date')}/${dayjs(current.date).get('month') + 1}`,
+        label: dayjs(current.date).format('YYYY-MM'),
         value: +(current.aggValue / current.totalDays).toFixed(2),
         frontColor: THEME_COLORS.primary[200],
       })
@@ -214,7 +212,7 @@ export const getDataByYear = (arr: Array<BarChartItem>) => {
     if (index === 0 && !isStartOfYear(item.label)) {
       current.date = item.label
       result.push({
-        label: `${dayjs(item?.label).get('year')}`,
+        label: dayjs(item?.label).format('YYYY-MM-DD'),
         value: item.value,
         frontColor: THEME_COLORS.primary[200],
       })
@@ -226,7 +224,7 @@ export const getDataByYear = (arr: Array<BarChartItem>) => {
     // for last day in the given array.
     if (index + 1 === arr.length) {
       result.push({
-        label: `${dayjs(item?.label).get('year')}`,
+        label: dayjs(item?.label).format('YYYY-MM-DD'),
         value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
         frontColor: THEME_COLORS.primary[200],
       })
@@ -253,6 +251,6 @@ export const getDataByYear = (arr: Array<BarChartItem>) => {
 export const getDataByDay = (arr: Array<BarChartItem>) => {
   return arr.map((item) => ({
     ...item,
-    label: `${dayjs(item?.label).get('date')}/${dayjs(item?.label).get('month') + 1}`,
+    label: dayjs(item.label).format('YYYY-MM-DD'),
   }))
 }

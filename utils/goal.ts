@@ -95,7 +95,7 @@ const getGoalTimelineData = (timelineData?: TimelineItem[], fromDate?: Date, toD
   const newTimelineData: BarChartItem[] = timelineData
     .filter((tItem) => {
       const isValidForFromDate = dayjs(tItem.time).isAfter(fromDate) || dayjs(tItem.time).isSame(fromDate, 'date')
-      const isValidForToDate = dayjs(tItem.time).isBefore(toDate) || dayjs(tItem.time).isBefore(toDate, 'date')
+      const isValidForToDate = dayjs(tItem.time).isBefore(toDate) || dayjs(tItem.time).isSame(toDate, 'day')
 
       return isValidForFromDate && isValidForToDate
     })
