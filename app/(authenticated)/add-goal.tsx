@@ -33,19 +33,19 @@ const AddGoal = () => {
   const { data: proportionalityQueryData } = useGetProportionality()
   const { data: sourcesQueryData } = useGetGoalSources()
   const { mutate: mutateAddGoal, isPending: isPendingAddGoal } = useAddGoalMutation()
-  const { mutate: mutateEditGoal, isPending: isPendingEditGoal } = useEditGoal()
   const params = useLocalSearchParams()
 
   const isEdit: boolean = !!params?.edit
   const editGoalDetails: GoalItemType = params?.goalDetails ? JSON.parse(params?.goalDetails as any) : null
 
+  const { mutate: mutateEditGoal, isPending: isPendingEditGoal } = useEditGoal()
   const formDefaultValues = {
     targetDate: isEdit ? dayjs(editGoalDetails.target_date || new Date()).toDate() : new Date(),
-    kpi: isEdit ? editGoalDetails.track_kpi : '',
-    name: isEdit ? editGoalDetails.name : '',
+    kpi: isEdit ? editGoalDetails.track_kpi : undefined,
+    name: isEdit ? editGoalDetails.name : undefined,
     proportionality: isEdit ? editGoalDetails.goal_proportionality : undefined,
-    source: isEdit ? editGoalDetails.target_contribution_source.toString() : undefined,
-    target: isEdit ? editGoalDetails.target_value?.toString() : undefined,
+    source: isEdit ? String(editGoalDetails.target_contribution_source) : undefined,
+    target: isEdit ? Number(editGoalDetails.target_value) : undefined,
   }
 
   const {

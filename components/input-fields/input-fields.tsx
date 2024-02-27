@@ -45,7 +45,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
             <Input
               color={inputColor}
               {...field}
-              value={field.value}
+              value={field.value && String(field.value)}
               keyboardType="numeric"
               placeholder={input.label}
               onChangeText={field.onChange}

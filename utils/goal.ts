@@ -47,11 +47,13 @@ const getAddGoalInputs = (
       id: 'name',
       label: 'Name',
       type: 'text',
+      required: true,
     },
     {
       id: 'target',
       label: 'Target',
       type: 'number',
+      required: true,
     },
     {
       id: 'kpi',
@@ -59,12 +61,14 @@ const getAddGoalInputs = (
       type: 'select',
       options: kpiData || [],
       valueKey: 'value',
+      required: true,
     },
     {
       id: 'source',
       label: 'Source',
       type: 'select',
       options: transformedSources || [],
+      required: true,
     },
     {
       id: 'proportionality',
@@ -72,11 +76,13 @@ const getAddGoalInputs = (
       type: 'select',
       options: proportionalityData || [],
       valueKey: 'value',
+      required: true,
     },
     {
       id: 'targetDate',
       label: 'Target Date',
       type: 'date',
+      required: true,
     },
   ]
 }
