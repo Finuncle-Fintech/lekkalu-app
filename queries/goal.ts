@@ -136,7 +136,7 @@ const getGoalDetails = (id: number) => {
 
 const useGetGoalDetails = (id: number) => {
   return useQuery({
-    queryKey: [`${GOAL_QUERY_KEYS.GOAL_DETAILS}-${id}`, id],
+    queryKey: [GOAL_QUERY_KEYS.GOAL_DETAILS, id],
     queryFn: () => getGoalDetails(id),
   })
 }
@@ -147,7 +147,7 @@ const getGoalTimeline = (id: number) => {
 
 const useGetGoalTimeline = (id: number) => {
   return useQuery({
-    queryKey: [`${GOAL_QUERY_KEYS.GOAL_TIMELINE}-${id}`, id],
+    queryKey: [GOAL_QUERY_KEYS.GOAL_TIMELINE, id],
     queryFn: () => getGoalTimeline(id),
   })
 }
