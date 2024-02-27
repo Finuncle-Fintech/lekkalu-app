@@ -2,11 +2,10 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Separator, Spinner, Text, View, useTheme } from 'tamagui'
-import { LineChart, BarChart } from 'react-native-gifted-charts'
+import { BarChart } from 'react-native-gifted-charts'
 import { router, useLocalSearchParams } from 'expo-router'
 import dayjs from 'dayjs'
 
-import { LineChart as LineChartIcon, BarChart4 } from '@tamagui/lucide-icons'
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
@@ -29,7 +28,6 @@ interface IKeyValueTextProps {
   value: string
 }
 
-type ChartType = 'bar' | 'line'
 type ChartViewBy = 'day' | 'week' | 'month' | 'year'
 
 const KeyValueText: FC<IKeyValueTextProps> = ({ title = '', value = '' }) => {
@@ -49,7 +47,6 @@ const GoalDetails = () => {
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
-  const [chartType, setChartType] = useState<ChartType>('bar')
   const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('day')
 
   const [timelineSpan, setTimelineSpan] = useState({
@@ -97,7 +94,7 @@ const GoalDetails = () => {
 
   useEffect(() => {
     if (!isLoadingTimelineData) {
-      const firstGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 100]?.time).toDate()
+      const firstGoalDay = dayjs(goalTimelineQueryData?.data[0]?.time).toDate()
       const lastGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 1].time).toDate()
 
       setFromDate(firstGoalDay)
@@ -156,22 +153,6 @@ const GoalDetails = () => {
               <Text fontSize={FontSizes.size20} fontWeight={'bold'}>
                 Timeline
               </Text>
-            </View>
-            <View display="flex" flexDirection="row" gap={20}>
-              <View>
-                <BarChart4
-                  size={40}
-                  onPress={() => setChartType('bar')}
-                  color={chartType === 'bar' ? THEME_COLORS.primary[200] : THEME_COLORS.gray[300]}
-                />
-              </View>
-              <View>
-                <LineChartIcon
-                  size={40}
-                  color={chartType === 'line' ? THEME_COLORS.primary[200] : THEME_COLORS.gray[300]}
-                  onPress={() => setChartType('line')}
-                />
-              </View>
             </View>
           </View>
           <Separator my={hp(1.5)} borderColor={THEME_COLORS.gray[200]} />
@@ -245,42 +226,27 @@ const GoalDetails = () => {
                 </TouchableOpacity>
               </View>
               <View overflow="hidden">
-                {chartType === 'bar' ? (
-                  <BarChart
-                    barWidth={22}
-                    noOfSections={3}
-                    barBorderRadius={4}
-                    frontColor="lightgray"
-                    xAxisLabelTextStyle={{ color: t.foreground.val }}
-                    yAxisTextStyle={{ color: t.foreground.val }}
-                    xAxisColor={t.foreground.val}
-                    yAxisColor={t.foreground.val}
-                    data={barData}
-                    yAxisThickness={0}
-                    xAxisThickness={0}
-                  />
-                ) : (
-                  <LineChart
-                    data={barData}
-                    color1={String(THEME_COLORS.primary[200])}
-                    xAxisColor={t.foreground.val}
-                    yAxisColor={t.foreground.val}
-                    xAxisLabelTextStyle={{ color: t.foreground.val }}
-                    dataPointsColor={String(THEME_COLORS.primary[200])}
-                    curved
-                    initialSpacing={8}
-                    spacing={50}
-                    color="white"
-                    yAxisTextStyle={{ color: t.foreground.val }}
-                  />
-                )}
+                <BarChart
+                  barWidth={22}
+                  noOfSections={3}
+                  barBorderRadius={4}
+                  frontColor="lightgray"
+                  xAxisLabelTextStyle={{ color: t.foreground.val }}
+                  yAxisTextStyle={{ color: t.foreground.val }}
+                  xAxisColor={t.foreground.val}
+                  yAxisColor={t.foreground.val}
+                  data={barData}
+                  spacing={60}
+                  yAxisThickness={0}
+                  xAxisThickness={0}
+                />
               </View>
             </>
           ) : (
             <View f={1} py={hp(2)} ai="center">
               <Spinner size="large" color={THEME_COLORS.primary[100]} />
               <Text mt={hp(1.5)} fontFamily={'$heading'} fontSize={FontSizes.size18}>
-                {isLoadingTimelineData ? 'Loading...' : 'Calculating...'}
+                {isLoadingTimelineData ? 'Loading...' : 'Preparing data...'}
               </Text>
             </View>
           )}
