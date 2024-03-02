@@ -56,6 +56,11 @@ userClient.interceptors.request.use(async (config) => {
   return config
 })
 
+export const socialLoginClient = axios.create({
+  baseURL: process.env.EXPO_PUBLIC_USER_BASE_URL_WO_API_KEYWORD,
+  headers: BASIC_HEADER,
+})
+
 /**
  * This is for token specific requests
  */
