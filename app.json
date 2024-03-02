@@ -33,6 +33,12 @@
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
       [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.237661035600-6v60gjohbdid2peoibif5jh40898onu7"
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": {
