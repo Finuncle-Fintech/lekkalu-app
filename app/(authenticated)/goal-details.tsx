@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Separator, Spinner, Text, View, useTheme } from 'tamagui'
-import { BarChart } from 'react-native-gifted-charts'
+import { LineChart } from 'react-native-gifted-charts'
 import { router, useLocalSearchParams } from 'expo-router'
 import dayjs from 'dayjs'
 
@@ -14,14 +14,7 @@ import { THEME_COLORS } from '@/utils/theme'
 import DatePicker from '@/components/date-picker'
 import { useGetGoalDetails, useGetGoalSources, useGetGoalTimeline } from '@/queries/goal'
 import { getGoalTimelineData } from '@/utils/goal'
-import {
-  convertDays,
-  getDataByDay,
-  getDataByMonth,
-  getDataByWeek,
-  getDataByYear,
-  goalReachedString,
-} from '@/utils/dateTime'
+import { convertDays, getDataByMonth, getDataByWeek, getDataByYear, goalReachedString } from '@/utils/dateTime'
 
 interface IKeyValueTextProps {
   title: string
@@ -47,7 +40,7 @@ const GoalDetails = () => {
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
-  const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('day')
+  const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('week')
 
   const [timelineSpan, setTimelineSpan] = useState({
     firstGoalDay: dayjs().toDate(),
@@ -77,8 +70,6 @@ const GoalDetails = () => {
     if (fromDate && toDate && goalTimelineQueryData?.data) {
       const _barData = getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate)
       switch (viewChartBy) {
-        case 'day':
-          return getDataByDay(_barData)
         case 'month':
           return getDataByMonth(_barData)
         case 'week':
@@ -86,7 +77,7 @@ const GoalDetails = () => {
         case 'year':
           return getDataByYear(_barData)
         default:
-          return getDataByDay(_barData)
+          return getDataByWeek(_barData)
       }
     }
     return []
@@ -197,14 +188,8 @@ const GoalDetails = () => {
                 <TouchableOpacity
                   style={StyleSheet.compose(
                     { ...styles.span, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
-                    viewChartBy === 'day' ? styles.activeSpanButton : {},
+                    viewChartBy === 'week' ? styles.activeSpanButton : {},
                   )}
-                  onPress={() => changeViewChartBy('day')}
-                >
-                  <Text color={'white'}>Days</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={StyleSheet.compose({ ...styles.span }, viewChartBy === 'week' ? styles.activeSpanButton : {})}
                   onPress={() => changeViewChartBy('week')}
                 >
                   <Text color={'white'}>Weeks</Text>
@@ -226,19 +211,20 @@ const GoalDetails = () => {
                 </TouchableOpacity>
               </View>
               <View overflow="hidden">
-                <BarChart
-                  barWidth={22}
-                  noOfSections={3}
-                  barBorderRadius={4}
-                  frontColor="lightgray"
-                  xAxisLabelTextStyle={{ color: t.foreground.val }}
-                  yAxisTextStyle={{ color: t.foreground.val }}
+                <LineChart
+                  data={barData}
+                  color1={String(THEME_COLORS.primary[200])}
                   xAxisColor={t.foreground.val}
                   yAxisColor={t.foreground.val}
-                  data={barData}
-                  spacing={60}
-                  yAxisThickness={0}
-                  xAxisThickness={0}
+                  xAxisLabelTextStyle={{ color: t.foreground.val }}
+                  dataPointsColor={String(THEME_COLORS.primary[200])}
+                  curved
+                  initialSpacing={30}
+                  spacing={100}
+                  color="white"
+                  isAnimated
+                  yAxisTextStyle={{ color: t.foreground.val }}
+                  endSpacing={500}
                 />
               </View>
             </>
