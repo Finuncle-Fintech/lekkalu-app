@@ -86,7 +86,7 @@ const GoalItem: FC<GoalItemProps> = (props) => {
         innerRadius={wp(6)}
         innerCircleColor={theme.backgroundHover.get()}
       />
-      <DisplayItem name={name} track_kpi={track_kpi} created_at={dayjs(created_at).fromNow()} theme={theme} />
+      <DisplayItem name={name} track_kpi={track_kpi} created_at={dayjs(created_at).fromNow()} />
       <View als={'flex-start'}>
         <EditDeleteMenu onEdit={handleOnPressEditGoal} onDelete={handleOnPressDeleteGoal} />
       </View>

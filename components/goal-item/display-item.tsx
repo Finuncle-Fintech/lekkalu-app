@@ -3,7 +3,13 @@ import { Text, View, useTheme } from 'tamagui'
 import { hp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
 
-const DisplayItem = ({ name, track_kpi, created_at }: any) => {
+type DisplayGoalInformation = {
+  name: string
+  track_kpi: string
+  created_at: string
+}
+
+const DisplayItem = ({ name, track_kpi, created_at }: DisplayGoalInformation) => {
   const t = useTheme()
   return (
     <View f={1} rowGap={hp(0.6)}>
