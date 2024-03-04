@@ -11,8 +11,9 @@ import { THEME_COLORS } from '@/utils/theme'
 import { FontSizes } from '@/utils/fonts'
 import { GoalItemType, useDeleteGoal, useGetGoalProgress } from '@/queries/goal'
 import EditDeleteMenu from '../edit-delete-menu'
+import DisplayItem from './display-item'
 
-const ChartCenterLabel: FC<{ value: number }> = ({ value }) => {
+export const ChartCenterLabel: FC<{ value: number }> = ({ value }) => {
   return (
     <View bg="$backgroundHover" ai="center" rowGap={wp(2)} px={wp(1)} br={wp(50)}>
       <Text
@@ -85,17 +86,7 @@ const GoalItem: FC<GoalItemProps> = (props) => {
         innerRadius={wp(6)}
         innerCircleColor={theme.backgroundHover.get()}
       />
-      <View f={1} rowGap={hp(0.6)}>
-        <Text fontSize={FontSizes.size18} color={theme.foreground.get()} fontWeight={'bold'}>
-          {name}
-        </Text>
-        <Text color={theme.mutedForeground.get()} fontSize={FontSizes.size14} fontWeight={'500'}>
-          {track_kpi}
-        </Text>
-        <Text color={theme.mutedForeground.get()} fontWeight={'500'} fontSize={FontSizes.size12}>
-          {dayjs(created_at).fromNow()}
-        </Text>
-      </View>
+      <DisplayItem name={name} track_kpi={track_kpi} created_at={dayjs(created_at).fromNow()} theme={theme} />
       <View als={'flex-start'}>
         <EditDeleteMenu onEdit={handleOnPressEditGoal} onDelete={handleOnPressDeleteGoal} />
       </View>
