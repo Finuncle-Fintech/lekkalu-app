@@ -158,7 +158,7 @@ const GoalDetails = () => {
 
           {!!barData.length && !timelineError ? (
             <>
-              <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)}>
+              <View fd="row" ai="center" columnGap={wp(6)} mb={hp(2)} display="none">
                 <View rowGap={hp(1)} f={1}>
                   <Text fontSize={FontSizes.size16} fontWeight={'bold'}>
                     From :-
