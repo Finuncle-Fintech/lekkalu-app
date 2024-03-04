@@ -18,7 +18,7 @@ import { getGoalProgressData, getGoalsProgressChartData } from '@/utils/goal'
 
 const Goals = () => {
   const insets = useSafeAreaInsets()
-  const { data, refetch } = useGetGoals()
+  const { data, refetch, isLoading } = useGetGoals()
   useRefetchOnFocus(refetch)
 
   const goalProgressData = useMemo(() => getGoalProgressData(data?.data || []), [data])
@@ -49,13 +49,22 @@ const Goals = () => {
         Your ongoing financial goals
       </Text>
       <FlatList
-        ListEmptyComponent={() => (
-          <View h={hp(35)} jc="center" ai="center">
-            <Text fontSize={FontSizes.size24} fontWeight={'bold'}>
-              No Goals Added
-            </Text>
-          </View>
-        )}
+        ListEmptyComponent={() => {
+          if (isLoading) {
+            return (
+              <View>
+                <Text>Loading...</Text>
+              </View>
+            )
+          }
+          return (
+            <View h={hp(35)} jc="center" ai="center">
+              <Text fontSize={FontSizes.size24} fontWeight={'bold'}>
+                No Goals Added
+              </Text>
+            </View>
+          )
+        }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         data={data?.data || []}
