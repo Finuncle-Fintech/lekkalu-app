@@ -5,7 +5,7 @@ import ExpenseList from '@/components/expense-list'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native'
 import { THEME_COLORS } from '@/utils/theme'
 import { AntDesign } from '@expo/vector-icons'
 import CreateOrEditBudget from '@/components/add-or-edit-budget/add-or-edit-budget'
@@ -22,6 +22,7 @@ interface Budget {
 export default function Expenses() {
   const theme = useTheme()
   const [showModal, setShowModal] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [currentMonthData, setCurrentMonthData] = useState<Budget | null>(null)
 
   const { data, isFetching, isLoading, isError } = useQuery({
@@ -33,8 +34,10 @@ export default function Expenses() {
 
   async function getData() {
     if (data) {
+      setLoading(true)
       const monthData = await getSingleMonthBudget(new Date(), data || [])
       setCurrentMonthData(monthData)
+      setLoading(false)
     }
   }
 
@@ -55,9 +58,9 @@ export default function Expenses() {
           <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size14} fontFamily={'$heading'}>
             Current Month Budget
           </Text>
-          <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size17} fontFamily={'$heading'} fontWeight={'bold'}>
+          {isLoading || loading ? <ActivityIndicator color={THEME_COLORS.brand[900]}/> :<Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size17} fontFamily={'$heading'} fontWeight={'bold'}>
             {currentMonthData ? '₹ ' + currentMonthData?.limit : 'Add'}
-          </Text>
+          </Text>}
         </TouchableOpacity>
 
         <TouchableOpacity
