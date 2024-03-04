@@ -104,8 +104,8 @@ export default function CreateOrEditBudget({
 
   const setBudgetMutation = useMutation({
     mutationFn: setBudget,
-    onSuccess() {
-      queryClient.invalidateQueries({
+    onSuccess : async () => {
+      await queryClient.invalidateQueries({
         queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
       })
       reset({})
