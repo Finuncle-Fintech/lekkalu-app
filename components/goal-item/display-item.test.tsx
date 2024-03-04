@@ -14,7 +14,7 @@ describe('Goal', () => {
     }
     const GoalItem = render(
       <TamaguiProvider config={config}>
-        <DisplayItem name={dummyData.name} track_kpi={dummyData.track_kpi} created_at={'12 days ago'} />,
+        <DisplayItem name={dummyData.name} track_kpi={dummyData.track_kpi} created_at={dummyData.created_at} />,
       </TamaguiProvider>,
     )
     expect(GoalItem).toBeDefined()
