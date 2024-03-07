@@ -1,10 +1,19 @@
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Separator, Spinner, Text, View, useTheme } from 'tamagui'
-import { LineChart } from 'react-native-gifted-charts'
+import { Separator, Spinner, Text, View } from 'tamagui'
+import { LineChart as LC } from 'echarts/charts'
 import { router, useLocalSearchParams } from 'expo-router'
+import { SVGRenderer } from '@wuba/react-native-echarts'
 import dayjs from 'dayjs'
+import * as echarts from 'echarts/core'
+import {
+  GridComponent,
+  ToolboxComponent,
+  DataZoomComponent,
+  LegendComponent,
+  TooltipComponent,
+} from 'echarts/components'
 
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
@@ -13,8 +22,10 @@ import Card from '@/components/card'
 import { THEME_COLORS } from '@/utils/theme'
 import DatePicker from '@/components/date-picker'
 import { useGetGoalDetails, useGetGoalSources, useGetGoalTimeline } from '@/queries/goal'
-import { getGoalTimelineData } from '@/utils/goal'
 import { convertDays, getDataByMonth, getDataByWeek, getDataByYear, goalReachedString } from '@/utils/dateTime'
+import LineChart from '@/components/LineChart'
+
+echarts.use([SVGRenderer, LegendComponent, LC, GridComponent, ToolboxComponent, DataZoomComponent, TooltipComponent])
 
 interface IKeyValueTextProps {
   title: string
@@ -40,14 +51,12 @@ const GoalDetails = () => {
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
-  const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('week')
+  const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('year')
 
   const [timelineSpan, setTimelineSpan] = useState({
     firstGoalDay: dayjs().toDate(),
     lastGoalDay: dayjs().toDate(),
   })
-
-  const t = useTheme()
 
   const params = useLocalSearchParams()
 
@@ -62,13 +71,15 @@ const GoalDetails = () => {
 
   const goalData = goalDetailsQueryData?.data || null
 
+  const skiaRef = useRef<any>(null)
+
   const SOURCE = useMemo(() => {
     return sourcesQueryData?.data?.find((each) => each?.id === goalData?.target_contribution_source)
   }, [sourcesQueryData?.data, goalData])
 
   const barData = useMemo(() => {
-    if (fromDate && toDate && goalTimelineQueryData?.data) {
-      const _barData = getGoalTimelineData(goalTimelineQueryData?.data, fromDate, toDate)
+    if (goalTimelineQueryData?.data) {
+      const _barData = goalTimelineQueryData?.data
       switch (viewChartBy) {
         case 'month':
           return getDataByMonth(_barData)
@@ -81,7 +92,7 @@ const GoalDetails = () => {
       }
     }
     return []
-  }, [fromDate, goalTimelineQueryData, toDate, viewChartBy])
+  }, [goalTimelineQueryData, viewChartBy])
 
   useEffect(() => {
     if (!isLoadingTimelineData) {
@@ -100,6 +111,62 @@ const GoalDetails = () => {
   const changeViewChartBy = (type: ChartViewBy) => {
     setViewChartBy(type)
   }
+
+  useEffect(() => {
+    let chart: any
+    if (barData.length) {
+      const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+          trigger: 'axis',
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: barData.map((each: any) => each?.label),
+          axisLabel: {
+            hideOverlap: true,
+            showMinLabel: true,
+            showMaxLabel: true,
+          },
+        },
+        grid: {
+          containLabel: true,
+        },
+        yAxis: {
+          type: 'value',
+        },
+        animationDurationUpdate: 0,
+        series: [
+          {
+            name: 'KPI',
+            type: 'line',
+            data: barData,
+            smooth: true,
+          },
+          {
+            name: 'Target',
+            data: barData.map(() => goalDetailsQueryData?.data?.target_value),
+            type: 'line',
+            color: '#d63031',
+            symbol: 'none',
+            smooth: true,
+          },
+        ],
+      }
+      if (skiaRef.current) {
+        chart = echarts.init(skiaRef.current, 'dark', {
+          renderer: 'svg',
+          width: 350,
+          height: 350,
+        })
+      }
+      chart?.setOption(option)
+    }
+    return () => {
+      chart?.dispose()
+    }
+  }, [barData, goalDetailsQueryData?.data?.target_value])
 
   return (
     <View f={1} pt={insets.top + hp(2)} bg="$backgroundHover">
@@ -210,22 +277,8 @@ const GoalDetails = () => {
                   <Text color={'white'}>Years</Text>
                 </TouchableOpacity>
               </View>
-              <View overflow="hidden">
-                <LineChart
-                  data={barData}
-                  color1={String(THEME_COLORS.primary[200])}
-                  xAxisColor={t.foreground.val}
-                  yAxisColor={t.foreground.val}
-                  xAxisLabelTextStyle={{ color: t.foreground.val }}
-                  dataPointsColor={String(THEME_COLORS.primary[200])}
-                  curved
-                  initialSpacing={30}
-                  spacing={100}
-                  color="white"
-                  isAnimated
-                  yAxisTextStyle={{ color: t.foreground.val }}
-                  endSpacing={500}
-                />
+              <View>
+                <LineChart ref={skiaRef} />
               </View>
             </>
           ) : (

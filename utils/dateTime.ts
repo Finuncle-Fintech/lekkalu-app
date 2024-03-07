@@ -1,8 +1,11 @@
 import dayjs from 'dayjs'
-import { BarChartItem } from './goal'
-import { THEME_COLORS } from './theme'
 
 type dayUnit = 'day' | 'month' | 'week' | 'year'
+
+type BarChartItem = {
+  time: string
+  kpi_value: number
+}
 
 type GoalReachedStringType = {
   hasReached: boolean
@@ -24,9 +27,21 @@ function isStartOfMonth(isoDate: string) {
   return day === firstDatOfMonth
 }
 
-function isStartOfYear(isoDate: string) {
-  const date = new Date(isoDate)
-  return date.getMonth() === 0 && date.getDate() === 1
+function isLastDayOfYear(isoDate: string) {
+  const dateObj = new Date(isoDate)
+  const month = dateObj.getMonth() + 1
+  const day = dateObj.getDate()
+  const year = dateObj.getFullYear()
+  if (month === 12) {
+    if (day === 31) {
+      return true
+    } else if (day === 30) {
+      const nextDay = new Date(year, month, day + 1)
+      return nextDay.getMonth() === 0 && nextDay.getDate() === 1
+    }
+  }
+
+  return false
 }
 
 export function getplural(number: number, unit: string) {
@@ -96,35 +111,33 @@ function getNextISODate(currentISODate: string): string {
 }
 
 export const getDataByWeek = (arr: Array<BarChartItem>) => {
-  const result: Array<BarChartItem> = []
+  const result: any = []
   const current = {
     totalDays: 0,
     aggValue: 0,
-    date: arr[0].label,
+    date: arr[0].time,
   }
 
-  arr.forEach((item: any, index: number) => {
+  arr.forEach((item: BarChartItem, index: number) => {
     /** for first item and is not end of week.
     /*  for example: if first time of array is 8th january and 8th january is not the end of the week.
     */
-    if (index === 0 && !isEndOfWeek(item.label)) {
-      current.date = item.label
+    if (index === 0 && !isEndOfWeek(item.time)) {
+      current.date = item.time
       result.push({
-        label: dayjs(item?.label).format('YYYY-MM-DD'),
-        value: item.value,
-        frontColor: THEME_COLORS.primary[200],
+        label: dayjs(item?.time).format('YYYY-MM-DD'),
+        value: item.kpi_value,
       })
     } else {
-      current.aggValue += item.value
+      current.aggValue += item.kpi_value
       current.totalDays += 1
     }
 
     // for the last item of the array.
     if (index + 1 === arr.length) {
       result.push({
-        label: dayjs(item?.label).format('YYYY-MM-DD'),
-        value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
-        frontColor: THEME_COLORS.primary[200],
+        label: dayjs(item?.time).format('YYYY-MM-DD'),
+        value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
       })
       return
     }
@@ -132,16 +145,15 @@ export const getDataByWeek = (arr: Array<BarChartItem>) => {
     /**
      * for the date which is the end of the week.
      */
-    if (isEndOfWeek(item.label)) {
+    if (isEndOfWeek(item.time)) {
       result.push({
         label: dayjs(current.date).format('YYYY-MM-DD'),
         value: +(current.aggValue / current.totalDays).toFixed(2),
-        frontColor: THEME_COLORS.primary[200],
       })
       current.totalDays = 0
       current.aggValue = 0
     } else {
-      current.aggValue += item.value
+      current.aggValue += item.kpi_value
       current.totalDays += 1
     }
 
@@ -151,47 +163,45 @@ export const getDataByWeek = (arr: Array<BarChartItem>) => {
 }
 
 export const getDataByMonth = (arr: Array<BarChartItem>) => {
-  const result: Array<BarChartItem> = []
+  // const result: Array<BarChartItem> = []
+  const result: any = []
   const current = {
     totalDays: 0,
     aggValue: 0,
-    date: arr[0]?.label,
+    date: arr[0]?.time,
   }
 
-  arr.forEach((item: any, index: number) => {
+  arr.forEach((item: BarChartItem, index: number) => {
     // for the first item of the array which is not the start of the month
-    if (index === 0 && !isStartOfMonth(item.label)) {
-      current.date = item.label
+    if (index === 0 && !isStartOfMonth(item.time)) {
+      current.date = item.time
       result.push({
-        label: dayjs(item?.label).format('YYYY-MM'),
-        value: item.value,
-        frontColor: THEME_COLORS.primary[200],
+        label: dayjs(item?.time).format('YYYY-MM'),
+        value: item.kpi_value,
       })
     } else {
-      current.aggValue += item.value
+      current.aggValue += item.kpi_value
       current.totalDays += 1
     }
 
     // for last day in the given array.
     if (index + 1 === arr.length) {
       result.push({
-        label: dayjs(item?.label).format('YYYY-MM-DD'),
-        value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
-        frontColor: THEME_COLORS.primary[200],
+        label: dayjs(item?.time).format('YYYY-MM'),
+        value: +((current.aggValue + item.kpi_value) / (current.totalDays + 1)).toFixed(2),
       })
       return
     }
 
-    if (isStartOfMonth(item.label)) {
+    if (isStartOfMonth(item.time)) {
       result.push({
         label: dayjs(current.date).format('YYYY-MM'),
         value: +(current.aggValue / current.totalDays).toFixed(2),
-        frontColor: THEME_COLORS.primary[200],
       })
       current.totalDays = 0
       current.aggValue = 0
     } else {
-      current.aggValue += item.value
+      current.aggValue += item.kpi_value
       current.totalDays += 1
     }
     current.date = getNextISODate(current.date)
@@ -200,48 +210,23 @@ export const getDataByMonth = (arr: Array<BarChartItem>) => {
 }
 
 export const getDataByYear = (arr: Array<BarChartItem>) => {
-  const result: Array<BarChartItem> = []
+  const result: any = []
   const current = {
-    totalDays: 0,
-    aggValue: 0,
-    date: arr[0].label,
+    totalDays: 1,
+    agg_value: arr[0]?.kpi_value,
+    date: arr[0]?.time,
   }
-
-  arr.forEach((item: any, index: number) => {
-    // for the first item of the array which is not the start of the month
-    if (index === 0 && !isStartOfYear(item.label)) {
-      current.date = item.label
-      result.push({
-        label: dayjs(item?.label).format('YYYY-MM-DD'),
-        value: item.value,
-        frontColor: THEME_COLORS.primary[200],
-      })
-    } else {
-      current.aggValue += item.value
-      current.totalDays += 1
-    }
-
-    // for last day in the given array.
-    if (index + 1 === arr.length) {
-      result.push({
-        label: dayjs(item?.label).format('YYYY-MM-DD'),
-        value: +((current.aggValue + item.value) / (current.totalDays + 1)).toFixed(2),
-        frontColor: THEME_COLORS.primary[200],
-      })
-      return
-    }
-
-    if (isStartOfYear(item.label)) {
-      result.push({
-        label: `${dayjs(current?.date).get('year')}`,
-        value: +(current.aggValue / current.totalDays).toFixed(2),
-        frontColor: THEME_COLORS.primary[200],
-      })
+  arr.forEach(({ time, kpi_value }, index) => {
+    if (isLastDayOfYear(time)) {
+      result.push({ label: dayjs(time).format('YYYY'), value: +(current.agg_value / current.totalDays).toFixed(2) })
       current.totalDays = 0
-      current.aggValue = 0
+      current.agg_value = 0
     } else {
-      current.aggValue += item.value
       current.totalDays += 1
+      current.agg_value += kpi_value
+    }
+    if (arr.length - 1 === index) {
+      result.push({ label: dayjs(time).format('YYYY'), value: +(current.agg_value / current.totalDays).toFixed(2) })
     }
     current.date = getNextISODate(current.date)
   })
@@ -251,6 +236,6 @@ export const getDataByYear = (arr: Array<BarChartItem>) => {
 export const getDataByDay = (arr: Array<BarChartItem>) => {
   return arr.map((item) => ({
     ...item,
-    label: dayjs(item.label).format('YYYY-MM-DD'),
+    label: dayjs(item.time).format('YYYY-MM-DD'),
   }))
 }
