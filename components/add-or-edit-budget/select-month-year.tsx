@@ -4,7 +4,7 @@ import type { FontSizeTokens, SelectProps } from 'tamagui'
 import { Adapt, Button, Dialog, Label, Select, Sheet, Text, View, XStack, YStack, getFontSize, useTheme } from 'tamagui'
 import { LinearGradient } from 'tamagui/linear-gradient'
 // import { ASSET_TYPE as items } from './config'
-import { Dimensions, FlatList, TouchableOpacity } from 'react-native'
+import { Dimensions, FlatList, TouchableOpacity, useColorScheme } from 'react-native'
 import { FontSizes } from '@/utils/fonts'
 import { StyleSheet } from 'react-native'
 import { hp, wp } from '@/utils/responsive'
@@ -31,6 +31,7 @@ export function SelectMonthYearItem({
   setShowPicker,
 }: SelectMonthYearProps) {
   const theme = useTheme()
+  let colorScheme = useColorScheme();
 
   return (
     <Dialog modal open={showPicker}>
@@ -55,7 +56,7 @@ export function SelectMonthYearItem({
               </Dialog.Close>
             </View>
           </Dialog.Title>
-          <View height={hp(height/25)}>
+          <View maxHeight={hp(height/25)} minHeight={hp(height/30)}>
             <FlatList
               data={items}
               showsVerticalScrollIndicator={false}
@@ -63,7 +64,7 @@ export function SelectMonthYearItem({
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={{
-                    flexBasis: `${95 / 3}%`
+                    flexBasis: `${95 / 3}%`,
                   }}
                   onPress={() => {
                     setSelectedItem(item)
@@ -78,9 +79,9 @@ export function SelectMonthYearItem({
                     paddingHorizontal={wp(3)}
                     paddingVertical={wp(1.5)}
                     alignItems="center"
-                    backgroundColor={item === selectedItem ? THEME_COLORS.brand[900] : 'white'}
+                    backgroundColor={item === selectedItem ? THEME_COLORS.brand[900] : ''}
                   >
-                    <Text fontSize={FontSizes.size16} color={item === selectedItem ? 'white' : 'black'}>
+                    <Text fontSize={FontSizes.size16} color={item === selectedItem ? 'white' : colorScheme === 'dark' ? 'white' : 'black'}>
                       {item}
                     </Text>
                   </View>

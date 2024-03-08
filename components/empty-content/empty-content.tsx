@@ -1,17 +1,17 @@
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import React from 'react'
 import { FontSizes } from '@/utils/fonts'
+import { Text } from 'tamagui'
 
 interface EmptyContentProps {
   title: string
-  containerStyle?: ViewStyle
-  textStyle?: TextStyle 
+  containerStyle?: ViewStyle  
 }
 
 const EmptyContent = (props: EmptyContentProps) => {
   return (
     <View style={[styles.emptyContentContaier, {...props?.containerStyle }]}>
-      <Text style={[styles.textStyle,{...props?.textStyle}]}>{props?.title}</Text>
+      <Text fontSize={FontSizes.size24}>{props?.title}</Text>
     </View>
   )
 }
@@ -24,7 +24,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textStyle:{
-    fontSize: FontSizes.size24
-  }
 })

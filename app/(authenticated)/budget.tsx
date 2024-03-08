@@ -1,8 +1,8 @@
-import { Button, FlatList, HStack, IconButton, Text, VStack, useToast } from 'native-base'
+import { Button, FlatList, HStack, IconButton, VStack, useToast } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
 import { router, useFocusEffect } from 'expo-router'
-import { View, useTheme } from 'tamagui'
+import { Text, View, useTheme } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
@@ -85,10 +85,11 @@ export default function BudgetList() {
   return (
     <>
       {isLoading || isFetching || deleteBudgetMutation.isPending && <LoaderOverlay />}
-      <View f={1} pt={top + hp(2)} marginHorizontal={wp(5)}>
+      <View f={1} bg="$backgroundHover">
+        <View pt={top + hp(2)} marginHorizontal={wp(5)} flex={1}>
         <View flexDirection="row" gap={wp(4)} alignItems="center" marginBottom={hp(2)}>
           <BackButton onPress={() => router.replace('/expenses')} />
-          <Text fontSize={FontSizes.size26} fontWeight={'500'}>
+          <Text fontSize={FontSizes.size26} fontWeight={'500'} adjustsFontSizeToFit fontFamily={'$heading'}>
             Your list of budgets
           </Text>
         </View>
@@ -171,6 +172,7 @@ export default function BudgetList() {
             </VStack>
           )}
         />
+        </View>
       </View>
       <CreateOrEditBudget
         setShowModal={setShowModal}
