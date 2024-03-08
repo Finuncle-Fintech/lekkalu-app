@@ -22,7 +22,14 @@ import Card from '@/components/card'
 import { THEME_COLORS } from '@/utils/theme'
 import DatePicker from '@/components/date-picker'
 import { useGetGoalDetails, useGetGoalSources, useGetGoalTimeline } from '@/queries/goal'
-import { convertDays, getDataByMonth, getDataByWeek, getDataByYear, goalReachedString } from '@/utils/dateTime'
+import {
+  convertDays,
+  getDataByMonth,
+  getDataByWeek,
+  getDataByYear,
+  getTimelineSpan,
+  goalReachedString,
+} from '@/utils/dateTime'
 import LineChart from '@/components/LineChart'
 
 echarts.use([SVGRenderer, LegendComponent, LC, GridComponent, ToolboxComponent, DataZoomComponent, TooltipComponent])
@@ -51,7 +58,7 @@ const GoalDetails = () => {
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
-  const [viewChartBy, setViewChartBy] = useState<ChartViewBy>('year')
+  const [viewChartBy, setViewChartBy] = useState<ChartViewBy | undefined>(undefined)
 
   const [timelineSpan, setTimelineSpan] = useState({
     firstGoalDay: dayjs().toDate(),
@@ -77,6 +84,28 @@ const GoalDetails = () => {
     return sourcesQueryData?.data?.find((each) => each?.id === goalData?.target_contribution_source)
   }, [sourcesQueryData?.data, goalData])
 
+  useEffect(() => {
+    if (!isLoadingTimelineData) {
+      const firstGoalDay = dayjs(goalTimelineQueryData?.data[0]?.time).toDate()
+      const lastGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 1].time).toDate()
+
+      setFromDate(firstGoalDay)
+      setToDate(lastGoalDay)
+      setTimelineSpan({
+        firstGoalDay,
+        lastGoalDay,
+      })
+      const span = getTimelineSpan(firstGoalDay.toISOString(), lastGoalDay.toISOString())
+      if (span.year >= 3) {
+        setViewChartBy('year')
+      } else if (span.month >= 3) {
+        setViewChartBy('month')
+      } else {
+        setViewChartBy('week')
+      }
+    }
+  }, [goalTimelineQueryData, isLoadingTimelineData])
+
   const barData = useMemo(() => {
     if (goalTimelineQueryData?.data) {
       const _barData = goalTimelineQueryData?.data
@@ -93,20 +122,6 @@ const GoalDetails = () => {
     }
     return []
   }, [goalTimelineQueryData, viewChartBy])
-
-  useEffect(() => {
-    if (!isLoadingTimelineData) {
-      const firstGoalDay = dayjs(goalTimelineQueryData?.data[0]?.time).toDate()
-      const lastGoalDay = dayjs(goalTimelineQueryData?.data[goalTimelineQueryData?.data.length - 1].time).toDate()
-
-      setFromDate(firstGoalDay)
-      setToDate(lastGoalDay)
-      setTimelineSpan({
-        firstGoalDay,
-        lastGoalDay,
-      })
-    }
-  }, [goalTimelineQueryData, isLoadingTimelineData])
 
   const changeViewChartBy = (type: ChartViewBy) => {
     setViewChartBy(type)
