@@ -239,3 +239,22 @@ export const getDataByDay = (arr: Array<BarChartItem>) => {
     label: dayjs(item.time).format('YYYY-MM-DD'),
   }))
 }
+
+export function getTimelineSpan(firstDay: string, lastDay: string) {
+  const startDate: any = new Date(firstDay)
+  const endDate: any = new Date(lastDay)
+
+  const millisecondsDiff = endDate - startDate
+  const secondsDiff = millisecondsDiff / 1000
+  const minutesDiff = secondsDiff / 60
+  const hoursDiff = minutesDiff / 60
+  const daysDiff = hoursDiff / 24
+  const weeksDiff = daysDiff / 7
+  const monthsDiff = endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear())
+  const yearsDiff = endDate.getFullYear() - startDate.getFullYear()
+  return {
+    week: weeksDiff,
+    month: monthsDiff,
+    year: yearsDiff,
+  }
+}
