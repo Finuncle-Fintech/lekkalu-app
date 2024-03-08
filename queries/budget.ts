@@ -3,7 +3,7 @@ import { Budget } from '@/types/budget'
 import { apiClient } from '@/utils/client'
 
 export async function fetchBudgets() {
-  const { data } = await apiClient.get<Budget[]>('/budget')
+  const { data } = await apiClient.get<Budget[]>('/budget/')
   return data
 }
 

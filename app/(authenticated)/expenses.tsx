@@ -27,7 +27,7 @@ export default function Expenses() {
 
   const { data, isFetching, isLoading, isError } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
-    queryFn: fetchBudgets,
+    queryFn: fetchBudgets,    
   })
 
   console.log(currentMonthData)
@@ -46,7 +46,8 @@ export default function Expenses() {
   }, [data, isLoading, isError])
 
   return (
-    <View flex={1} p={4} width={'90%'} alignSelf="center" marginTop={12}>
+    <View flex={1} p={4} bg="$backgroundHover">
+      <View marginTop={12} alignSelf="center" width={'95%'}>
       <View flexDirection="row" justifyContent="space-around" marginBottom={10}>
         <TouchableOpacity
           activeOpacity={0.6}
@@ -87,6 +88,7 @@ export default function Expenses() {
         </Link>
       </TouchableOpacity>
       <CreateOrEditBudget setShowModal={setShowModal} showModal={showModal} title="Add Budget" />
+      </View>
     </View>
   )
 }
