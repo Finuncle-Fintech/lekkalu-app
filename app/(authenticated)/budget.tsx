@@ -30,16 +30,39 @@ export default function BudgetList() {
   const { top } = useSafeAreaInsets()
   const toast = useToast()
 
-  const { data, isFetching, isRefetching,isLoading, refetch } = useQuery({
+  const { data, isFetching, isRefetching, isLoading, refetch } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
     queryFn: fetchBudgets,
   })
+  const [sortedBudgetList, setSortedBudgetList] = useState<Budget[]>([])
 
-  // useEffect(()=>{
-  //   queryClient.invalidateQueries({
-  //     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
-  //   })
-  // },[])
+  
+  useEffect(()=>{
+    refetch()
+  },[])
+
+  console.log(isFetching,isLoading,isRefetching);
+  
+
+  function sortBudgetData(budgetData: Budget[]): Budget[] {
+    try {
+      budgetData?.forEach((item) => {
+        const [year, month] = item.month.split('-')
+        item.month = new Date(parseInt(year), parseInt(month)).toISOString().substr(0, 7)
+      })
+  
+      const sortedBudgetData = budgetData.sort((a, b) => b.month.localeCompare(a.month))
+  
+      return sortedBudgetData 
+    } catch (error: any) {
+      console.log(error?.message);
+      return [];      
+    }    
+  }
+
+  useEffect(() => {    
+    setSortedBudgetList(sortBudgetData(data || []))
+  }, [data])
 
   const deleteBudgetMutation = useMutation({
     mutationFn: deleteBudget,
@@ -84,94 +107,94 @@ export default function BudgetList() {
 
   return (
     <>
-      {isLoading || isFetching || deleteBudgetMutation.isPending && <LoaderOverlay />}
+      {(isLoading || deleteBudgetMutation.isPending) && <LoaderOverlay />}
       <View f={1} bg="$backgroundHover">
         <View pt={top + hp(2)} marginHorizontal={wp(5)} flex={1}>
-        <View flexDirection="row" gap={wp(4)} alignItems="center" marginBottom={hp(2)}>
-          <BackButton onPress={() => router.replace('/expenses')} />
-          <Text fontSize={FontSizes.size26} fontWeight={'500'} adjustsFontSizeToFit fontFamily={'$heading'}>
-            Your list of budgets
-          </Text>
-        </View>
-        <FlatList
-          keyExtractor={(item) => item.id.toString()}
-          data={data ?? []}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={!isFetching ? <EmptyContent title="No budget has been set yet!" /> : null}
-          contentContainerStyle={data?.length === 0 ? { flexGrow: 1, justifyContent: 'center' } : null}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={onRefresh}
-              colors={[THEME_COLORS.brand[900]]} // Customize the refresh indicator colors
-              tintColor={THEME_COLORS.brand[900]} // Customize the color of the refresh indicator
-            />
-          }
-          renderItem={({ item }) => (
-            <VStack
-              space={4}
-              bg={theme.background.get()}
-              rounded="md"
-              p="3"
-              shadow="sm"
-              mb="4"
-              display={'flex'}
-              flexDirection={'row'}
-              justifyContent={'space-between'}
-            >
-              <View flex={1} mr={wp(3)}>
-                <HStack space={1}>
-                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
-                    Month :{' '}
-                  </Text>
-                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
-                    {dayjs(item?.month).format('MMMM YYYY')}
-                  </Text>
-                </HStack>
-                <HStack space={1} display={'flex'} flexWrap={'wrap'}>
-                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
-                    Limit :{' '}
-                  </Text>
-                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600" flex={1}>
-                    ₹ {item?.limit}
-                  </Text>
-                </HStack>
-              </View>
-              <Button.Group display={'flex'} alignItems={'center'}>
-                <View>
-                  <IconButton
-                    size={wp(6)}
-                    variant="solid"
-                    _icon={{
-                      as: EvilIcons,
-                      name: 'pencil',
-                      size: 6,
-                    }}
-                    onPress={() => {
-                      setShowModal(true)
-                      setEditDate(item)
-                    }}
-                  />
+          <View flexDirection="row" gap={wp(4)} alignItems="center" marginBottom={hp(2)}>
+            <BackButton onPress={() => router.replace('/expenses')} />
+            <Text fontSize={FontSizes.size26} fontWeight={'500'} adjustsFontSizeToFit fontFamily={'$heading'}>
+              Your list of budgets
+            </Text>
+          </View>
+          <FlatList
+            keyExtractor={(item) => item.id.toString()}
+            data={sortedBudgetList ?? []}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={data?.length === 0 ? <EmptyContent title="No budget has been set yet!" /> : null}
+            contentContainerStyle={sortedBudgetList?.length === 0 ? { flexGrow: 1, justifyContent: 'center' } : null}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefetching}
+                onRefresh={onRefresh}
+                colors={[THEME_COLORS.brand[900]]} // Customize the refresh indicator colors
+                tintColor={THEME_COLORS.brand[900]} // Customize the color of the refresh indicator
+              />
+            }
+            renderItem={({ item }) => (
+              <VStack
+                space={4}
+                bg={theme.background.get()}
+                rounded="md"
+                p="3"
+                shadow="sm"
+                mb="4"
+                display={'flex'}
+                flexDirection={'row'}
+                justifyContent={'space-between'}
+              >
+                <View flex={1} mr={wp(3)}>
+                  <HStack space={1}>
+                    <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
+                      Month :{' '}
+                    </Text>
+                    <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
+                      {dayjs(item?.month).format('MMMM YYYY')}
+                    </Text>
+                  </HStack>
+                  <HStack space={1} display={'flex'} flexWrap={'wrap'}>
+                    <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
+                      Limit :{' '}
+                    </Text>
+                    <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600" flex={1}>
+                      ₹ {item?.limit}
+                    </Text>
+                  </HStack>
                 </View>
-                <View>
-                  <IconButton
-                    size={wp(6)}
-                    variant="solid"
-                    colorScheme="danger"
-                    _icon={{
-                      as: EvilIcons,
-                      name: 'trash',
-                      size: 6,
-                    }}
-                    onPress={() => {
-                      handleDeleteBudget(item?.id)
-                    }}
-                  />
-                </View>
-              </Button.Group>
-            </VStack>
-          )}
-        />
+                <Button.Group display={'flex'} alignItems={'center'}>
+                  <View>
+                    <IconButton
+                      size={wp(6)}
+                      variant="solid"
+                      _icon={{
+                        as: EvilIcons,
+                        name: 'pencil',
+                        size: 6,
+                      }}
+                      onPress={() => {
+                        setShowModal(true)
+                        setEditDate(item)
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <IconButton
+                      size={wp(6)}
+                      variant="solid"
+                      colorScheme="danger"
+                      _icon={{
+                        as: EvilIcons,
+                        name: 'trash',
+                        size: 6,
+                      }}
+                      onPress={() => {
+                        handleDeleteBudget(item?.id)
+                      }}
+                    />
+                  </View>
+                </Button.Group>
+              </VStack>
+            )}
+          />
         </View>
       </View>
       <CreateOrEditBudget
