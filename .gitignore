@@ -43,3 +43,7 @@ expo-env.d.ts
 # env files
 *.env
 expo-env.d.ts
+
+ios
+android
+firebase

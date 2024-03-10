@@ -70,8 +70,7 @@
     "react-native-svg": "13.9.0",
     "tamagui": "^1.79.12",
     "xlsx": "^0.18.5",
-    "zod": "^3.22.4",
-    "@shopify/react-native-skia": "0.1.196"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
