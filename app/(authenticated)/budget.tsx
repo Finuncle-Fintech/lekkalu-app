@@ -18,6 +18,7 @@ import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { deleteBudget, fetchBudgets } from '@/queries/budget'
 import { isAxiosError } from 'axios'
 import { Budget } from '@/types/budget'
+import { formatDate } from '@/utils/fn'
 
 export default function BudgetList() {
   const queryClient = useQueryClient()
@@ -40,15 +41,12 @@ export default function BudgetList() {
   useEffect(()=>{
     refetch()
   },[])
-
-  console.log(isFetching,isLoading,isRefetching);
   
-
   function sortBudgetData(budgetData: Budget[]): Budget[] {
     try {
       budgetData?.forEach((item) => {
         const [year, month] = item.month.split('-')
-        item.month = new Date(parseInt(year), parseInt(month)).toISOString().substr(0, 7)
+        item.month = formatDate(item.month,'YYYY-MM-DD')
       })
   
       const sortedBudgetData = budgetData.sort((a, b) => b.month.localeCompare(a.month))

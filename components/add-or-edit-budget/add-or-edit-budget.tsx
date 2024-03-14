@@ -81,7 +81,6 @@ export default function CreateOrEditBudget({
   const [selectedYear, setSelectedYear] = useState<string>(yearData[0])
 
   useEffect(() => {
-    console.log(selectedMonth)
     setSelectedMonthExist(false)
     const month = getMonthIndex(selectedMonth)
     const customDate = dayjs(new Date(`${Number(selectedYear)}-${month+1}`)).format('YYYY-MM-DD')
