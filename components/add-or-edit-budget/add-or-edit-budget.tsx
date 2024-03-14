@@ -202,7 +202,9 @@ export default function CreateOrEditBudget({
           <Dialog.Content bordered elevate key="content" gap={wp(2)}>
             <Dialog.Title>
               <View flexDirection="row" justifyContent="space-between" width={width - 50} alignItems="center">
-                <Text fontSize={FontSizes.size26}>{title}</Text>
+                <Text fontSize={FontSizes.size26} adjustsFontSizeToFit>{title}
+                  {isEdit && asset && <Text fontSize={FontSizes.size26} adjustsFontSizeToFit>{' (' + formatDate(asset?.month,'MMM, YYYY') + ')'}</Text>}
+                </Text>
                 <Dialog.Close asChild>
                   <Button size="$2" circular icon={X} onPress={() => setShowModal(false)} />
                 </Dialog.Close>

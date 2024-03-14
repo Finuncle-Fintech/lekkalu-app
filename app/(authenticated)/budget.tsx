@@ -6,7 +6,7 @@ import { Text, View, useTheme } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
-import { RefreshControl, StyleSheet } from 'react-native'
+import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import BackButton from '@/components/back-button'
 import LoaderOverlay from '@/components/loader-overlay'
@@ -19,6 +19,7 @@ import { deleteBudget, fetchBudgets } from '@/queries/budget'
 import { isAxiosError } from 'axios'
 import { Budget } from '@/types/budget'
 import { formatDate } from '@/utils/fn'
+import { Plus } from '@tamagui/lucide-icons'
 
 export default function BudgetList() {
   const queryClient = useQueryClient()
@@ -26,6 +27,7 @@ export default function BudgetList() {
   // const [budgetList, setBudgetList] = useState<Budget[]>([])
   // const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
   const [editData, setEditDate] = useState<Budget>()
 
   const { top } = useSafeAreaInsets()
@@ -37,28 +39,27 @@ export default function BudgetList() {
   })
   const [sortedBudgetList, setSortedBudgetList] = useState<Budget[]>([])
 
-  
-  useEffect(()=>{
+  useEffect(() => {
     refetch()
-  },[])
-  
+  }, [])
+
   function sortBudgetData(budgetData: Budget[]): Budget[] {
     try {
       budgetData?.forEach((item) => {
         const [year, month] = item.month.split('-')
-        item.month = formatDate(item.month,'YYYY-MM-DD')
+        item.month = formatDate(item.month, 'YYYY-MM-DD')
       })
-  
+
       const sortedBudgetData = budgetData.sort((a, b) => b.month.localeCompare(a.month))
-  
-      return sortedBudgetData 
+
+      return sortedBudgetData
     } catch (error: any) {
-      console.log(error?.message);
-      return [];      
-    }    
+      console.log(error?.message)
+      return []
+    }
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     setSortedBudgetList(sortBudgetData(data || []))
   }, [data])
 
@@ -170,6 +171,7 @@ export default function BudgetList() {
                       }}
                       onPress={() => {
                         setShowModal(true)
+                        setIsEdit(true)
                         setEditDate(item)
                       }}
                     />
@@ -194,12 +196,15 @@ export default function BudgetList() {
             )}
           />
         </View>
+        <TouchableOpacity style={styles.fab} onPress={() => {setShowModal(!showModal),setIsEdit(false)}}>
+          <Plus size={wp(8)} color={'white'} />
+        </TouchableOpacity>
       </View>
       <CreateOrEditBudget
         setShowModal={setShowModal}
         showModal={showModal}
-        title="Edit Budget"
-        isEdit={true}
+        title={isEdit ? "Edit Budget" : "Add Budget"}
+        isEdit={isEdit}
         asset={editData}
       />
     </>
@@ -207,6 +212,17 @@ export default function BudgetList() {
 }
 
 const styles = StyleSheet.create({
+  fab: {
+    height: wp(12),
+    width: wp(12),
+    borderRadius: wp(6),
+    backgroundColor: THEME_COLORS.primary[400],
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: hp(3),
+    position: 'absolute',
+    right: wp(8),
+  },
   back: {
     height: wp(10),
     width: wp(10),

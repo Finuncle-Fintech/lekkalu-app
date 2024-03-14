@@ -12,7 +12,7 @@ import CreateOrEditBudget from '@/components/add-or-edit-budget/add-or-edit-budg
 import { useQuery } from '@tanstack/react-query'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { fetchBudgets, getSingleMonthBudget } from '@/queries/budget'
-
+import { Plus } from '@tamagui/lucide-icons'
 interface Budget {
   id: any
   limit: number
@@ -30,6 +30,7 @@ export default function Expenses() {
     queryFn: fetchBudgets,    
   })
 
+
   async function getData() {
     if (data) {
       setLoading(true)
@@ -45,7 +46,7 @@ export default function Expenses() {
 
   return (
     <View flex={1} p={4} bg="$backgroundHover">
-      <View marginTop={12} alignSelf="center" width={'95%'}>
+      <View marginTop={12} alignSelf="center" width={'95%'} flex={1}>
       <View flexDirection="row" justifyContent="space-around" marginBottom={10}>
         <TouchableOpacity
           activeOpacity={0.6}
@@ -79,11 +80,9 @@ export default function Expenses() {
         All Expensess
       </Text>
 
-      <ExpenseList />
-      <TouchableOpacity style={styles.addFab}>
-        <Link href="/create-expense" asChild>
-          <AntDesign name="plus" color={'white'} size={wp(6)} />
-        </Link>
+      <ExpenseList />      
+      <TouchableOpacity style={styles.fab} onPress={() => router.push('/(authenticated)/create-expense')}>
+        <Plus size={wp(8)} color={'white'} />
       </TouchableOpacity>
       <CreateOrEditBudget setShowModal={setShowModal} showModal={showModal} title="Add Budget" />
       </View>
@@ -92,16 +91,16 @@ export default function Expenses() {
 }
 
 const styles = StyleSheet.create({
-  addFab: {
+  fab: {
     height: wp(12),
     width: wp(12),
     borderRadius: wp(6),
-    backgroundColor: THEME_COLORS.primary[50],
-    position: 'absolute',
+    backgroundColor: THEME_COLORS.primary[400],
     justifyContent: 'center',
     alignItems: 'center',
+    bottom: hp(3),
+    position: 'absolute',
     right: wp(4),
-    bottom: wp(2),
   },
   container: {
     paddingHorizontal: wp(2),
