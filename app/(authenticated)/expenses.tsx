@@ -30,8 +30,6 @@ export default function Expenses() {
     queryFn: fetchBudgets,    
   })
 
-  console.log(currentMonthData)
-
   async function getData() {
     if (data) {
       setLoading(true)
