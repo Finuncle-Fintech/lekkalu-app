@@ -47,6 +47,15 @@ export const userClient = axios.create({
   headers: BASIC_HEADER,
 })
 
+userClient.interceptors.request.use(async (config) => {
+  config.headers = new AxiosHeaders(config.headers)
+  const accessToken = await getToken('access')
+  if (accessToken) {
+    config.headers.setAuthorization(`Bearer ${accessToken}`)
+  }
+  return config
+})
+
 /**
  * This is for token specific requests
  */
