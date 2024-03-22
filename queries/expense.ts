@@ -1,6 +1,6 @@
 import { AddExpenseSchema } from '@/schema/expense'
 import { Expense, MonthlyExpense, WeeklyExpense } from '@/types/expense'
-import { apiClient } from '@/utils/client'
+import { apiClient, apiv1point2Client } from '@/utils/client'
 
 type PageParams = {
   page?: number
@@ -44,4 +44,11 @@ export async function fetchExpenseByDate(params: PageParams & { from: string; to
     params: { per_page: params?.per_page ?? 10, page: (params?.page ?? 0) + 1 },
   })
   return data
+}
+
+export async function fetchExpenseByKeyword(search: string) {
+  const { data } = await apiv1point2Client.get('expenses/', {
+    params: { search },
+  })
+  return data.records
 }

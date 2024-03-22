@@ -1,13 +1,12 @@
 import { useQueries } from '@tanstack/react-query'
 import { Button, FlatList, HStack, IconButton, Text, VStack, Modal } from 'native-base'
-import { useCallback, useState } from 'react'
-// import { Modal } from 'react-native'
+import { useCallback, useEffect, useState } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
 import { Link } from 'expo-router'
 import { Input, View, useTheme } from 'tamagui'
 import { Calendar, Search, X } from '@tamagui/lucide-icons'
 import { EXPENSES, TAGS } from '@/utils/query-keys'
-import { fetchExpenses } from '@/queries/expense'
+import { fetchExpenses, fetchExpenseByKeyword } from '@/queries/expense'
 import { fetchTags } from '@/queries/tag'
 import Loading from '../loading'
 import DeleteExpense from '../delete-expense'
@@ -18,7 +17,9 @@ export default function ExpenseList() {
   const theme = useTheme()
   const [modalOpen, setModalOpen] = useState(false)
 
-  const [expenseQuery, tagsQuery] = useQueries({
+  const [search, setSearch] = useState('')
+
+  const [expenseQuery, tagsQuery, searchExpenseQuery] = useQueries({
     queries: [
       {
         queryKey: [EXPENSES.EXPENSES],
@@ -27,6 +28,11 @@ export default function ExpenseList() {
       {
         queryKey: [TAGS.TAGS],
         queryFn: fetchTags,
+      },
+      {
+        queryKey: [EXPENSES.EXPENSES],
+        queryFn: () => fetchExpenseByKeyword(search),
+        enabled: !!search.length,
       },
     ],
   })
@@ -43,6 +49,14 @@ export default function ExpenseList() {
     [tagsQuery.data],
   )
 
+  useEffect(() => {
+    if (search.length > 2) {
+      searchExpenseQuery.refetch()
+    } else {
+      expenseQuery.refetch()
+    }
+  }, [search])
+
   if (expenseQuery.isLoading) {
     return <Loading title="Loading expenses..." />
   }
@@ -51,7 +65,7 @@ export default function ExpenseList() {
     <>
       <View marginBottom={20} display="flex" flexDirection="row" justifyContent={'space-between'}>
         <View width={'80%'}>
-          <Input placeholder="Search Expenses" />
+          <Input placeholder="Search Expenses" onChangeText={(text) => setSearch(text)} />
           <Search style={{ position: 'absolute', right: 15, top: 10 }} />
         </View>
         <View>
@@ -80,8 +94,16 @@ export default function ExpenseList() {
             </View>
           </View>
           <View display="flex" flexDirection="column" gap={20} marginTop={20}>
-            <DatePicker placeholder="From" />
-            <DatePicker placeholder="To" />
+            <DatePicker
+              placeholder="From"
+              // value={search?.fromDate}
+              // onChange={(value) => handleSearch('fromDate', value.toDateString())}
+            />
+            <DatePicker
+              placeholder="To"
+              // value={search?.toDate}
+              // onChange={(value) => handleSearch('toDate', value.toDateString())}
+            />
           </View>
           <View display="flex" gap={20} marginTop={20}>
             <Button>Search</Button>
@@ -140,9 +162,6 @@ export default function ExpenseList() {
           </VStack>
         )}
       />
-      <View>
-        <Text color={'red.100'}>Pagination here</Text>
-      </View>
     </>
   )
 }

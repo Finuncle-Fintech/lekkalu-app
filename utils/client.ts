@@ -39,6 +39,20 @@ apiv2Client.interceptors.request.use(async (config) => {
   return config
 })
 
+export const apiv1point2Client = axios.create({
+  baseURL: 'https://api.finuncle.com/api/v1.2',
+  headers: BASIC_HEADER,
+})
+
+apiv1point2Client.interceptors.request.use(async (config) => {
+  config.headers = new AxiosHeaders(config.headers)
+  const accessToken = await getToken('access')
+  if (accessToken) {
+    config.headers.setAuthorization(`Bearer ${accessToken}`)
+  }
+  return config
+})
+
 /**
  * This is for user specific requests
  */
