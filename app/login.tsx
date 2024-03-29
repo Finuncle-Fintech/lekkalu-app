@@ -161,7 +161,7 @@ export default function Login() {
         >
           Login
         </Button>
-        <GoogleSigninButton handleLogin={handleGoogleSignIn} />
+        {/* <GoogleSigninButton handleLogin={handleGoogleSignIn} /> */}        
         <Link href="/signup" asChild>
           <Button variant="outlined">
             <Text color="$color" fontSize={FontSizes.size15} ta="center">
