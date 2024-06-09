@@ -284,6 +284,14 @@ export default function AuthenticatedAppLayout() {
           unmountOnBlur: true,
         }}
       />
+      <Tabs.Screen
+        name="scenarios/[id]"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
     </Tabs>
   )
 }
