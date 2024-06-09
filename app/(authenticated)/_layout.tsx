@@ -44,14 +44,18 @@ export default function AuthenticatedAppLayout() {
         },
         tabBarItemStyle: { paddingHorizontal: wp(2) },
         header: ({ options, route }) => {
-          const showBackbutton = ['create-expense', 'create-lending-account', 'update-expense/[id]'].includes(
-            route.name,
-          )
+          const showBackbutton = [
+            'create-expense',
+            'create-lending-account',
+            'update-expense/[id]',
+            'lending-account/[id]',
+          ].includes(route.name)
 
           const backScreenKeys: Record<string, string> = {
             'create-expense': 'expenses',
             'update-expense/[id]': 'expenses',
             'create-lending-account': 'lending',
+            'lending-account/[id]': 'lending',
           }
 
           return (
@@ -141,6 +145,16 @@ export default function AuthenticatedAppLayout() {
           title: 'Update Expense',
           href: null,
           unmountOnBlur: true,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="lending-account/[id]"
+        options={{
+          title: 'View Account Transaction',
+          href: null,
+          unmountOnBlur: true,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
