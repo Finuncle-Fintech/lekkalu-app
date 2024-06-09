@@ -25,7 +25,7 @@ export type Transaction = {
 export type AddAccountSchema = {
   id?: number
   name: string
-  partner_email: string
+  partner_email?: string
   principal: number | string | null
   user_remark?: string | null
   started: Date

@@ -1,4 +1,4 @@
-import { Accounts, AddAccountSchema, AddTransactionSchema } from '@/types/lending'
+import { Accounts, AddAccountSchema, AddTransactionSchema, Transaction } from '@/types/lending'
 import { apiv2Client } from '@/utils/client'
 
 // Lending Accounts
@@ -24,11 +24,11 @@ export async function deleteLendingAccount(id: number) {
 
 // Lending Transactions
 export async function fetchLendingTransaction() {
-  const { data } = await apiv2Client.get<Array<AddTransactionSchema>>('/lending_transactions')
+  const { data } = await apiv2Client.get<Array<Transaction>>('/lending_transactions')
   return data
 }
 
-export async function fetchLendingTransactionById(id: number) {
+export async function fetchLendingTransactionById(id: string) {
   const { data } = await apiv2Client.get<Array<Accounts>[]>(`/lending_transactions/${id}/`)
   return data
 }

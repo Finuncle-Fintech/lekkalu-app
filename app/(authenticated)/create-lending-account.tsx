@@ -1,75 +1,85 @@
 import { useMemo } from 'react'
 import { Button, VStack, useToast } from 'native-base'
-import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from 'expo-router'
 import { View, useTheme } from 'tamagui'
 import InputFields from '@/components/input-fields'
-import { EXPENSES, TAGS } from '@/utils/query-keys'
-import { fetchTags } from '@/queries/tag'
-import { addExpense, fetchExpenses } from '@/queries/expense'
-import { AddExpenseSchema, addExpenseSchema } from '@/schema/expense'
 import { Success } from '@/utils/toast'
-import { checkIsExpenseExists, getExpenseInputs } from '@/utils/expense'
 import { hp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
+import { InputField } from '@/types/input-fields'
+import { AddAccountSchema } from '@/types/lending'
+import { addLendingAccount } from '@/queries/lending'
+import { addAccountSchema } from '@/schema/lending'
+import { LENDING } from '@/utils/query-keys/lending'
+import { TRANSACTION_TYPES, calculateTransactionAmount } from '@/utils/lending'
 
 export default function CreateLendingAccount() {
   const toast = useToast()
   const qc = useQueryClient()
   const theme = useTheme()
 
-  const [tagsQuery, expensesQuery] = useQueries({
-    queries: [
-      {
-        queryKey: [TAGS.TAGS],
-        queryFn: fetchTags,
-      },
-      {
-        queryKey: [EXPENSES.EXPENSES],
-        queryFn: () => fetchExpenses(),
-      },
-    ],
-  })
-
   const {
     reset,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<AddExpenseSchema>({
-    resolver: zodResolver(addExpenseSchema),
-  })
-
-  const createExpenseMutation = useMutation({
-    mutationFn: addExpense,
-    onSuccess: () => {
-      reset()
-      qc.invalidateQueries({ queryKey: [EXPENSES.EXPENSES] })
-      toast.show({ render: () => Success('Expense created successfully!') })
-      router.push('/expenses')
+  } = useForm<AddAccountSchema & { type: 'lend' | 'borrow' }>({
+    resolver: zodResolver(addAccountSchema),
+    defaultValues: {
+      started: new Date(),
+      type: 'lend',
     },
   })
 
-  const inputs = useMemo(() => getExpenseInputs(tagsQuery.data ?? []), [tagsQuery.data])
+  const createAccountMutation = useMutation({
+    mutationFn: addLendingAccount,
+    onSuccess: () => {
+      reset()
+      qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
+      toast.show({ render: () => Success('Account created successfully!') })
+      router.push('/lending')
+    },
+  })
 
-  const handleAddExpense = (values: AddExpenseSchema) => {
-    const newExpense = {
-      amount: values.amount,
-      tags: values.tags,
-      time: values.time,
-    }
-    /** Handling case of expense creation */
-    const exists = checkIsExpenseExists(expensesQuery.data ?? [], {
-      ...newExpense,
-      amount: newExpense.amount.toString(),
-    })
-    if (exists) {
-      toast.show({ title: 'Expense already exists!' })
-    }
+  const inputs = useMemo(
+    () =>
+      [
+        {
+          id: 'type',
+          label: 'Select Type',
+          type: 'select',
+          options: TRANSACTION_TYPES,
+        },
+        {
+          id: 'name',
+          label: 'Account Name',
+          type: 'text',
+        },
+        {
+          id: 'principal',
+          label: 'Enter Amount',
+          type: 'number',
+        },
 
-    createExpenseMutation.mutate(newExpense)
+        {
+          id: 'started',
+          label: 'Choose the Date',
+          type: 'date',
+        },
+      ] as InputField[],
+    [],
+  )
+
+  const handleAddLendingAccount = (values: AddAccountSchema & { type: 'lend' | 'borrow' }) => {
+    const newAccount = {
+      started: values.started,
+      name: values.name,
+      principal: calculateTransactionAmount(values.type, values.principal as number),
+    }
+    createAccountMutation.mutate(newAccount)
   }
 
   return (
@@ -79,9 +89,9 @@ export default function CreateLendingAccount() {
       </View>
 
       <Button
-        onPress={handleSubmit(handleAddExpense)}
-        isDisabled={createExpenseMutation.isPending}
-        isLoading={createExpenseMutation.isPending}
+        onPress={handleSubmit(handleAddLendingAccount)}
+        isDisabled={createAccountMutation.isPending}
+        isLoading={createAccountMutation.isPending}
         height={hp(5)}
         _text={{ style: { fontSize: FontSizes.size15 } }}
       >

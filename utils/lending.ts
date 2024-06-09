@@ -12,3 +12,18 @@ export const describeTransaction = (amount: string | number) => {
     }
   }
 }
+
+export const TRANSACTION_TYPES = [
+  { id: 'lend', value: 'Lend', label: 'Lend' },
+  { id: 'borrow', value: 'Borrow', label: 'Borrow' },
+]
+
+export function calculateTransactionAmount(type: 'lend' | 'borrow', amount: number): number {
+  if (type === 'lend') {
+    return amount // Positive amount for lending
+  } else if (type === 'borrow') {
+    return -amount // Negative amount for borrowing
+  } else {
+    throw new Error('Invalid transaction type. Use "lend" or "borrow".')
+  }
+}

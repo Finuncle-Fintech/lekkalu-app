@@ -64,7 +64,7 @@ export default function LendingList() {
             </HStack>
           </View>
           <Button.Group display={'flex'} alignItems={'center'}>
-            <Link href={'/update-expense/23'} asChild>
+            <Link href={`/lending-account/${item.id}`} asChild>
               <IconButton
                 size={wp(6)}
                 _icon={{
