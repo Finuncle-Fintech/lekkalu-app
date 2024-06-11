@@ -25,12 +25,14 @@ export default function CreateLendingAccount() {
     reset,
     handleSubmit,
     control,
+    getValues,
     formState: { errors },
   } = useForm<AddAccountSchema & { type: 'lend' | 'borrow' }>({
     resolver: zodResolver(addAccountSchema),
     defaultValues: {
       started: new Date(),
       type: 'lend',
+      partner_email: undefined,
     },
   })
 
@@ -59,11 +61,20 @@ export default function CreateLendingAccount() {
           type: 'text',
         },
         {
+          id: 'partner_email',
+          label: 'Account Email',
+          type: 'text',
+        },
+        {
           id: 'principal',
           label: 'Enter Amount',
           type: 'number',
         },
-
+        {
+          id: 'user_remark',
+          label: 'Remarks',
+          type: 'text',
+        },
         {
           id: 'started',
           label: 'Choose the Date',
@@ -74,10 +85,14 @@ export default function CreateLendingAccount() {
   )
 
   const handleAddLendingAccount = (values: AddAccountSchema & { type: 'lend' | 'borrow' }) => {
+    const partner_email = getValues('partner_email')
+    const user_remark = getValues('user_remark')
     const newAccount = {
       started: values.started,
       name: values.name,
       principal: calculateTransactionAmount(values.type, values.principal as number),
+      partner_email,
+      user_remark,
     }
     createAccountMutation.mutate(newAccount)
   }
