@@ -5,6 +5,7 @@ export const addAccountSchema = z.object({
   name: z.string(),
   principal: z.coerce.number(),
   started: z.date(),
+  partner_email: z.string().email('Invalid Email Address!').optional(),
 })
 export const addTransactionSchema = z.object({
   amount: z.coerce.number(),

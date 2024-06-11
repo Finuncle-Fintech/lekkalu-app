@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Button, FlatList, HStack, IconButton, Text, VStack } from 'native-base'
-import AntDesign from '@expo/vector-icons/AntDesign'
+import { EvilIcons } from '@expo/vector-icons'
 import { Link } from 'expo-router'
 import moment from 'moment'
 import { Avatar, AvatarImage, View, useTheme } from 'tamagui'
@@ -10,6 +10,7 @@ import { wp } from '@/utils/responsive'
 import { fetchLendingAccounts } from '@/queries/lending'
 import { LENDING } from '@/utils/query-keys/lending'
 import { describeTransaction } from '@/utils/lending'
+import DeleteLendingAccount from '../delete-lending-account/delete-account'
 
 export default function LendingList() {
   const theme = useTheme()
@@ -63,18 +64,36 @@ export default function LendingList() {
               </HStack>
             </HStack>
           </View>
-          <Button.Group display={'flex'} alignItems={'center'}>
-            <Link href={`/lending-account/${item.id}`} asChild>
-              <IconButton
-                size={wp(6)}
-                _icon={{
-                  as: AntDesign,
-                  name: 'right',
-                  size: 6,
-                }}
-              />
-            </Link>
-          </Button.Group>
+          <HStack space={1}>
+            <Button.Group display={'flex'} alignItems={'center'}>
+              <Link href={`/update-lending-account/${item.id}`} asChild>
+                <IconButton
+                  size={wp(6)}
+                  variant="solid"
+                  _icon={{
+                    as: EvilIcons,
+                    name: 'pencil',
+                    size: 6,
+                  }}
+                />
+              </Link>
+            </Button.Group>
+            <Button.Group display={'flex'} alignItems={'center'}>
+              <DeleteLendingAccount id={item.id} />
+            </Button.Group>
+            <Button.Group display={'flex'} alignItems={'center'}>
+              <Link href={`/lending-account/${item.id}`} asChild>
+                <IconButton
+                  size={wp(6)}
+                  _icon={{
+                    as: EvilIcons,
+                    name: 'chevron-right',
+                    size: 10,
+                  }}
+                />
+              </Link>
+            </Button.Group>
+          </HStack>
         </VStack>
       )}
     />

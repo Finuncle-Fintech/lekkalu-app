@@ -22,6 +22,7 @@ export default function LendingAccountTransactions() {
     queryFn: fetchLendingTransaction,
     queryKey: [LENDING.TRANSACTIONS],
     enabled: !!id,
+    staleTime: 0,
   })
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function LendingAccountTransactions() {
 
   return (
     <View flex={1} p={4} bg="$backgroundHover">
-      <VStack bgColor={theme.backgroundHover.get()} flex={1} p={4} space={4} mt={10}>
+      <VStack bgColor={theme.backgroundHover.get()} flex={1} p={4} space={4}>
         <FlatList
           refreshing={lendingTransaction.isLoading || lendingTransaction.isLoading}
           keyExtractor={(item) => item.id.toString()}
