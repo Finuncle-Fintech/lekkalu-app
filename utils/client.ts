@@ -6,7 +6,7 @@ const BASIC_HEADER = {
   'Content-Type': 'application/json',
 }
 
-export const BASE_URL = 'https://api.finuncle.com'
+export const BASE_URL = 'https://api1.finuncle.com'
 
 /**
  * This is general api client which will be used for most of the stuff
