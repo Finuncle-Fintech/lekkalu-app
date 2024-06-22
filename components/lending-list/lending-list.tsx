@@ -58,6 +58,11 @@ export default function LendingList() {
                     {moment(item.started).fromNow()}
                   </Text>
                 </HStack>
+                {item.user_remark && (
+                  <Text maxWidth={wp(48)} color={theme.foreground.get()} fontSize={FontSizes.size15}>
+                    {item.user_remark.length > 55 ? item.user_remark.substring(0, 55) + '...' : item.user_remark}
+                  </Text>
+                )}
                 <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
                   {describeTransaction(item.balance)}
                 </Text>
