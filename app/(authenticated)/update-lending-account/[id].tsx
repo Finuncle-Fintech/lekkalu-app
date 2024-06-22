@@ -35,6 +35,7 @@ export default function UpdateLendingAccount() {
       partner_email: undefined,
     },
   })
+
   const { status: fetchAccountDetailsStatus, data: fetchAccountDetails } = useQuery({
     queryFn: () => fetchLendingAccountById(id),
     queryKey: [LENDING.ACCOUNTS_DETAILS, id],
@@ -45,7 +46,7 @@ export default function UpdateLendingAccount() {
     mutationFn: (dto: AddAccountSchema) => updateLendingAccount(id, dto),
     onSuccess: () => {
       reset()
-      qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS_DETAILS, id] })
+      qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       toast.show({ render: () => Success('Account edited successfully!') })
       router.push('/lending')
     },
