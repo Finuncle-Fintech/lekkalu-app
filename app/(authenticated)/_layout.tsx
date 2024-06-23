@@ -300,6 +300,14 @@ export default function AuthenticatedAppLayout() {
           unmountOnBlur: true,
         }}
       />
+      <Tabs.Screen
+        name="comparisons/add"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
     </Tabs>
   )
 }
