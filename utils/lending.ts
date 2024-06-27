@@ -18,6 +18,13 @@ export const TRANSACTION_TYPES = [
   { id: 'borrow', value: 'Borrow', label: 'Borrow' },
 ]
 
+export const PAYMENT_METHODS = [
+  { id: 'UPI', value: 'UPI', label: 'UPI' },
+  { id: 'Card', value: 'Card', label: 'Card' },
+  { id: 'Cash', value: 'Cash', label: 'Cash' },
+  { id: 'NetBanking', value: 'NetBanking', label: 'NetBanking' },
+]
+
 export function calculateTransactionAmount(type: 'lend' | 'borrow', amount: number): number {
   if (type === 'lend') {
     return amount // Positive amount for lending
