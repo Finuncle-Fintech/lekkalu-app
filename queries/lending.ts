@@ -7,12 +7,17 @@ export async function fetchLendingAccounts() {
   return data
 }
 
+export async function fetchLendingAccountById(id: string) {
+  const { data } = await apiv2Client.get<Accounts>(`/lending_accounts/${id}`)
+  return data
+}
+
 export async function addLendingAccount(dto: AddAccountSchema) {
   const { data } = await apiv2Client.post<{ data: AddAccountSchema }>('/lending_accounts', dto)
   return data
 }
 
-export async function updateLendingAccount(id: number, dto: AddAccountSchema) {
+export async function updateLendingAccount(id: string, dto: AddAccountSchema) {
   const { data } = await apiv2Client.put<{ data: AddAccountSchema }>(`/lending_accounts/${id}`, dto)
   return data
 }
@@ -33,7 +38,7 @@ export async function fetchLendingTransactionById(id: string) {
   return data
 }
 
-export async function addLendingTransaction(dto: AddTransactionSchema) {
+export async function addLendingTransaction(dto: Omit<AddTransactionSchema, 'type'>) {
   const { data } = await apiv2Client.post<{ data: AddTransactionSchema }>('/lending_transactions', dto)
   return data
 }

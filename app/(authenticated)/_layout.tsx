@@ -49,6 +49,7 @@ export default function AuthenticatedAppLayout() {
             'create-lending-account',
             'update-expense/[id]',
             'lending-account/[id]',
+            'update-lending-account/[id]',
           ].includes(route.name)
 
           const backScreenKeys: Record<string, string> = {
@@ -56,6 +57,7 @@ export default function AuthenticatedAppLayout() {
             'update-expense/[id]': 'expenses',
             'create-lending-account': 'lending',
             'lending-account/[id]': 'lending',
+            'update-lending-account/[id]': 'lending',
           }
 
           return (
@@ -131,6 +133,14 @@ export default function AuthenticatedAppLayout() {
         }}
       />
       <Tabs.Screen
+        name="update-lending-account/[id]"
+        options={{
+          title: 'Edit Lending Account',
+          href: null,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
         name="create-expense"
         options={{
           title: 'Create Expense',
@@ -145,16 +155,22 @@ export default function AuthenticatedAppLayout() {
           title: 'Update Expense',
           href: null,
           unmountOnBlur: true,
-          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="update-lending-transaction/[id]"
+        options={{
+          title: 'Update Lending Transaction',
+          href: null,
+          unmountOnBlur: true,
         }}
       />
       <Tabs.Screen
         name="lending-account/[id]"
         options={{
-          title: 'View Account Transaction',
+          title: 'Account Transaction',
           href: null,
           unmountOnBlur: true,
-          headerShown: false,
         }}
       />
       <Tabs.Screen
