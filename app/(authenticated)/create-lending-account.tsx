@@ -59,6 +59,7 @@ export default function CreateLendingAccount() {
           id: 'name',
           label: 'Account Name',
           type: 'text',
+          required: true,
         },
         {
           id: 'partner_email',
@@ -69,6 +70,7 @@ export default function CreateLendingAccount() {
           id: 'principal',
           label: 'Enter Amount',
           type: 'number',
+          required: true,
         },
         {
           id: 'user_remark',
@@ -79,6 +81,7 @@ export default function CreateLendingAccount() {
           id: 'started',
           label: 'Choose the Date',
           type: 'date',
+          required: true,
         },
       ] as InputField[],
     [],

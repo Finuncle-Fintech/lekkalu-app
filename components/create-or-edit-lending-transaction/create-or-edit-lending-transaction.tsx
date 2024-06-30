@@ -108,12 +108,14 @@ export default function CreateOrEditLendingAccount({
           id: 'amount',
           label: 'Amount',
           type: 'number',
+          required: true,
         },
         {
           id: 'time',
           label: 'Date',
           type: 'date',
           defaultDate: new Date(),
+          required: true,
         },
         {
           id: 'payment_method',
