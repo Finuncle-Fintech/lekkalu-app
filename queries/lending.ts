@@ -43,7 +43,7 @@ export async function addLendingTransaction(dto: Omit<AddTransactionSchema, 'typ
   return data
 }
 
-export async function updateLendingTransaction(id: number, dto: AddTransactionSchema) {
+export async function updateLendingTransaction(id: number, dto: Omit<AddTransactionSchema, 'type'>) {
   const { data } = await apiv2Client.put<{ data: AddTransactionSchema }>(`/lending_transactions/${id}`, dto)
   return data
 }

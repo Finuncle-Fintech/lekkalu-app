@@ -1,12 +1,10 @@
-import { cloneElement, useMemo, useState } from 'react'
+import { cloneElement, useEffect, useMemo, useState } from 'react'
 import { Button, Modal, useToast } from 'native-base'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Text, useTheme } from 'tamagui'
 import { useColorScheme } from 'react-native'
-import { AssetCreateOrEditDto, editPhysicalAsset } from '@/queries/balance-sheet'
-import { BALANCE_SHEET } from '@/utils/query-keys'
 import InputFields from '../input-fields'
 import { hp, wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
@@ -14,13 +12,13 @@ import { THEME_COLORS } from '@/utils/theme'
 import { InputField } from '@/types/input-fields'
 import { PAYMENT_METHODS, TRANSACTION_TYPES, calculateTransactionAmount } from '@/utils/lending'
 import { LENDING } from '@/utils/query-keys/lending'
-import { addLendingTransaction } from '@/queries/lending'
-import { AddTransactionSchema } from '@/types/lending'
+import { addLendingTransaction, updateLendingTransaction } from '@/queries/lending'
+import { AddTransactionSchema, Transaction } from '@/types/lending'
 import { addTransactionSchema } from '@/schema/lending'
 
 type CreateOrEditTransactionProps = {
   trigger: React.ReactElement<{ onPress: () => void }>
-  transaction?: AddTransactionSchema
+  transaction?: Transaction
   lending_account: string
 }
 
@@ -45,7 +43,7 @@ export default function CreateOrEditLendingAccount({
   } = useForm<AddTransactionSchema>({
     resolver: zodResolver(addTransactionSchema),
     defaultValues: {
-      type: (transaction?.amount as number) < 0 ? 'borrow' : 'lend',
+      type: Number(transaction?.amount ?? 0) < 0 ? 'borrow' : 'lend',
       amount: Number(transaction?.amount),
       time: transaction?.time ? new Date(transaction.time) : new Date(),
       payment_method: transaction?.payment_method,
@@ -53,6 +51,7 @@ export default function CreateOrEditLendingAccount({
       note: transaction?.note,
     },
   })
+
   const addLendingAccountMutation = useMutation({
     mutationFn: addLendingTransaction,
     onSuccess: () => {
@@ -69,11 +68,16 @@ export default function CreateOrEditLendingAccount({
     },
   })
   const editLendingAccountMutation = useMutation({
-    mutationFn: (dto: AssetCreateOrEditDto) => editPhysicalAsset(transaction?.id!, dto),
+    mutationFn: (dto: Omit<AddTransactionSchema, 'type'>) => updateLendingTransaction(transaction?.id!, dto),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [BALANCE_SHEET.ASSETS] })
-      toast.show({ title: 'Asset updated successfully!' })
+      qc.invalidateQueries({ queryKey: [LENDING.TRANSACTIONS] })
+      qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
+      toast.show({ title: 'Transaction updated successfully!' })
       setShowModal(false)
+    },
+    onError: () => {
+      setShowModal(false)
+      toast.show({ title: 'Failed to update transaction' })
     },
   })
 
@@ -83,6 +87,10 @@ export default function CreateOrEditLendingAccount({
       ...rest,
       lending_account,
       amount: calculateTransactionAmount(type, values.amount as number)?.toString(),
+    }
+    if (isEdit) {
+      editLendingAccountMutation.mutate({ ...valuesToSubmit, amount: Number(values.amount), id: transaction?.id })
+      return
     }
     addLendingAccountMutation.mutate(valuesToSubmit)
   }
@@ -133,6 +141,19 @@ export default function CreateOrEditLendingAccount({
     reset()
   }
 
+  useEffect(() => {
+    if (isEdit) {
+      reset({
+        type: Number(transaction?.amount ?? 0) < 0 ? 'borrow' : 'lend',
+        amount: Number(transaction?.amount),
+        time: transaction?.time ? new Date(transaction.time) : new Date(),
+        payment_method: transaction?.payment_method,
+        reference_no: transaction?.reference_no,
+        note: transaction?.note,
+      })
+    }
+  }, [isEdit, transaction, reset])
+
   return (
     <>
       {cloneElement(trigger, {
@@ -152,6 +173,23 @@ export default function CreateOrEditLendingAccount({
 
           <Modal.Body style={{ rowGap: hp(1) }}>
             <InputFields control={control} errors={errors} inputs={inputs} />
+            {/* <Accordion overflow="hidden" width="100%" type="multiple">
+              <Accordion.Item value="a1">
+                <Accordion.Trigger flexDirection="row" justifyContent="space-between">
+                  {({ open }: { open: boolean }) => (
+                    <>
+                      <Paragraph>Advance options</Paragraph>
+                      <Square animation="quick" rotate={open ? '180deg' : '0deg'}>
+                        <ChevronDown size="$1" />
+                      </Square>
+                    </>
+                  )}
+                </Accordion.Trigger>
+                <Accordion.Content animation="bouncy" exitStyle={{ opacity: 0 }}>
+                  <InputFields control={control} errors={errors} inputs={advancedInputs} />
+                </Accordion.Content>
+              </Accordion.Item>
+            </Accordion> */}
           </Modal.Body>
 
           <Modal.Footer bg={theme.background.get()}>
@@ -177,7 +215,7 @@ export default function CreateOrEditLendingAccount({
                 isDisabled={addLendingAccountMutation.isPending || editLendingAccountMutation.isPending}
                 isLoading={addLendingAccountMutation.isPending || editLendingAccountMutation.isPending}
               >
-                {title}
+                {isEdit ? 'Update' : 'Add'}
               </Button>
             </Button.Group>
           </Modal.Footer>

@@ -21,7 +21,15 @@ export default function LendingList() {
   })
 
   if (lendingAccountQuery.isLoading) {
-    return <Loading title="Loading expenses..." />
+    return <Loading title="Loading accounts..." />
+  }
+
+  if ((lendingAccountQuery.data ?? []).length === 0) {
+    return (
+      <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
+        No lending accounts found
+      </Text>
+    )
   }
 
   return (

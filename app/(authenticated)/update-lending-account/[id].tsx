@@ -40,6 +40,7 @@ export default function UpdateLendingAccount() {
     queryFn: () => fetchLendingAccountById(id),
     queryKey: [LENDING.ACCOUNTS_DETAILS, id],
     enabled: !!id,
+    staleTime: 0,
   })
 
   const editAccountMutation = useMutation({

@@ -12,7 +12,7 @@ export type Accounts = {
 export type Transaction = {
   id: number
   amount: string
-  payment_method: string | null
+  payment_method: string | null | undefined
   time: Date
   reference_no: string | undefined
   remark: string | null
@@ -44,7 +44,7 @@ export type AddTransactionSchema = {
   time: Date
   amount: number | string | null
   note?: string
-  payment_method?: string
+  payment_method?: string | null
   reference_no?: string
   type: 'lend' | 'borrow'
 }
