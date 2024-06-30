@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useQuery } from '@tanstack/react-query'
 import { Button, HStack, Text, VStack, FlatList, IconButton, AddIcon } from 'native-base'
 import moment from 'moment'
@@ -22,6 +22,7 @@ export default function LendingAccountTransactions() {
   const lendingTransaction = useQuery({
     queryFn: fetchLendingTransaction,
     queryKey: [LENDING.TRANSACTIONS],
+    staleTime: 0,
   })
 
   useEffect(() => {
@@ -88,17 +89,21 @@ export default function LendingAccountTransactions() {
               </View>
               <HStack alignItems="center" space={2}>
                 <Button.Group display={'flex'} alignItems={'center'}>
-                  <Link href={`/update-expense/${item.id}`} asChild>
-                    <IconButton
-                      size={wp(6)}
-                      variant="solid"
-                      _icon={{
-                        as: EvilIcons,
-                        name: 'pencil',
-                        size: 6,
-                      }}
-                    />
-                  </Link>
+                  <CreateOrEditLendingTransaction
+                    lending_account={id}
+                    transaction={item}
+                    trigger={
+                      <IconButton
+                        size={wp(6)}
+                        variant="solid"
+                        _icon={{
+                          as: EvilIcons,
+                          name: 'pencil',
+                          size: 6,
+                        }}
+                      />
+                    }
+                  />
                   <DeleteTransaction transactions={accountHistory} id={item.id} />
                 </Button.Group>
               </HStack>
