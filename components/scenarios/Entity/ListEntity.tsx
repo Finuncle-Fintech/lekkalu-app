@@ -79,7 +79,7 @@ const ListEntity = ({ data, isLoading, refetch, handleEdit }: ListEntityType) =>
         } else {
           return (
             <View>
-              <Text>Please add Assets, Liabilities and Monthly Expenses in your scenario</Text>
+              <Text color={'gray'}>Please add Assets, Liabilities and Monthly Expenses in your scenario</Text>
             </View>
           )
         }
