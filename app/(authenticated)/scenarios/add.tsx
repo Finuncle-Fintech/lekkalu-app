@@ -76,7 +76,7 @@ const AddScenarios = () => {
     mutationFn: (values: Partial<Scenario>) => updateScenario(+editScenarioDetail?.id, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SCENARIO.SCENARIO] })
-      router.push('/(authenticated)/scenarios/')
+      handleBack()
     },
   })
 
