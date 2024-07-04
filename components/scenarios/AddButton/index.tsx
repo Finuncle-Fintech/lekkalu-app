@@ -34,7 +34,7 @@ const AddButtonForScenario = ({ handlePress }: AddButtonForScenarioType) => {
                 </View>
               </Dialog.Close>
             </Dialog.Title>
-            <View h={'25%'}>
+            <View h={'25%'} gap={20}>
               <TouchableOpacity onPress={() => onPress('Asset')} style={styles.entityButton}>
                 <Text>Asset</Text>
               </TouchableOpacity>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: wp(8),
   },
-  entityButton: { padding: 20 },
+  entityButton: { padding: 10 },
 })
 
 export default AddButtonForScenario

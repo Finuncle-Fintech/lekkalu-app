@@ -178,7 +178,7 @@ export default function ScenarioWithId() {
       <View fd="row" ml={wp(5)} mr={wp(14)}>
         <View fd="row" columnGap={wp(4)}>
           <BackButton onPress={handleBack} />
-          <Text fontSize={FontSizes.size20} fontFamily={'$heading'} w={'85%'}>
+          <Text fontSize={FontSizes.size20} fontFamily={'$heading'} w={'83%'} alignSelf="center">
             {scenario?.name}
           </Text>
         </View>

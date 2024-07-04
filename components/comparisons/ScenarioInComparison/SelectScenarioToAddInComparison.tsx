@@ -36,14 +36,14 @@ const SelectScenarioToAddInComparison = ({
     >
       <View alignSelf="center">
         {isSelected ? (
-          <CheckCircle2 color={isPrivate ? '$gray10' : textColor} />
+          <CheckCircle2 color={isPrivate ? '$gray10' : textColor} size={'$1'} />
         ) : isPrivate ? (
           <Lock color={'$red10Dark'} size={'$1'} />
         ) : (
-          <CircleDashed color={isPrivate ? '$gray10' : textColor} />
+          <CircleDashed color={isPrivate ? '$gray10' : textColor} size={'$1'} />
         )}
       </View>
-      <View px={'$3'}>
+      <View px={'$3'} alignSelf="center">
         <Text fontSize={FontSizes.size15} color={isPrivate ? '$gray10' : textColor}>
           {name}
         </Text>

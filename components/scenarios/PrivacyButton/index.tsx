@@ -39,11 +39,11 @@ const PrivacyButtonForScenario = ({
           <Dialog.Overlay key={'overlay'} onPress={() => setIsDialogOpen(false)} />
           <Dialog.Content style={{ width: '90%' }} key={'Privacy-dialog-content'}>
             <Dialog.Title>
-              <Text fontSize={FontSizes.size13} lineHeight={'$1'}>
+              <Text fontSize={FontSizes.size18} lineHeight={30}>
                 {`Are you sure you want to make this ${name} ${isPublic ? 'private' : 'public'}`}?
               </Text>
             </Dialog.Title>
-            <View mt={15}>
+            <View mt={5}>
               <View fd="row" gap={20}>
                 <Button flex={1} onPress={() => setIsDialogOpen(false)}>
                   No

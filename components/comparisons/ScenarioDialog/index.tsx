@@ -5,6 +5,7 @@ import { View, Text, Button } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import SelectScenarioToAddInComparison from '../ScenarioInComparison/SelectScenarioToAddInComparison'
 import { Scenario } from '@/types/scenarios'
+import { THEME_COLORS } from '@/utils/theme'
 
 type ScenarioDialogInComparisonType = {
   data: Scenario[]
@@ -83,8 +84,8 @@ const ScenarioDialogInComparison = ({
               />
             ))}
           </View>
-          <Button onPress={handleAddPress}>
-            <Text>Add Scenarios</Text>
+          <Button onPress={handleAddPress} bg={THEME_COLORS.brand[900]}>
+            <Text color={'white'}>Add Scenarios</Text>
           </Button>
         </Modal.Body>
       </Modal.Content>

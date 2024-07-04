@@ -86,7 +86,7 @@ const EditDeleteMenu: FC<EditDeleteMenuProps> = (props) => {
         <Modal.Content>
           <Modal.Body background={theme.background.get()}>
             <View>
-              <Text color={theme.foreground.get()} fontSize={FontSizes.size15}>
+              <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
                 {props.deleteMessage || 'Are you sure you want to delete this?'}
               </Text>
             </View>
@@ -94,7 +94,7 @@ const EditDeleteMenu: FC<EditDeleteMenuProps> = (props) => {
               <Button onPress={() => setViewDeleteDialog(false)} f={1}>
                 Cancel
               </Button>
-              <Button onPress={handleDeletePress} backgroundColor={'$primary'} f={1}>
+              <Button onPress={handleDeletePress} backgroundColor={'$primary'} f={1} color={'white'}>
                 Confirm
               </Button>
             </View>
