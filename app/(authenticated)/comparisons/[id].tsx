@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { TouchableOpacity, StyleSheet, Share } from 'react-native'
-import { View, Text } from 'tamagui'
+import { TouchableOpacity, StyleSheet, Share, BackHandler } from 'react-native'
+import { View, Text, ScrollView } from 'tamagui'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FlatList, Toast } from 'native-base'
 
@@ -45,6 +45,17 @@ const ComparisonWithId = () => {
   const comparisonId = +params.id
   const [isAddScenarioModalOpen, setIsAddScenarioModalOpen] = useState(false)
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
+
+  const handleBack = () => {
+    router.push('/(authenticated)/comparisons/')
+    return true
+  }
+
+  useEffect(() => {
+    const backButtonPress = BackHandler.addEventListener('hardwareBackPress', handleBack)
+
+    return () => backButtonPress.remove()
+  }, [])
 
   const { data: comparison, refetch: refetchComparison } = useQuery({
     queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`],
@@ -197,7 +208,7 @@ const ComparisonWithId = () => {
 
   return (
     <>
-      <View f={1} pt={insets.top + hp(2)} bg={'$backgroundHover'}>
+      <ScrollView f={1} pt={insets.top + hp(2)} bg={'$backgroundHover'}>
         <View fd="row" ml={wp(5)} mr={wp(14)}>
           <View fd={'row'} columnGap={wp(4)}>
             <BackButton onPress={() => router.replace('/(authenticated)/comparisons')} />
@@ -249,7 +260,7 @@ const ComparisonWithId = () => {
                   })
                 }}
               >
-                <Text>{item?.name}</Text>
+                <Text w="85%">{item?.name}</Text>
                 <EditDeleteMenu
                   deleteMessage="Are you sure you want to remove this scenario from this comparison."
                   onDelete={() => handleRemoveScenarioFromThisComparison(item?.id)}
@@ -291,7 +302,7 @@ const ComparisonWithId = () => {
             <></>
           )}
         </View>
-      </View>
+      </ScrollView>
       <ScenarioDialogInComparison
         data={scenariosForAddDialog || []}
         handleAdd={handleAddScenarioToThisComparison}
