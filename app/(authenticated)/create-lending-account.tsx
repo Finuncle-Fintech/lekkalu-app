@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from 'expo-router'
+import { isAxiosError } from 'axios'
 import { View, useTheme } from 'tamagui'
 import InputFields from '@/components/input-fields'
 import { Success } from '@/utils/toast'
@@ -43,6 +44,13 @@ export default function CreateLendingAccount() {
       qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       toast.show({ render: () => Success('Account created successfully!') })
       router.push('/lending')
+    },
+    onError: (error: any) => {
+      if (isAxiosError(error)) {
+        toast.show({ title: error?.response?.data[0] || 'Failed to create account' })
+      } else {
+        toast.show({ title: 'Something went wrong while creating account' })
+      }
     },
   })
 
