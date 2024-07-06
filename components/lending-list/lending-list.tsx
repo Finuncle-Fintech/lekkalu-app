@@ -1,23 +1,40 @@
-import { useQuery } from '@tanstack/react-query'
-import { Button, FlatList, HStack, IconButton, Text, VStack } from 'native-base'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Button, FlatList, HStack, IconButton, Text, VStack, useToast } from 'native-base'
 import { EvilIcons } from '@expo/vector-icons'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
+import { Alert } from 'react-native'
 import moment from 'moment'
 import { Avatar, AvatarImage, View, useTheme } from 'tamagui'
 import Loading from '../loading'
 import { FontSizes } from '@/utils/fonts'
 import { wp } from '@/utils/responsive'
-import { fetchLendingAccounts } from '@/queries/lending'
+import { deleteLendingAccount, fetchLendingAccounts } from '@/queries/lending'
 import { LENDING } from '@/utils/query-keys/lending'
 import { describeTransaction } from '@/utils/lending'
-import DeleteLendingAccount from '../delete-lending-account/delete-account'
+import EditDeleteMenu from '../edit-delete-menu'
+import { ErrorMessage, Success } from '@/utils/toast'
 
 export default function LendingList() {
   const theme = useTheme()
+  const qc = useQueryClient()
+  const toast = useToast()
 
   const lendingAccountQuery = useQuery({
     queryFn: fetchLendingAccounts,
     queryKey: [LENDING.ACCOUNTS],
+  })
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: deleteLendingAccount,
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: [LENDING.ACCOUNTS],
+      })
+      toast.show({ render: () => Success('Account deleted successfully') })
+    },
+    onError: () => {
+      toast.show({ render: () => ErrorMessage('Failed to delete account') })
+    },
   })
 
   if (lendingAccountQuery.isLoading) {
@@ -30,6 +47,19 @@ export default function LendingList() {
         No lending accounts found
       </Text>
     )
+  }
+
+  const deleteItemHandler = async (id: number) => {
+    Alert.alert('Delete', 'Are you sure you want to delete ?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          deleteAccountMutation.mutate(id)
+        },
+      },
+    ])
   }
 
   return (
@@ -77,23 +107,15 @@ export default function LendingList() {
               </HStack>
             </HStack>
           </View>
-          <HStack space={1}>
-            <Button.Group display={'flex'} alignItems={'center'}>
-              <Link href={`/update-lending-account/${item.id}`} asChild>
-                <IconButton
-                  size={wp(6)}
-                  variant="solid"
-                  _icon={{
-                    as: EvilIcons,
-                    name: 'pencil',
-                    size: 6,
-                  }}
-                />
-              </Link>
-            </Button.Group>
-            <Button.Group display={'flex'} alignItems={'center'}>
-              <DeleteLendingAccount id={item.id} />
-            </Button.Group>
+          <HStack alignItems="center" space={1}>
+            <EditDeleteMenu
+              onEdit={() => {
+                router.push(`/update-lending-account/${item.id}`)
+              }}
+              onDelete={() => {
+                deleteItemHandler(item.id)
+              }}
+            />
             <Button.Group display={'flex'} alignItems={'center'}>
               <Link href={`/lending-account/${item.id}`} asChild>
                 <IconButton

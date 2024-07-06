@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, VStack, useToast } from 'native-base'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { isAxiosError } from 'axios'
 import { View, useTheme } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import { hp } from '@/utils/responsive'
@@ -50,6 +51,15 @@ export default function UpdateLendingAccount() {
       qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       toast.show({ render: () => Success('Account edited successfully!') })
       router.push('/lending')
+    },
+    onError: (error: any) => {
+      if (isAxiosError(error)) {
+        toast.show({
+          title: error?.response?.data[0]?.length > 2 ? error?.response?.data[0] : 'Failed to update account',
+        })
+      } else {
+        toast.show({ title: 'Something went wrong while updating account' })
+      }
     },
   })
 

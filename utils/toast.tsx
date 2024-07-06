@@ -7,3 +7,11 @@ export function Success(title: string) {
     </Box>
   )
 }
+
+export function ErrorMessage(title: string) {
+  return (
+    <Box bg="red.500" px="2" py="1" rounded="sm" mb={5}>
+      <Text color="white">{title}</Text>
+    </Box>
+  )
+}

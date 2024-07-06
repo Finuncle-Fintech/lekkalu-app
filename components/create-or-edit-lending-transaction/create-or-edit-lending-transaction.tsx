@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Text, useTheme } from 'tamagui'
+import { isAxiosError } from 'axios'
 import { useColorScheme } from 'react-native'
 import InputFields from '../input-fields'
 import { hp, wp } from '@/utils/responsive'
@@ -20,12 +21,14 @@ type CreateOrEditTransactionProps = {
   trigger: React.ReactElement<{ onPress: () => void }>
   transaction?: Transaction
   lending_account: string
+  afterFn?: () => void
 }
 
 export default function CreateOrEditLendingAccount({
   lending_account,
   trigger,
   transaction,
+  afterFn,
 }: CreateOrEditTransactionProps) {
   const [showModal, setShowModal] = useState(false)
   const toast = useToast()
@@ -61,10 +64,14 @@ export default function CreateOrEditLendingAccount({
       setShowModal(false)
       reset()
     },
-    onError: () => {
+    onError: (error) => {
       reset()
       setShowModal(false)
-      toast.show({ title: 'Failed to create transaction' })
+      if (isAxiosError(error)) {
+        toast.show({ title: error?.response?.data[0] || 'Failed to create transaction' })
+      } else {
+        toast.show({ title: 'Failed to create transaction' })
+      }
     },
   })
   const editLendingAccountMutation = useMutation({
@@ -73,11 +80,17 @@ export default function CreateOrEditLendingAccount({
       qc.invalidateQueries({ queryKey: [LENDING.TRANSACTIONS] })
       qc.invalidateQueries({ queryKey: [LENDING.ACCOUNTS] })
       toast.show({ title: 'Transaction updated successfully!' })
+      afterFn?.()
       setShowModal(false)
     },
-    onError: () => {
+    onError: (error) => {
+      afterFn?.()
       setShowModal(false)
-      toast.show({ title: 'Failed to update transaction' })
+      if (isAxiosError(error)) {
+        toast.show({ title: error?.response?.data[0] || 'Failed to update transaction' })
+      } else {
+        toast.show({ title: 'Failed to update transaction' })
+      }
     },
   })
 
@@ -139,6 +152,7 @@ export default function CreateOrEditLendingAccount({
     [],
   )
   const handleClose = () => {
+    afterFn?.()
     setShowModal(false)
     reset()
   }
