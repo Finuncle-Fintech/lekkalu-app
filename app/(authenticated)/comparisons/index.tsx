@@ -34,7 +34,7 @@ const Comparisons = () => {
           if (isLoading) {
             return (
               <View>
-                <Text>Loading</Text>
+                <Text>Loading...</Text>
               </View>
             )
           }

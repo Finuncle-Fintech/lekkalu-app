@@ -5,6 +5,8 @@ import { View, Text, ScrollView } from 'tamagui'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FlatList, Toast } from 'native-base'
 
+import * as Linking from 'expo-linking'
+
 import {
   GridComponent,
   ToolboxComponent,
@@ -53,7 +55,6 @@ const ComparisonWithId = () => {
 
   useEffect(() => {
     const backButtonPress = BackHandler.addEventListener('hardwareBackPress', handleBack)
-
     return () => backButtonPress.remove()
   }, [])
 
@@ -198,11 +199,11 @@ const ComparisonWithId = () => {
   }
 
   const handleShare = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const result = await Share.share({
+    const link = Linking.createURL(`(authenticated)/comparisons/${comparisonId}`)
+    await Share.share({
       title: 'Share this comparison',
-      url: 'https://finuncle.com/scenarios/121',
-      message: 'https://finuncle.com/scenarios/121',
+      url: link,
+      message: link,
     })
   }
 
@@ -238,7 +239,7 @@ const ComparisonWithId = () => {
             ListEmptyComponent={() => {
               return (
                 <View>
-                  <Text>No scenarios found on this comparison</Text>
+                  <Text>No scenarios found in this comparison.</Text>
                 </View>
               )
             }}
@@ -285,8 +286,14 @@ const ComparisonWithId = () => {
               <Text>Graph</Text>
             </View>
           ) : (
-            <TouchableOpacity onPress={handleSimulate} style={{ width: 'auto' }}>
-              <Text color={'$foreground'}>Press to view chart</Text>
+            <TouchableOpacity
+              onPress={handleSimulate}
+              style={{ width: 'auto' }}
+              disabled={!comparison?.scenarios?.length}
+            >
+              <Text color={'$foreground'}>
+                {comparison?.scenarios?.length ? 'Press to view chart' : 'No scenarios to visualize.'}
+              </Text>
             </TouchableOpacity>
           )}
           {calculatedTimelineData && !isPending && (
@@ -309,7 +316,11 @@ const ComparisonWithId = () => {
         handleModalClose={() => setIsAddScenarioModalOpen(false)}
         isModalOpen={isAddScenarioModalOpen}
       />
-      <TouchableOpacity style={styles.fab} onPress={handleSimulate}>
+      <TouchableOpacity
+        style={{ ...styles.fab, backgroundColor: comparison?.scenarios?.length ? THEME_COLORS?.brand[900] : 'gray' }}
+        onPress={handleSimulate}
+        disabled={!comparison?.scenarios?.length}
+      >
         <LineChartIcon color={'white'} />
       </TouchableOpacity>
     </>
@@ -321,7 +332,6 @@ const styles = StyleSheet.create({
     height: wp(12),
     width: wp(12),
     borderRadius: wp(6),
-    backgroundColor: THEME_COLORS.primary[500],
     justifyContent: 'center',
     alignItems: 'center',
     bottom: hp(3),
