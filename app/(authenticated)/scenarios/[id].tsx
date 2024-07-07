@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLocalSearchParams, router } from 'expo-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { SCENARIO } from '@/utils/query-keys/scenarios'
-import { editScenario, fetchScenarioById, fetchScenarios } from '@/queries/scenario'
+import { deleteScenario, editScenario, fetchScenarioById, fetchScenarios } from '@/queries/scenario'
 import { hp, wp } from '@/utils/responsive'
 import BackButton from '@/components/back-button'
 import { FontSizes } from '@/utils/fonts'
@@ -24,6 +24,7 @@ import EditExpenseForScenario from '@/components/scenarios/Expenses/edit'
 import EditAssetForScenario from '@/components/scenarios/Asset/edit'
 import PrivacyButtonForScenario from '@/components/scenarios/PrivacyButton'
 import { AddScenarioSchemas } from '@/schema/scenarios'
+import EditDeleteMenu from '@/components/edit-delete-menu/edit-delete-menu'
 
 export type ScenarioEntities = 'Asset' | 'Liabilities' | 'Expense'
 
@@ -37,6 +38,7 @@ export type ImaginaryUserType = {
 export default function ScenarioWithId() {
   const [entityToAdd, setEntityToAdd] = useState<ScenarioEntities>()
   const [entityToEdit, setEntityToEdit] = useState<{ type: ScenarioEntities; id: number }>()
+  const [showChangePrivacyDialog, setShowChangePrivacyDialog] = useState(false)
   const params = useLocalSearchParams()
   const insets = useSafeAreaInsets()
   const scenarioId = +params.id
@@ -61,6 +63,18 @@ export default function ScenarioWithId() {
   } = useMutation({
     mutationFn: (value: Partial<AddScenarioSchemas>) => editScenario(scenarioId, value),
   })
+
+  const { mutate: deleteMutation } = useMutation({
+    mutationFn: deleteScenario,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [SCENARIO.SCENARIO] })
+      router.push('/(authenticated)/scenarios/')
+    },
+  })
+
+  const handleDelete = () => {
+    deleteMutation(scenarioId)
+  }
 
   function handleBack() {
     if (params.backToComparison) {
@@ -182,13 +196,26 @@ export default function ScenarioWithId() {
             {scenario?.name}
           </Text>
         </View>
-        <View>
+        <View fd="row" alignItems="center">
           <PrivacyButtonForScenario
+            showDialog={showChangePrivacyDialog}
+            setShowDialog={setShowChangePrivacyDialog}
             isPublic={scenario?.access === 'Public'}
             handleMutation={handleEditPrivacy}
             isSuccess={isEditSuccess}
             isLoading={isPending}
             name="scenario"
+          />
+          <EditDeleteMenu
+            onDelete={handleDelete}
+            size={wp(5)}
+            extraMenus={[
+              { name: 'Share', onPress: () => {} },
+              {
+                name: `Set to ${scenario?.access === 'Public' ? 'private' : 'public'}`,
+                onPress: () => setShowChangePrivacyDialog(true),
+              },
+            ]}
           />
         </View>
       </View>

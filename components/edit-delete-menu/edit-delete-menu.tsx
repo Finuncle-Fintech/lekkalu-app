@@ -12,6 +12,7 @@ interface EditDeleteMenuProps {
   onDelete?: () => void
   extraMenus?: Array<{ style?: {}; name: string; onPress: () => void }>
   deleteMessage?: string
+  size?: number
 }
 
 const EditDeleteMenu: FC<EditDeleteMenuProps> = (props) => {
@@ -50,30 +51,37 @@ const EditDeleteMenu: FC<EditDeleteMenuProps> = (props) => {
         visible={visible}
         anchor={
           <TouchableOpacity onPress={showMenu}>
-            <Feather size={wp(4)} name="more-vertical" color={theme.foreground.get()} />
+            <Feather size={props.size || wp(4)} name="more-vertical" color={theme.foreground.get()} />
           </TouchableOpacity>
         }
         onRequestClose={hideMenu}
         style={{ backgroundColor: theme.backgroundHover.get() }}
       >
-        <MenuItem textStyle={{ color: theme.foreground.get(), fontSize: FontSizes.size16 }} onPress={handleEditPress}>
-          Edit
-        </MenuItem>
-        <MenuItem
-          textStyle={{ color: 'red', fontSize: FontSizes.size16 }}
-          onPress={() => {
-            setViewDeleteDialog(true)
-            setVisible(false)
-          }}
-        >
-          Delete
-        </MenuItem>
+        {onEdit && (
+          <MenuItem textStyle={{ color: theme.foreground.get(), fontSize: FontSizes.size16 }} onPress={handleEditPress}>
+            Edit
+          </MenuItem>
+        )}
+        {onDelete && (
+          <MenuItem
+            textStyle={{ color: 'red', fontSize: FontSizes.size16 }}
+            onPress={() => {
+              setViewDeleteDialog(true)
+              setVisible(false)
+            }}
+          >
+            Delete
+          </MenuItem>
+        )}
         {props.extraMenus ? (
           props.extraMenus?.map((each) => (
             <MenuItem
               key={each?.name}
               textStyle={{ color: theme.foreground.get(), ...each?.style }}
-              onPress={each?.onPress}
+              onPress={() => {
+                hideMenu()
+                each?.onPress()
+              }}
             >
               {each?.name}
             </MenuItem>
