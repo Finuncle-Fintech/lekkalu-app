@@ -31,6 +31,7 @@ const ScenarioDialogInComparison = ({
   }
 
   const handleClose = () => {
+    setSelectedScenarios([])
     handleModalClose()
   }
 

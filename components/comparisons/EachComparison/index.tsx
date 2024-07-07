@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import { Unlock, Lock } from '@tamagui/lucide-icons'
 import { router } from 'expo-router'
@@ -9,6 +9,7 @@ import { hp, wp } from '@/utils/responsive'
 import { deleteComparison, updateComparison } from '@/queries/scenario'
 import { COMPARISON } from '@/utils/query-keys/scenarios'
 import { AddComparisonSchema } from '@/schema/comparisons'
+import PrivacyButton from '@/components/scenarios/PrivacyButton'
 
 type EachComparisonType = {
   access: 'Private' | 'Public'
@@ -19,6 +20,8 @@ type EachComparisonType = {
 const EachComparison = ({ access, name, id }: EachComparisonType) => {
   const theme = useTheme()
   const qc = useQueryClient()
+
+  const [showPrivacyDialog, setPrivacyDialog] = useState(false)
 
   const handleNavigationToComparison = () => {
     router.push({
@@ -34,7 +37,11 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
     },
   })
 
-  const { mutate: updatePrivacy } = useMutation({
+  const {
+    mutate: updatePrivacy,
+    isSuccess: isPrivacyChangedSuccess,
+    isPending: isPrivacyChangeLoading,
+  } = useMutation({
     mutationFn: (values: Partial<AddComparisonSchema>) => updateComparison(id, values),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [COMPARISON.COMPARISON] })
@@ -58,6 +65,15 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
         </View>
       </View>
       <View als={'flex-start'}>
+        <PrivacyButton
+          handleMutation={() => handlePrivacyChange(access === 'Private' ? 'Public' : 'Private')}
+          showDialog={showPrivacyDialog}
+          setShowDialog={setPrivacyDialog}
+          isPublic={access === 'Public'}
+          isSuccess={isPrivacyChangedSuccess}
+          isLoading={isPrivacyChangeLoading}
+          name="comparison"
+        />
         <EditDeleteMenu
           onEdit={() =>
             router.push({
@@ -69,7 +85,7 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
           extraMenus={[
             {
               name: `Set to ${access === 'Private' ? 'Public' : 'Private'}`,
-              onPress: () => handlePrivacyChange(access === 'Private' ? 'Public' : 'Private'),
+              onPress: () => setPrivacyDialog(true),
             },
           ]}
         />
