@@ -19,6 +19,7 @@ import { createComparison, fetchComparisonById, fetchScenarios, updateComparison
 import { COMPARISON, SCENARIO } from '@/utils/query-keys/scenarios'
 import { Comparison, Scenario as ScenarioType } from '@/types/scenarios'
 import ScenarioDialogInComparison from '@/components/comparisons/ScenarioDialog'
+import { THEME_COLORS } from '@/utils/theme'
 
 const AddComparison = () => {
   const insets = useSafeAreaInsets()
@@ -165,7 +166,7 @@ const AddComparison = () => {
             fontSize={FontSizes.size18}
             h={hp(5.5)}
             onPress={handleSubmit(handleFormSubmitButton)}
-            bg={'$primary'}
+            bg={THEME_COLORS.brand[900]}
             color={'white'}
             mt={hp(2)}
             mb={hp(5)}
