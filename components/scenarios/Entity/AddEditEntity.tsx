@@ -10,6 +10,7 @@ import KeyboardScrollView from '../../keyboard-scroll-view'
 import InputFields from '../../input-fields'
 import { InputField } from '@/types/input-fields'
 import { ScenarioEntities } from '@/app/(authenticated)/scenarios/[id]'
+import { THEME_COLORS } from '@/utils/theme'
 
 type EntityForScenarioType = {
   isEdit?: boolean
@@ -73,7 +74,7 @@ const AddEditEntityForScenario = ({
                   fontSize={FontSizes.size18}
                   h={hp(5.5)}
                   onPress={mutation}
-                  bg="$primary"
+                  bg={THEME_COLORS.brand[900]}
                   color="white"
                   mt={hp(4)}
                   disabled={isLoading || !form.formState.isDirty}

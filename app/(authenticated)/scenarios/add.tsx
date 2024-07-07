@@ -22,6 +22,7 @@ import { SCENARIO } from '@/utils/query-keys/scenarios'
 import { loginImaginaryUser } from '@/queries/auth'
 import { addGoalForImaginaryUser as addGoal } from '@/queries/goal'
 import { useImaginaryAuth } from '@/hooks/use-imaginary-auth'
+import { THEME_COLORS } from '@/utils/theme'
 
 const ONE_YEAR_LATER = dayjs().add(1, 'year').toISOString().split('T')[0]
 
@@ -126,7 +127,7 @@ const AddScenarios = () => {
           fontSize={FontSizes.size18}
           h={hp(5.5)}
           onPress={handleSubmit(handleScenarioFormSubmit)}
-          bg="$primary"
+          bg={THEME_COLORS.brand[900]}
           color="white"
           mt={hp(2)}
           mb={hp(5)}
