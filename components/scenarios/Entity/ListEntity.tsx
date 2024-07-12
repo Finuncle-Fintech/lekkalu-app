@@ -12,7 +12,8 @@ type ListEntityType = {
   data: any
   isLoading: boolean
   refetch: any
-  handleEdit: React.Dispatch<
+  isForUnAuthenticatedUser?: boolean
+  handleEdit?: React.Dispatch<
     React.SetStateAction<
       | {
           type: ScenarioEntities
@@ -34,7 +35,7 @@ const getTextColor = (type: ScenarioEntities) => {
   }
 }
 
-const ListEntity = ({ data, isLoading, refetch, handleEdit }: ListEntityType) => {
+const ListEntity = ({ data, isLoading, refetch, handleEdit, isForUnAuthenticatedUser = false }: ListEntityType) => {
   const theme = useTheme()
   const { deleteLiabilityMutation, deleteIncomeExpenseMutation, deletePhysicalAssetMutation } = useScenario()
   const { mutate: deleteExpense, isSuccess: deletedExpense } = deleteIncomeExpenseMutation
@@ -66,7 +67,7 @@ const ListEntity = ({ data, isLoading, refetch, handleEdit }: ListEntityType) =>
 
   return (
     <FlatList
-      style={{ paddingHorizontal: 20, marginTop: 20, marginBottom: 40 }}
+      style={{ paddingHorizontal: 20, marginTop: 20, marginBottom: isForUnAuthenticatedUser ? 20 : 40 }}
       data={data}
       refreshing={isLoading}
       ListEmptyComponent={() => {
@@ -101,7 +102,8 @@ const ListEntity = ({ data, isLoading, refetch, handleEdit }: ListEntityType) =>
           >
             <TouchableOpacity
               style={{ width: '90%' }}
-              onPress={() => handleEdit({ id: item.id, type: item?.entity_type })}
+              disabled={isForUnAuthenticatedUser}
+              onPress={() => handleEdit?.({ id: item.id, type: item?.entity_type })}
             >
               <Text fontSize={'$1'} mb={3} color={getTextColor(item?.entity_type)}>
                 {item?.entity_type}
@@ -109,12 +111,14 @@ const ListEntity = ({ data, isLoading, refetch, handleEdit }: ListEntityType) =>
               <Text fontSize={'$7'}>{item?.name || ''}</Text>
               <Text pt={8}>Rs. {formatIndianMoneyNotation(item?.amount)}</Text>
             </TouchableOpacity>
-            <View alignSelf="center">
-              <EditDeleteMenu
-                onDelete={() => handleDelete(item?.entity_type, item?.id)}
-                onEdit={() => handleEdit({ id: item.id, type: item?.entity_type })}
-              />
-            </View>
+            {!isForUnAuthenticatedUser && (
+              <View alignSelf="center">
+                <EditDeleteMenu
+                  onDelete={() => handleDelete(item?.entity_type, item?.id)}
+                  onEdit={() => handleEdit?.({ id: item.id, type: item?.entity_type })}
+                />
+              </View>
+            )}
           </View>
         )
       }}

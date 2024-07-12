@@ -3,7 +3,7 @@ import { BackHandler } from 'react-native'
 import { View, Text } from 'tamagui'
 import { useToast } from 'native-base'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useLocalSearchParams, router } from 'expo-router'
+import { useLocalSearchParams, router, useRootNavigationState } from 'expo-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { SCENARIO } from '@/utils/query-keys/scenarios'
 import { deleteScenario, editScenario, fetchScenarioById, fetchScenarios } from '@/queries/scenario'
@@ -25,6 +25,7 @@ import EditAssetForScenario from '@/components/scenarios/Asset/edit'
 import PrivacyButtonForScenario from '@/components/scenarios/PrivacyButton'
 import { AddScenarioSchemas } from '@/schema/scenarios'
 import EditDeleteMenu from '@/components/edit-delete-menu/edit-delete-menu'
+import { useGetUserDetails } from '@/queries/auth'
 
 export type ScenarioEntities = 'Asset' | 'Liabilities' | 'Expense'
 
@@ -44,6 +45,7 @@ export default function ScenarioWithId() {
   const scenarioId = +params.id
 
   const toast = useToast()
+  const rootNavigationState = useRootNavigationState()
 
   const qc = useQueryClient()
 
@@ -55,6 +57,16 @@ export default function ScenarioWithId() {
     queryFn: () => fetchScenarioById(scenarioId),
     staleTime: 0,
   })
+
+  const { data: user, isFetching: isAuthenticating } = useGetUserDetails()
+
+  useEffect(() => {
+    if (rootNavigationState?.key) {
+      if (!isAuthenticating && !user) {
+        router.replace({ pathname: '/scenario', params: { id: scenarioId } })
+      }
+    }
+  }, [scenarioId, user, isAuthenticating, rootNavigationState])
 
   const {
     mutate,
