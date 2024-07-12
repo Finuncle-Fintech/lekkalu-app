@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { TouchableOpacity, StyleSheet, Share, BackHandler } from 'react-native'
-import { View, Text, ScrollView } from 'tamagui'
+import React, { useRef, useEffect, useState } from 'react'
+import { FlatList, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native'
+import { Actionsheet, Toast } from 'native-base'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { FlatList, Toast } from 'native-base'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { View, Text, ScrollView, Button } from 'tamagui'
+import dayjs from 'dayjs'
 
-// import * as Linking from 'expo-linking'
-
+import * as echarts from 'echarts/core'
+import { LineChart as LC } from 'echarts/charts'
+import { SVGRenderer } from '@wuba/react-native-echarts'
 import {
   GridComponent,
   ToolboxComponent,
@@ -14,61 +17,33 @@ import {
   LegendComponent,
   TooltipComponent,
 } from 'echarts/components'
-import { LineChart as LC } from 'echarts/charts'
-import { SVGRenderer } from '@wuba/react-native-echarts'
-import { router, useLocalSearchParams, useRootNavigationState } from 'expo-router'
-import * as echarts from 'echarts/core'
 
-import dayjs from 'dayjs'
-import { LineChart as LineChartIcon, Share as ShareIcon } from '@tamagui/lucide-icons'
+import { Share as ShareIcon, LineChart as LineChartIcon } from '@tamagui/lucide-icons'
+import { fetchComparisonById } from '@/queries/scenario'
+import { COMPARISON } from '@/utils/query-keys/scenarios'
 import { hp, wp } from '@/utils/responsive'
-import BackButton from '@/components/back-button/back-button'
-import { COMPARISON, SCENARIO } from '@/utils/query-keys/scenarios'
-import { fetchComparisonById, fetchScenarios, updateComparison } from '@/queries/scenario'
 import { FontSizes } from '@/utils/fonts'
 import { THEME_COLORS } from '@/utils/theme'
-import EditDeleteMenu from '@/components/edit-delete-menu/edit-delete-menu'
-import ScenarioDialogInComparison from '@/components/comparisons/ScenarioDialog'
-import { Scenario } from '@/types/scenarios'
-import { AddComparisonSchema } from '@/schema/comparisons'
+import LineChart from '@/components/LineChart'
+import { formatIndianMoneyNotation } from '@/utils/fn'
+import { SERVER_DATE_FORMAT } from '@/utils/constants'
+import { mergeArraysByDate } from '@/utils/comparison-timeline'
 import { tokenClient } from '@/utils/client'
 import { useImaginaryAuth } from '@/hooks/use-imaginary-auth'
 import { GoalItemType } from '@/queries/goal'
-import { mergeArraysByDate } from '@/utils/comparison-timeline'
-import LineChart from '@/components/LineChart'
-import { SERVER_DATE_FORMAT } from '@/utils/constants'
-import { formatIndianMoneyNotation } from '@/utils/fn'
-import { useGetUserDetails } from '@/queries/auth'
 
 echarts.use([SVGRenderer, GridComponent, LegendComponent, DataZoomComponent, TooltipComponent, ToolboxComponent, LC])
 
-const ComparisonWithId = () => {
-  const insets = useSafeAreaInsets()
-  const rootNavigationState = useRootNavigationState()
+const ComparisonForUnAuthenticatedUser = () => {
   const params = useLocalSearchParams()
+  const insets = useSafeAreaInsets()
   const comparisonId = +params.id
-  const [isAddScenarioModalOpen, setIsAddScenarioModalOpen] = useState(false)
+
+  const systemTheme = useColorScheme()
+
+  const inputColor = systemTheme === 'dark' ? 'black' : 'white'
+
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
-
-  const { data: user, isFetching: isAuthenticating } = useGetUserDetails()
-
-  useEffect(() => {
-    if (rootNavigationState?.key) {
-      if (!isAuthenticating && !user) {
-        router.replace({ pathname: '/comparison', params: { id: comparisonId } })
-      }
-    }
-  }, [comparisonId, rootNavigationState, user, isAuthenticating])
-
-  const handleBack = () => {
-    router.push('/(authenticated)/comparisons/')
-    return true
-  }
-
-  useEffect(() => {
-    const backButtonPress = BackHandler.addEventListener('hardwareBackPress', handleBack)
-    return () => backButtonPress.remove()
-  }, [])
 
   const { data: comparison, refetch: refetchComparison } = useQuery({
     queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`],
@@ -76,37 +51,10 @@ const ComparisonWithId = () => {
     staleTime: 0,
   })
 
-  const { mutate: editComparison } = useMutation({
-    mutationFn: (dto: Partial<AddComparisonSchema>) => updateComparison(comparisonId, dto),
-    onSuccess: () => {
-      refetchComparison()
-      setIsAddScenarioModalOpen(false)
-    },
-  })
-
-  const { data: allScenarios } = useQuery({
-    queryKey: [SCENARIO.SCENARIO],
-    queryFn: fetchScenarios,
-  })
-
-  const scenariosForAddDialog = useMemo(() => {
-    const alreadyAddedScenariosIds = comparison?.scenarios_objects.map((each) => each?.id)
-    return allScenarios?.filter((each) => !alreadyAddedScenariosIds?.includes(each?.id))
-  }, [allScenarios, comparison])
-
-  const handleAddScenarioToThisComparison = (scenarios: Array<Scenario>) => {
-    const incommingScenariosIds = scenarios?.map((each) => each?.id)
-    const existingScenariosIds = comparison?.scenarios || []
-    const updatedScenarios = [...existingScenariosIds, ...incommingScenariosIds]
-    editComparison({ scenarios: updatedScenarios })
+  function handleShare() {
+    console.log('handle share pressed')
+    refetchComparison()
   }
-
-  const handleRemoveScenarioFromThisComparison = (id: number) => {
-    const updatedScenarios = comparison?.scenarios.filter((each) => each !== id)
-    editComparison({ scenarios: updatedScenarios })
-  }
-
-  // graph related functions.
 
   const [timelineData, setTimelineData] = useState<any>()
   const [calculatedTimelineData, setCalculatedTimelineData] = useState<any>()
@@ -210,23 +158,69 @@ const ComparisonWithId = () => {
     })
   }
 
-  const handleShare = async () => {
-    const sharingLink = `https://www.finuncle.com/comparisons/${comparisonId}`
-    await Share.share({
-      title: 'Share this comparison',
-      url: sharingLink,
-      message: sharingLink,
-    })
-  }
+  useEffect(() => {
+    let chart: any
+    if (calculatedTimelineData) {
+      const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+          trigger: 'axis',
+          confine: true,
+        },
+        xAxis: {
+          type: 'category',
+          boundryGap: false,
+          data: calculatedTimelineData?.map((each: any) => dayjs(each?.time)?.format(SERVER_DATE_FORMAT)),
+          axisLabel: {
+            hideOverlap: true,
+            showMinLabel: true,
+            showMaxLabel: true,
+          },
+          offset: 10,
+        },
+        grid: {
+          containLabel: true,
+          // left: 80,
+        },
+        yAxis: {
+          type: 'value',
+          logBase: 10,
+          scale: true,
+          axisLabel: {
+            formatter: (val: number) => formatIndianMoneyNotation(val),
+          },
+        },
+        animationDurationUpdate: 0,
+        series: Object.keys(timelineData)?.map((timeline) => {
+          return {
+            data: calculatedTimelineData.map((each: any) => each[timeline]),
+            type: 'line',
+            name: timeline,
+            smooth: true,
+          }
+        }),
+      }
+      if (skiaRef.current) {
+        chart = echarts.init(skiaRef.current, 'dark', {
+          renderer: 'svg',
+          width: 350,
+          height: 350,
+        })
+      }
+      chart?.setOption(option)
+    }
+    return () => {
+      chart?.dispose()
+    }
+  }, [calculatedTimelineData, timelineData])
 
   return (
     <>
       <ScrollView f={1} pt={insets.top + hp(2)} bg={'$backgroundHover'}>
         <View fd="row" ml={wp(5)} mr={wp(14)}>
           <View fd={'row'} columnGap={wp(4)}>
-            <BackButton onPress={() => router.replace('/(authenticated)/comparisons')} />
-            <Text fontSize={FontSizes.size15} fontFamily={'$heading'} w={'75%'}>
-              {comparison?.name}
+            <Text fontSize={FontSizes.size18} fontFamily={'$heading'} w={'92%'}>
+              {comparison?.name || 'Placeholder name which can be long'}
             </Text>
             <View>
               <ShareIcon onPress={handleShare} />
@@ -238,9 +232,6 @@ const ComparisonWithId = () => {
             <Text fontSize={'$5'} color={'$foreground'}>
               Scenarios in this comparison
             </Text>
-            <TouchableOpacity onPress={() => setIsAddScenarioModalOpen(true)}>
-              <Text color={'$blue10'}>Add</Text>
-            </TouchableOpacity>
           </View>
           <FlatList
             style={{ marginTop: 20 }}
@@ -267,28 +258,14 @@ const ComparisonWithId = () => {
                   justifyContent: 'space-between',
                   minHeight: 120,
                 }}
-                onPress={() => {
-                  router.push({
-                    pathname: `/(authenticated)/scenarios/${item?.id}`,
-                    params: { id: item?.id, backToComparison: String(comparisonId) },
-                  })
-                }}
+                // onPress={() => {
+                //   router.push({
+                //     pathname: `/(authenticated)/scenarios/${item?.id}`,
+                //     params: { id: item?.id, backToComparison: String(comparisonId) },
+                //   })
+                // }}
               >
                 <Text w="85%">{item?.name}</Text>
-                <EditDeleteMenu
-                  deleteMessage="Are you sure you want to remove this scenario from this comparison."
-                  onDelete={() => handleRemoveScenarioFromThisComparison(item?.id)}
-                  onEdit={() => {
-                    router.push({
-                      pathname: '/(authenticated)/scenarios/add',
-                      params: {
-                        scenarioDetails: JSON.stringify(item),
-                        edit: 'true',
-                        backToComparison: String(comparisonId),
-                      },
-                    })
-                  }}
-                />
               </TouchableOpacity>
             )}
           />
@@ -323,12 +300,6 @@ const ComparisonWithId = () => {
           )}
         </View>
       </ScrollView>
-      <ScenarioDialogInComparison
-        data={scenariosForAddDialog || []}
-        handleAdd={handleAddScenarioToThisComparison}
-        handleModalClose={() => setIsAddScenarioModalOpen(false)}
-        isModalOpen={isAddScenarioModalOpen}
-      />
       <TouchableOpacity
         style={{ ...styles.fab, backgroundColor: comparison?.scenarios?.length ? THEME_COLORS?.brand[900] : 'gray' }}
         onPress={handleSimulate}
@@ -336,6 +307,18 @@ const ComparisonWithId = () => {
       >
         <LineChartIcon color={'white'} />
       </TouchableOpacity>
+      <Actionsheet isOpen={true} disableOverlay>
+        <Actionsheet.Content bg={inputColor}>
+          <View fd="row" gap={20} px={10}>
+            <Button f={1} bg={'$primary'} onPress={() => router.push('/signup')}>
+              Sign Up
+            </Button>
+            <Button f={1} bg={'$primary'} onPress={() => router.push('/login')}>
+              Login
+            </Button>
+          </View>
+        </Actionsheet.Content>
+      </Actionsheet>
     </>
   )
 }
@@ -347,10 +330,10 @@ const styles = StyleSheet.create({
     borderRadius: wp(6),
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: hp(3),
+    bottom: hp(13),
     position: 'absolute',
     right: wp(8),
   },
 })
 
-export default ComparisonWithId
+export default ComparisonForUnAuthenticatedUser
