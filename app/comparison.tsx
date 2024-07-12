@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { FlatList, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native'
-import { Actionsheet, Toast } from 'native-base'
+import { FlatList, TouchableOpacity, StyleSheet } from 'react-native'
+import { Toast } from 'native-base'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { router, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { View, Text, ScrollView, Button } from 'tamagui'
+import { View, Text, ScrollView } from 'tamagui'
 import dayjs from 'dayjs'
 
 import * as echarts from 'echarts/core'
@@ -31,6 +31,7 @@ import { mergeArraysByDate } from '@/utils/comparison-timeline'
 import { tokenClient } from '@/utils/client'
 import { useImaginaryAuth } from '@/hooks/use-imaginary-auth'
 import { GoalItemType } from '@/queries/goal'
+import AuthenticationCardForUnAuthenticatedUsers from '@/components/AuthenticationCardForUnAuthenticatedUsers'
 
 echarts.use([SVGRenderer, GridComponent, LegendComponent, DataZoomComponent, TooltipComponent, ToolboxComponent, LC])
 
@@ -38,10 +39,6 @@ const ComparisonForUnAuthenticatedUser = () => {
   const params = useLocalSearchParams()
   const insets = useSafeAreaInsets()
   const comparisonId = +params.id
-
-  const systemTheme = useColorScheme()
-
-  const inputColor = systemTheme === 'dark' ? 'black' : 'white'
 
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
 
@@ -307,18 +304,7 @@ const ComparisonForUnAuthenticatedUser = () => {
       >
         <LineChartIcon color={'white'} />
       </TouchableOpacity>
-      <Actionsheet isOpen={true} disableOverlay>
-        <Actionsheet.Content bg={inputColor}>
-          <View fd="row" gap={20} px={10}>
-            <Button f={1} bg={'$primary'} onPress={() => router.push('/signup')}>
-              Sign Up
-            </Button>
-            <Button f={1} bg={'$primary'} onPress={() => router.push('/login')}>
-              Login
-            </Button>
-          </View>
-        </Actionsheet.Content>
-      </Actionsheet>
+      <AuthenticationCardForUnAuthenticatedUsers />
     </>
   )
 }
