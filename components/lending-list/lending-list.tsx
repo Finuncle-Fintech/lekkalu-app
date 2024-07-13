@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, FlatList, HStack, IconButton, Text, VStack, useToast } from 'native-base'
-import { EvilIcons } from '@expo/vector-icons'
+import { FlatList, HStack, Text, VStack, useToast } from 'native-base'
 import { Link, router } from 'expo-router'
 import { Alert } from 'react-native'
 import moment from 'moment'
@@ -80,33 +79,35 @@ export default function LendingList() {
           flexDirection={'row'}
           justifyContent={'space-between'}
         >
-          <View flex={1} mr={wp(3)}>
-            <HStack alignItems="center" space={2}>
-              <Avatar circular size="$6">
-                {/* @ts-ignore */}
-                <AvatarImage src="https://github.com/GVR-Secure-Solutions/lekkalu-frontend/assets/87645745/2e28155a-f7cc-4487-a3f9-c6bb48b426d5" />
-                <Avatar.Fallback bc="$background" />
-              </Avatar>
-              <HStack flexDir={'column'} space={2}>
-                <HStack space={1} alignItems="baseline">
-                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
-                    {item.name} •
-                  </Text>
-                  <Text color={theme.gray10.get()} fontSize={FontSizes.size16} fontWeight="500">
-                    {moment(item.started).fromNow()}
+          <Link href={`/lending-account/${item.id}`} asChild>
+            <View flex={1} mr={wp(3)}>
+              <HStack alignItems="center" space={2}>
+                <Avatar circular size="$6">
+                  {/* @ts-ignore */}
+                  <AvatarImage src="https://github.com/GVR-Secure-Solutions/lekkalu-frontend/assets/87645745/2e28155a-f7cc-4487-a3f9-c6bb48b426d5" />
+                  <Avatar.Fallback bc="$background" />
+                </Avatar>
+                <HStack flexDir={'column'} space={2}>
+                  <HStack space={1} alignItems="baseline">
+                    <Text color={theme.foreground.get()} fontSize={FontSizes.size18} fontWeight="600">
+                      {item.name} •
+                    </Text>
+                    <Text color={theme.gray10.get()} fontSize={FontSizes.size16} fontWeight="500">
+                      {moment(item.started).fromNow()}
+                    </Text>
+                  </HStack>
+                  {item.user_remark && (
+                    <Text maxWidth={wp(48)} color={theme.foreground.get()} fontSize={FontSizes.size15}>
+                      {item.user_remark.length > 55 ? item.user_remark.substring(0, 55) + '...' : item.user_remark}
+                    </Text>
+                  )}
+                  <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
+                    {describeTransaction(item.balance)}
                   </Text>
                 </HStack>
-                {item.user_remark && (
-                  <Text maxWidth={wp(48)} color={theme.foreground.get()} fontSize={FontSizes.size15}>
-                    {item.user_remark.length > 55 ? item.user_remark.substring(0, 55) + '...' : item.user_remark}
-                  </Text>
-                )}
-                <Text color={theme.foreground.get()} fontSize={FontSizes.size18}>
-                  {describeTransaction(item.balance)}
-                </Text>
               </HStack>
-            </HStack>
-          </View>
+            </View>
+          </Link>
           <HStack alignItems="center" space={1}>
             <EditDeleteMenu
               onEdit={() => {
@@ -116,18 +117,6 @@ export default function LendingList() {
                 deleteItemHandler(item.id)
               }}
             />
-            <Button.Group display={'flex'} alignItems={'center'}>
-              <Link href={`/lending-account/${item.id}`} asChild>
-                <IconButton
-                  size={wp(6)}
-                  _icon={{
-                    as: EvilIcons,
-                    name: 'chevron-right',
-                    size: 10,
-                  }}
-                />
-              </Link>
-            </Button.Group>
           </HStack>
         </VStack>
       )}
