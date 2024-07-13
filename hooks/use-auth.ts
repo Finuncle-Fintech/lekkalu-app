@@ -42,7 +42,7 @@ export function useAuth() {
     [refreshTokenStatus, fetchUserData, tokenData?.refresh, tokenData?.access],
   )
 
-  const handleLoginSuccess = (data: LoginResponseType) => {
+  const handleLoginSuccess = async (data: LoginResponseType) => {
     toast.show({ title: 'Successfully logged in!' })
 
     /** Saving the tokens */
@@ -53,6 +53,7 @@ export function useAuth() {
     qc.setQueryData([AUTH.LOGGED_IN], data)
 
     fetchUserData()
+    await AsyncStorage.setItem('is_logged_in', 'true')
   }
 
   const handleLoginError = () => {
@@ -97,7 +98,7 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     setIsAuthenticated(false)
-    await AsyncStorage.multiRemove([REFRESH_TOKEN_KEY, ACCESS_TOKEN_KEY])
+    await AsyncStorage.multiRemove([REFRESH_TOKEN_KEY, ACCESS_TOKEN_KEY, 'is_logged_in'])
     qc.clear() // Empties query cache
     router.replace('/login')
   }, [qc])
