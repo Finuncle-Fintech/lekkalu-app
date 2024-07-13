@@ -16,7 +16,7 @@ import {
 } from 'echarts/components'
 import { LineChart as LC } from 'echarts/charts'
 import { SVGRenderer } from '@wuba/react-native-echarts'
-import { router, useLocalSearchParams, useRootNavigationState } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import * as echarts from 'echarts/core'
 
 import dayjs from 'dayjs'
@@ -38,27 +38,18 @@ import { mergeArraysByDate } from '@/utils/comparison-timeline'
 import LineChart from '@/components/LineChart'
 import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { formatIndianMoneyNotation } from '@/utils/fn'
-import { useGetUserDetails } from '@/queries/auth'
+import useRerouteUnAuthenticatedUser from '@/hooks/use-reroute-unauthenticated-users'
 
 echarts.use([SVGRenderer, GridComponent, LegendComponent, DataZoomComponent, TooltipComponent, ToolboxComponent, LC])
 
 const ComparisonWithId = () => {
   const insets = useSafeAreaInsets()
-  const rootNavigationState = useRootNavigationState()
   const params = useLocalSearchParams()
   const comparisonId = +params.id
   const [isAddScenarioModalOpen, setIsAddScenarioModalOpen] = useState(false)
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
 
-  const { data: user, isFetching: isAuthenticating } = useGetUserDetails()
-
-  useEffect(() => {
-    if (rootNavigationState?.key) {
-      if (!isAuthenticating && !user) {
-        router.replace({ pathname: '/comparison', params: { id: comparisonId } })
-      }
-    }
-  }, [comparisonId, rootNavigationState, user, isAuthenticating])
+  useRerouteUnAuthenticatedUser({ pathname: '/comparison', params: { id: comparisonId } })
 
   const handleBack = () => {
     router.push('/(authenticated)/comparisons/')

@@ -6,10 +6,10 @@ const AuthenticationCardForUnAuthenticatedUsers = () => {
   return (
     <View pt={'$6'} pb={20} bg="$background">
       <View fd="row" gap={20} px={10}>
-        <Button f={1} bg={'$primary'} onPress={() => router.push('/signup')}>
+        <Button f={1} bg={'$primary'} onPress={() => router.push('/signup')} color={'white'}>
           Sign Up
         </Button>
-        <Button f={1} bg={'$primary'} onPress={() => router.push('/login')}>
+        <Button f={1} bg={'$primary'} onPress={() => router.push('/login')} color={'white'}>
           Login
         </Button>
       </View>
