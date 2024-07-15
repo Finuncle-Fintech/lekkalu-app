@@ -24,8 +24,12 @@ export async function editScenario(id: number, dto: Partial<AddScenarioSchemas>)
 }
 
 export async function deleteScenario(id: number) {
-  const { data } = await v1ApiClient.delete<Scenario>(`/scenario/${id}`)
-  return data
+  try {
+    const { data } = await v1ApiClient.delete<Scenario>(`/scenario/${id}`)
+    return data
+  } catch (e) {
+    console.log('error', e)
+  }
 }
 
 // All comparison related APIs
@@ -51,6 +55,10 @@ export async function updateComparison(id: number, dto: Partial<AddComparisonSch
 }
 
 export async function deleteComparison(id: number) {
-  const { data } = await v1ApiClient.delete<Comparison>(`/comparison/${id}`)
-  return data
+  try {
+    const { data } = await v1ApiClient.delete<Comparison>(`/comparison/${id}`)
+    return data
+  } catch (e) {
+    console.log('error', e)
+  }
 }

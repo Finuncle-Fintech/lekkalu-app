@@ -38,9 +38,13 @@ const getTextColor = (type: ScenarioEntities) => {
 const ListEntity = ({ data, isLoading, refetch, handleEdit, isForUnAuthenticatedUser = false }: ListEntityType) => {
   const theme = useTheme()
   const { deleteLiabilityMutation, deleteIncomeExpenseMutation, deletePhysicalAssetMutation } = useScenario()
-  const { mutate: deleteExpense, isSuccess: deletedExpense } = deleteIncomeExpenseMutation
-  const { mutate: deleteLiabilities, isSuccess: deletedLiabilities } = deleteLiabilityMutation
-  const { mutate: deleteAsset, isSuccess: deletedAsset } = deletePhysicalAssetMutation
+  const { mutate: deleteExpense, isSuccess: deletedExpense, isPending: isDeletingExpense } = deleteIncomeExpenseMutation
+  const {
+    mutate: deleteLiabilities,
+    isSuccess: deletedLiabilities,
+    isPending: isDeletingLiability,
+  } = deleteLiabilityMutation
+  const { mutate: deleteAsset, isSuccess: deletedAsset, isPending: isDeletingAsset } = deletePhysicalAssetMutation
 
   const handleDelete = (entity_type: ScenarioEntities, id: number) => {
     switch (entity_type) {
@@ -115,6 +119,7 @@ const ListEntity = ({ data, isLoading, refetch, handleEdit, isForUnAuthenticated
               <View alignSelf="center">
                 <EditDeleteMenu
                   onDelete={() => handleDelete(item?.entity_type, item?.id)}
+                  isDeleting={isDeletingAsset || isDeletingExpense || isDeletingLiability}
                   onEdit={() => handleEdit?.({ id: item.id, type: item?.entity_type })}
                 />
               </View>

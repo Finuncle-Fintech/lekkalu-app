@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import { View, Text, Button } from 'tamagui'
+import { View, Text, Button, Spinner } from 'tamagui'
 import { FlatList } from 'native-base'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useForm } from 'react-hook-form'
@@ -56,7 +56,7 @@ const AddComparison = () => {
     values: defaultFormValues,
   })
 
-  const { mutate: addComparison } = useMutation({
+  const { mutate: addComparison, isPending: isAddingComparison } = useMutation({
     mutationFn: createComparison,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [COMPARISON.COMPARISON] })
@@ -64,7 +64,7 @@ const AddComparison = () => {
     },
   })
 
-  const { mutate: editComparison } = useMutation({
+  const { mutate: editComparison, isPending: isEditingComparison } = useMutation({
     mutationFn: (value: Partial<Comparison>) => updateComparison(comparisonId, value),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [COMPARISON.COMPARISON] })
@@ -171,6 +171,7 @@ const AddComparison = () => {
             mt={hp(2)}
             mb={hp(5)}
           >
+            {isAddingComparison || isEditingComparison ? <Spinner /> : <></>}
             {isEdit ? 'Edit Comparison' : 'Create Comparison'}
           </Button>
         </KeyboardScrollView>

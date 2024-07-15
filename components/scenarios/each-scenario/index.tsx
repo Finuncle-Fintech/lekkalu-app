@@ -15,7 +15,7 @@ export default function EachScenario({ item }: any) {
   const theme = useTheme()
   const toast = useToast()
 
-  const { mutate: removeScenario } = useMutation({
+  const { mutate: removeScenario, isPending: isDeletingScenario } = useMutation({
     mutationFn: deleteScenario,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -56,7 +56,11 @@ export default function EachScenario({ item }: any) {
         </View>
       </View>
       <View als={'flex-start'}>
-        <EditDeleteMenu onEdit={handleEditScenario} onDelete={() => removeScenario(item?.id)} />
+        <EditDeleteMenu
+          onEdit={handleEditScenario}
+          onDelete={() => removeScenario(item?.id)}
+          isDeleting={isDeletingScenario}
+        />
       </View>
     </TouchableOpacity>
   )

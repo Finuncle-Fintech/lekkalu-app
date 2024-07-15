@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Modal } from 'native-base'
-import { View, useTheme, Text, Button } from 'tamagui'
+import { View, useTheme, Text, Button, Spinner } from 'tamagui'
 import { Menu, MenuItem } from 'react-native-material-menu'
 import { Feather } from '@expo/vector-icons'
 import { wp } from '@/utils/responsive'
@@ -13,6 +13,7 @@ interface EditDeleteMenuProps {
   extraMenus?: Array<{ style?: {}; name: string; onPress: () => void }>
   deleteMessage?: string
   size?: number
+  isDeleting?: boolean
 }
 
 const EditDeleteMenu: FC<EditDeleteMenuProps> = (props) => {
@@ -103,7 +104,7 @@ const EditDeleteMenu: FC<EditDeleteMenuProps> = (props) => {
                 Cancel
               </Button>
               <Button onPress={handleDeletePress} backgroundColor={'$primary'} f={1} color={'white'}>
-                Confirm
+                {props?.isDeleting ? <Spinner /> : 'Confirm'}
               </Button>
             </View>
           </Modal.Body>

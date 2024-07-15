@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Text, View } from 'tamagui'
+import { Button, Spinner, Text, View } from 'tamagui'
 import { Modal } from 'native-base'
 import { useNavigation } from 'expo-router'
 import { UseFormReturn } from 'react-hook-form'
@@ -79,6 +79,7 @@ const AddEditEntityForScenario = ({
                   mt={hp(4)}
                   disabled={isLoading || !form.formState.isDirty}
                 >
+                  {isLoading ? <Spinner /> : <></>}
                   {isEdit ? `Edit ${entityName}` : `Add ${entityName}`}
                 </Button>
               </KeyboardScrollView>

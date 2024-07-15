@@ -67,7 +67,7 @@ const ComparisonWithId = () => {
     staleTime: 0,
   })
 
-  const { mutate: editComparison } = useMutation({
+  const { mutate: editComparison, isPending: isDeletingScenarioFromComparison } = useMutation({
     mutationFn: (dto: Partial<AddComparisonSchema>) => updateComparison(comparisonId, dto),
     onSuccess: () => {
       refetchComparison()
@@ -216,7 +216,7 @@ const ComparisonWithId = () => {
         <View fd="row" ml={wp(5)} mr={wp(14)}>
           <View fd={'row'} columnGap={wp(4)}>
             <BackButton onPress={() => router.replace('/(authenticated)/comparisons')} />
-            <Text fontSize={FontSizes.size15} fontFamily={'$heading'} w={'75%'}>
+            <Text fontSize={FontSizes.size15} fontFamily={'$heading'} w={'75%'} alignSelf="center">
               {comparison?.name}
             </Text>
             <View>
@@ -269,6 +269,7 @@ const ComparisonWithId = () => {
                 <EditDeleteMenu
                   deleteMessage="Are you sure you want to remove this scenario from this comparison."
                   onDelete={() => handleRemoveScenarioFromThisComparison(item?.id)}
+                  isDeleting={isDeletingScenarioFromComparison}
                   onEdit={() => {
                     router.push({
                       pathname: '/(authenticated)/scenarios/add',

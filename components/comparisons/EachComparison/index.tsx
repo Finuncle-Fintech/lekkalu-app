@@ -30,7 +30,7 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
     })
   }
 
-  const { mutate: remove } = useMutation({
+  const { mutate: remove, isPending: isDeletingComparison } = useMutation({
     mutationFn: () => deleteComparison(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [COMPARISON.COMPARISON] })
@@ -82,6 +82,7 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
             })
           }
           onDelete={remove}
+          isDeleting={isDeletingComparison}
           extraMenus={[
             {
               name: `Set to ${access === 'Private' ? 'Public' : 'Private'}`,
