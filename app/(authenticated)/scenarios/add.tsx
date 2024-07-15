@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { View, Text, Button } from 'tamagui'
+import { View, Text, Button, Spinner } from 'tamagui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -51,7 +51,7 @@ const AddScenarios = () => {
     mutationFn: loginImaginaryUser,
   })
 
-  const { mutate: addScenario } = useMutation({
+  const { mutate: addScenario, isPending: isAddingScenario } = useMutation({
     mutationFn: createScenarios,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [SCENARIO.SCENARIO] })
@@ -73,7 +73,7 @@ const AddScenarios = () => {
 
   const editScenarioDetail = params?.scenarioDetails ? JSON.parse(params?.scenarioDetails as any) : null
 
-  const { mutate: editScenario } = useMutation({
+  const { mutate: editScenario, isPending: isEditingScenario } = useMutation({
     mutationFn: (values: Partial<Scenario>) => updateScenario(+editScenarioDetail?.id, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SCENARIO.SCENARIO] })
@@ -132,6 +132,7 @@ const AddScenarios = () => {
           mt={hp(2)}
           mb={hp(5)}
         >
+          {isAddingScenario || isEditingScenario ? <Spinner /> : <></>}
           {isEdit ? 'Edit Scenario' : 'Create Scenario'}
         </Button>
       </KeyboardScrollView>

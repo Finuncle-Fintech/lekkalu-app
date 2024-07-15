@@ -67,7 +67,7 @@ export default function ScenarioWithId() {
     mutationFn: (value: Partial<AddScenarioSchemas>) => editScenario(scenarioId, value),
   })
 
-  const { mutate: deleteMutation } = useMutation({
+  const { mutate: deleteMutation, isPending: isDeletingScenario } = useMutation({
     mutationFn: deleteScenario,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [SCENARIO.SCENARIO] })
@@ -211,6 +211,7 @@ export default function ScenarioWithId() {
           />
           <EditDeleteMenu
             onDelete={handleDelete}
+            isDeleting={isDeletingScenario}
             size={wp(5)}
             extraMenus={[
               { name: 'Share', onPress: () => {} },
