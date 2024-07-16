@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Spinner, Text, View } from 'tamagui'
 import { Modal } from 'native-base'
 import { useNavigation } from 'expo-router'
+import { Info } from '@tamagui/lucide-icons'
 import { UseFormReturn } from 'react-hook-form'
 import { useColorScheme } from 'react-native'
 import { hp, wp } from '@/utils/responsive'
@@ -21,6 +22,7 @@ type EntityForScenarioType = {
   mutation: any
   isLoading: boolean
   handleComplete: () => void
+  error?: string
 }
 
 const AddEditEntityForScenario = ({
@@ -32,6 +34,7 @@ const AddEditEntityForScenario = ({
   isLoading,
   handleComplete,
   isFetchingEntity = false,
+  error,
 }: EntityForScenarioType) => {
   const navigation = useNavigation()
 
@@ -70,14 +73,22 @@ const AddEditEntityForScenario = ({
                 <View rowGap={hp(1)}>
                   <InputFields control={form.control} errors={form.formState.errors} inputs={inputs} />
                 </View>
+                {error && (
+                  <View fd="row" mt={hp(2)} gap={'$2'}>
+                    <Info color={'$red10Dark'} />
+                    <Text alignSelf="center" fontSize={'$5'} color={'$red10Dark'}>
+                      {error}
+                    </Text>
+                  </View>
+                )}
                 <Button
                   fontSize={FontSizes.size18}
                   h={hp(5.5)}
                   onPress={mutation}
-                  bg={THEME_COLORS.brand[900]}
+                  bg={form.formState.isValid ? THEME_COLORS.brand[900] : 'gray'}
                   color="white"
-                  mt={hp(4)}
-                  disabled={isLoading || !form.formState.isDirty}
+                  mt={hp(2)}
+                  disabled={isLoading || !form.formState.isValid}
                 >
                   {isLoading ? <Spinner /> : <></>}
                   {isEdit ? `Edit ${entityName}` : `Add ${entityName}`}

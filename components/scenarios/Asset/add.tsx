@@ -68,6 +68,7 @@ const AssetForScenario = ({ handleComplete }: TAssetForScenario) => {
       mutation={handleAdd}
       isLoading={addPhysicalAssetMutation.isPending}
       handleComplete={handleComplete}
+      error={addPhysicalAssetMutation?.error?.message}
     />
   )
 }

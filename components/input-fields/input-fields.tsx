@@ -43,12 +43,14 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
         case 'number': {
           return (
             <Input
-              color={inputColor}
               {...field}
-              value={field.value && String(field.value)}
+              id={input.id}
+              color={inputColor}
+              value={field.value ? String(field.value) : undefined}
               keyboardType="numeric"
               placeholder={input.label}
               onChangeText={field.onChange}
+              onBlur={field.onBlur}
               fontSize={FontSizes.size15}
               height={hp(5)}
               borderRadius={wp(1)}
@@ -184,16 +186,23 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
         }
       }
     },
-    [inputColor, tamagtheme],
+    [inputColor, tamagtheme, control],
   )
 
-  return inputs.map((input) => (
-    <FormControl key={input.id} isRequired={input.required} isInvalid={input.id in errors}>
-      <FormControl.Label _text={{ style: { fontSize: FontSizes.size15, paddingBottom: hp(0.8) } }}>
-        {input.label}
-      </FormControl.Label>
-      <Controller name={input.id} control={control} render={({ field }) => getFieldInput(input, field, errors)} />
-      <FormControl.ErrorMessage>{errors[input.id]?.message}</FormControl.ErrorMessage>
-    </FormControl>
-  ))
+  return inputs.map((input) => {
+    return (
+      <FormControl key={input.id} isRequired={input.required} isInvalid={input.id in errors}>
+        <FormControl.Label _text={{ style: { fontSize: FontSizes.size15, paddingBottom: hp(0.8) } }}>
+          {input.label}
+        </FormControl.Label>
+        <Controller
+          name={input.id}
+          control={control}
+          key={input.id}
+          render={({ field }) => getFieldInput(input, field, errors)}
+        />
+        <FormControl.ErrorMessage>{errors[input.id]?.message}</FormControl.ErrorMessage>
+      </FormControl>
+    )
+  })
 }

@@ -69,6 +69,7 @@ const EditExpenseForScenario = ({ id, handleComplete }: EditExpenseForScenarioTy
       mutation={handleEdit}
       isLoading={updateIncomeExpenseMutation.isPending}
       handleComplete={handleComplete}
+      error={updateIncomeExpenseMutation.error?.message}
     />
   )
 }

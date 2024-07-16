@@ -55,6 +55,7 @@ const ExpensesForScenario = ({ handleComplete }: any) => {
       mutation={handleAdd}
       isLoading={addIncomeMutation.isPending}
       handleComplete={handleComplete}
+      error={addIncomeMutation.error?.message}
     />
   )
 }

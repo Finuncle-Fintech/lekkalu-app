@@ -41,7 +41,7 @@ const EditAssetForScenario = ({ id, handleComplete }: EditAssetForScenarioType) 
     values: { ...data },
   })
 
-  const { mutate, isPending, isSuccess } = useMutation({
+  const { mutate, isPending, isSuccess, error } = useMutation({
     mutationFn: (dto: Partial<AddPhysicalAssetSchemaForScenario>) => updatePhysicalAsset(id, dto),
   })
 
@@ -82,6 +82,7 @@ const EditAssetForScenario = ({ id, handleComplete }: EditAssetForScenarioType) 
       mutation={handleEdit}
       isLoading={isPending}
       handleComplete={handleComplete}
+      error={error?.message}
     />
   )
 }

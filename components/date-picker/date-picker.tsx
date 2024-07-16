@@ -23,6 +23,14 @@ export default function DatePicker({ placeholder, value, onChange, maximumDate, 
   const [date, setDate] = useState(value ?? dayjs().toDate())
   const systemTheme = useColorScheme()
 
+  useEffect(() => {
+    if (value) {
+      onChange?.(value)
+    } else {
+      onChange?.(dayjs().toDate())
+    }
+  }, [])
+
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
 
   const _placeholder = placeholder ?? 'Select Date'
