@@ -5,27 +5,32 @@ export const LIABILITIY_INPUTS_FOR_SCENARIO: InputField[] = [
     id: 'name',
     label: 'Loan Name',
     type: 'text',
+    required: true,
   },
   {
     id: 'principal',
     label: 'Principal',
     type: 'number',
+    required: true,
   },
   {
     id: 'disbursement_date',
     label: 'Disbursement Date',
     type: 'date',
     defaultDate: undefined,
+    required: true,
   },
   {
     id: 'interest_rate',
     label: 'Interest',
     type: 'number',
+    required: true,
   },
   {
     id: 'tenure',
     label: 'Tenure',
     type: 'number',
+    required: true,
   },
   {
     id: 'balance',

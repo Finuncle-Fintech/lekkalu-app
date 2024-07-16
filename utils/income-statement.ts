@@ -6,6 +6,7 @@ export const getAddIncomeExpenseInputs = (typeOptions?: Option[]): InputField[] 
       id: 'name',
       label: 'Name',
       type: 'text',
+      required: true,
     },
     {
       id: 'type',
@@ -13,11 +14,13 @@ export const getAddIncomeExpenseInputs = (typeOptions?: Option[]): InputField[] 
       type: 'select',
       valueKey: 'label',
       options: typeOptions || [],
+      required: true,
     },
     {
       id: 'amount',
       label: 'Amount',
       type: 'number',
+      required: true,
     },
   ]
 }

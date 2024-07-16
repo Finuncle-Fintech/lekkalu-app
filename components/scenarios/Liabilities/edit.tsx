@@ -74,6 +74,7 @@ const EditLiabilitiesForScenario = ({ id, handleComplete }: EditLiabilitiesForSc
       mutation={handleEdit}
       isLoading={updateLiabilityMutation.isPending}
       handleComplete={handleComplete}
+      error={updateLiabilityMutation?.error?.message}
     />
   )
 }

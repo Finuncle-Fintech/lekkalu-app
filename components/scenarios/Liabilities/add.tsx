@@ -66,6 +66,7 @@ const LiabilitiesForScenario = ({ handleComplete }: TLiabilityForScenario) => {
       mutation={handleAdd}
       isLoading={addLiabilityMutation.isPending}
       handleComplete={handleComplete}
+      error={addLiabilityMutation?.error?.message}
     />
   )
 }
