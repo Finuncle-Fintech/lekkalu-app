@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackHandler } from 'react-native'
+import { BackHandler, Share } from 'react-native'
 import { View, Text } from 'tamagui'
 import { useToast } from 'native-base'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -177,6 +177,15 @@ export default function ScenarioWithId() {
     }
   }
 
+  const handleShare = async () => {
+    const link = `https://www.finuncle.com/scenarios/${scenarioId}`
+    await Share.share({
+      title: 'Share this scenario',
+      url: link,
+      message: link,
+    })
+  }
+
   if (loginImaginaryUser.isPending) {
     return (
       <View f={1} pt={insets.top + hp(2)} bg="$backgroundHover">
@@ -214,7 +223,7 @@ export default function ScenarioWithId() {
             isDeleting={isDeletingScenario}
             size={wp(5)}
             extraMenus={[
-              { name: 'Share', onPress: () => {} },
+              { name: 'Share', onPress: handleShare },
               {
                 name: `Set to ${scenario?.access === 'Public' ? 'private' : 'public'}`,
                 onPress: () => setShowChangePrivacyDialog(true),
