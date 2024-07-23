@@ -190,6 +190,14 @@ export default function AuthenticatedAppLayout() {
         }}
       />
       <Tabs.Screen
+        name="cagr-calculator"
+        options={{
+          href: null,
+          headerShown: false,
+          unmountOnBlur: true,
+        }}
+      />
+      <Tabs.Screen
         name="emi-calculator-breakdown"
         options={{
           href: null,
