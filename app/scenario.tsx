@@ -23,7 +23,7 @@ const ScenarioForUnAuthenticatedUser = () => {
   })
 
   const { loginImaginaryUser } = useImaginaryAuth()
-  const { getAllScenarioEntitiesQuery } = useScenario()
+  const { getAllScenarioEntitiesQuery } = useScenario(scenarioId)
 
   useEffect(() => {
     if (isSuccess) {

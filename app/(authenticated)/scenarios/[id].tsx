@@ -145,7 +145,7 @@ export default function ScenarioWithId() {
     setEntityToEdit(undefined)
   }
 
-  const { getAllScenarioEntitiesQuery } = useScenario()
+  const { getAllScenarioEntitiesQuery } = useScenario(scenarioId)
 
   const EntityDialogToAddEntity = () => {
     switch (entityToAdd) {

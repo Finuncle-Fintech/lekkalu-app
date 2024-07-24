@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect } from 'react'
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { useImaginaryAuth } from '@/hooks/use-imaginary-auth'
 import { AUTH, BALANCE_SHEET } from '@/utils/query-keys'
@@ -8,12 +9,19 @@ import { AddLiabilitySchema, AddPhysicalAssetSchemaForScenario } from '@/schema/
 import { Liability, PhysicalAsset } from '@/types/balance-sheet'
 import { INCOME_STATEMENT_QUERY_KEYS } from '@/utils/query-keys/income-statement'
 import { SCENARIO } from '@/utils/query-keys/scenarios'
+import { queryClient } from '@/utils/query-client'
 
-const useScenario = () => {
+const useScenario = (scenarioId?: number) => {
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
   const qc = useQueryClient()
   const IMAGINARY_USER = qc.getQueryData<any>([AUTH.IMAGINARY_CLIENT])
   const apiClient = getAPIClientForImaginaryUser(IMAGINARY_USER?.access || '')
+
+  useEffect(() => {
+    return () => {
+      queryClient.setQueryData([AUTH.IMAGINARY_CLIENT], {})
+    }
+  }, [])
 
   async function createIncomeExpense(dto: IAddEditIncomeExpenseSchema) {
     const { data } = await apiClient.post('income_expense/', dto)
@@ -68,7 +76,7 @@ const useScenario = () => {
   }
 
   const getAllScenarioEntitiesQuery = useQuery({
-    queryKey: [`${SCENARIO.SCENARIO_ENTITIES}-${IMAGINARY_USER?.username}`],
+    queryKey: [`${SCENARIO.SCENARIO_ENTITIES}-${IMAGINARY_USER?.username}-${scenarioId}`],
     queryFn: fetchScenarioEntities,
     select: (data) => {
       const income = data?.income?.map((each) => ({

@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { FlatList, TouchableOpacity, StyleSheet } from 'react-native'
+import { FlatList, TouchableOpacity, StyleSheet, Share } from 'react-native'
 import { Toast } from 'native-base'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { View, Text, ScrollView } from 'tamagui'
 import dayjs from 'dayjs'
@@ -42,15 +42,19 @@ const ComparisonForUnAuthenticatedUser = () => {
 
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
 
-  const { data: comparison, refetch: refetchComparison } = useQuery({
+  const { data: comparison } = useQuery({
     queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`],
     queryFn: () => fetchComparisonById(comparisonId),
     staleTime: 0,
   })
 
-  function handleShare() {
-    console.log('handle share pressed')
-    refetchComparison()
+  async function handleShare() {
+    const sharingLink = `https://www.finuncle.com/comparisons/${comparisonId}`
+    await Share.share({
+      title: comparison?.name,
+      url: sharingLink,
+      message: sharingLink,
+    })
   }
 
   const [timelineData, setTimelineData] = useState<any>()
@@ -255,12 +259,12 @@ const ComparisonForUnAuthenticatedUser = () => {
                   justifyContent: 'space-between',
                   minHeight: 120,
                 }}
-                // onPress={() => {
-                //   router.push({
-                //     pathname: `/(authenticated)/scenarios/${item?.id}`,
-                //     params: { id: item?.id, backToComparison: String(comparisonId) },
-                //   })
-                // }}
+                onPress={() => {
+                  router.push({
+                    pathname: `/scenarios/${item?.id}`,
+                    params: { id: item?.id, backToComparison: String(comparisonId) },
+                  })
+                }}
               >
                 <Text w="85%">{item?.name}</Text>
               </TouchableOpacity>
