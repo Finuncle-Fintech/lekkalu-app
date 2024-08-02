@@ -124,6 +124,7 @@ export default function ScenarioWithId() {
           `${AUTH.IMAGINARY_CLIENT}`,
         ],
       })
+      qc.setQueryData([AUTH.IMAGINARY_CLIENT], {})
     }
   }, [])
 
