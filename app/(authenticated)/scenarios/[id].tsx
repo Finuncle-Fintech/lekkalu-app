@@ -26,6 +26,7 @@ import PrivacyButtonForScenario from '@/components/scenarios/PrivacyButton'
 import { AddScenarioSchemas } from '@/schema/scenarios'
 import EditDeleteMenu from '@/components/edit-delete-menu/edit-delete-menu'
 import useRerouteUnAuthenticatedUser from '@/hooks/use-reroute-unauthenticated-users'
+import { WEB_URL } from '@/utils/constant/constant'
 
 export type ScenarioEntities = 'Asset' | 'Liabilities' | 'Expense'
 
@@ -178,9 +179,9 @@ export default function ScenarioWithId() {
   }
 
   const handleShare = async () => {
-    const link = `https://www.finuncle.com/scenarios/${scenarioId}`
+    const link = `${WEB_URL}/scenarios/${scenarioId}`
     await Share.share({
-      title: 'Share this scenario',
+      title: scenario?.name,
       url: link,
       message: link,
     })
