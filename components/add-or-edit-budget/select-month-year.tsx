@@ -1,14 +1,9 @@
-import { Check, ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
-import { useMemo, useState } from 'react'
-import type { FontSizeTokens, SelectProps } from 'tamagui'
-import { Adapt, Button, Dialog, Label, Select, Sheet, Text, View, XStack, YStack, getFontSize, useTheme } from 'tamagui'
-import { LinearGradient } from 'tamagui/linear-gradient'
-// import { ASSET_TYPE as items } from './config'
+import { X } from '@tamagui/lucide-icons'
+
+import { Button, Dialog, Text, View } from 'tamagui'
 import { Dimensions, FlatList, TouchableOpacity, useColorScheme } from 'react-native'
 import { FontSizes } from '@/utils/fonts'
-import { StyleSheet } from 'react-native'
 import { hp, wp } from '@/utils/responsive'
-import CustomButton from '../custom-button'
 import { THEME_COLORS } from '@/utils/theme'
 const { width, height } = Dimensions.get('window')
 
@@ -30,15 +25,17 @@ export function SelectMonthYearItem({
   showPicker,
   setShowPicker,
 }: SelectMonthYearProps) {
-  const theme = useTheme()
-  let colorScheme = useColorScheme();
+  const colorScheme = useColorScheme()
 
   return (
     <Dialog modal open={showPicker}>
       <Dialog.Portal>
-        <Dialog.Overlay key="overlay" onPress={()=>{
-          setShowPicker(false)
-        }} />
+        <Dialog.Overlay
+          key="overlay"
+          onPress={() => {
+            setShowPicker(false)
+          }}
+        />
 
         <Dialog.Content bordered elevate key="content" gap={wp(2)}>
           <Dialog.Title>
@@ -56,7 +53,7 @@ export function SelectMonthYearItem({
               </Dialog.Close>
             </View>
           </Dialog.Title>
-          <View maxHeight={hp(height/25)} minHeight={hp(height/30)}>
+          <View maxHeight={hp(height / 25)} minHeight={hp(height / 30)}>
             <FlatList
               data={items}
               showsVerticalScrollIndicator={false}
@@ -81,12 +78,14 @@ export function SelectMonthYearItem({
                     alignItems="center"
                     backgroundColor={item === selectedItem ? THEME_COLORS.brand[900] : ''}
                   >
-                    <Text fontSize={FontSizes.size16} color={item === selectedItem ? 'white' : colorScheme === 'dark' ? 'white' : 'black'}>
+                    <Text
+                      fontSize={FontSizes.size16}
+                      color={item === selectedItem ? 'white' : colorScheme === 'dark' ? 'white' : 'black'}
+                    >
                       {item}
                     </Text>
                   </View>
                 </TouchableOpacity>
-                
               )}
               keyExtractor={(item, index) => index.toString()}
               numColumns={3}
@@ -97,5 +96,3 @@ export function SelectMonthYearItem({
     </Dialog>
   )
 }
-
-const styles = StyleSheet.create({})

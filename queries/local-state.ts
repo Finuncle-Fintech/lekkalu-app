@@ -33,9 +33,9 @@ export const addItem = (key: string, newItem: Omit<Item, 'id'>) => {
       const currentItems = getItemList(key)
       const newItemWithId = { ...newItem, id: generateId() }
       queryClient.setQueryData([key], [...currentItems, newItemWithId])
-      return true;
+      return true
     }
-    return false;
+    return false
   } catch (error) {
     console.log(error)
   }
@@ -72,9 +72,9 @@ export const getMonthWiseBudgetItems = (date: Date): Budget | null => {
       const itemYear = new Date(item.month).getFullYear()
       return itemMonth === date.getMonth() && itemYear === date.getFullYear()
     })
-    return monthWiseBudgetItems?.[0] ?? null;
+    return monthWiseBudgetItems?.[0] ?? null
   } catch (error) {
     console.log(error)
-    return null;
+    return null
   }
 }

@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import BackButton from '@/components/back-button'
-import LoaderOverlay from '@/components/loader-overlay'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
 import { EditProfileSchema, editProfileSchema } from '@/schema/settings'

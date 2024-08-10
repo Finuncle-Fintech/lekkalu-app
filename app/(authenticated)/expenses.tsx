@@ -1,18 +1,16 @@
-import { AddIcon, Button, VStack } from 'native-base'
-import { Link, router, useFocusEffect } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import { router } from 'expo-router'
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native'
 import { Text, View, useTheme } from 'tamagui'
+import { useQuery } from '@tanstack/react-query'
+import { Plus } from '@tamagui/lucide-icons'
 import ExpenseList from '@/components/expense-list'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
-import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native'
 import { THEME_COLORS } from '@/utils/theme'
-import { AntDesign } from '@expo/vector-icons'
 import CreateOrEditBudget from '@/components/add-or-edit-budget/add-or-edit-budget'
-import { useQuery } from '@tanstack/react-query'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { fetchBudgets, getSingleMonthBudget } from '@/queries/budget'
-import { Plus } from '@tamagui/lucide-icons'
 interface Budget {
   id: any
   limit: number
@@ -25,11 +23,10 @@ export default function Expenses() {
   const [loading, setLoading] = useState(true)
   const [currentMonthData, setCurrentMonthData] = useState<Budget | null>(null)
 
-  const { data, isFetching, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
-    queryFn: fetchBudgets,    
+    queryFn: fetchBudgets,
   })
-
 
   async function getData() {
     if (data) {
@@ -47,44 +44,54 @@ export default function Expenses() {
   return (
     <View flex={1} p={4} bg="$backgroundHover">
       <View marginTop={12} alignSelf="center" width={'95%'} flex={1}>
-      <View flexDirection="row" justifyContent="space-around" marginBottom={10}>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={() => {
-            setShowModal(true)
-          }}
-          style={[styles.container, { backgroundColor: theme.backgroundStrong.get() }]}
-        >
-          <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size14} fontFamily={'$heading'}>
-            Current Month Budget
-          </Text>
-          {isLoading || loading ? <ActivityIndicator color={THEME_COLORS.brand[900]}/> :<Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size17} fontFamily={'$heading'} fontWeight={'bold'}>
-            {currentMonthData ? '₹ ' + currentMonthData?.limit : 'Add'}
-          </Text>}
+        <View flexDirection="row" justifyContent="space-around" marginBottom={10}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              setShowModal(true)
+            }}
+            style={[styles.container, { backgroundColor: theme.backgroundStrong.get() }]}
+          >
+            <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size14} fontFamily={'$heading'}>
+              Current Month Budget
+            </Text>
+            {isLoading || loading ? (
+              <ActivityIndicator color={THEME_COLORS.brand[900]} />
+            ) : (
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                fontSize={FontSizes.size17}
+                fontFamily={'$heading'}
+                fontWeight={'bold'}
+              >
+                {currentMonthData ? '₹ ' + currentMonthData?.limit : 'Add'}
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              router.push('/budget')
+            }}
+            style={[styles.container, { backgroundColor: theme.backgroundStrong.get(), justifyContent: 'center' }]}
+          >
+            <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size14} fontFamily={'$heading'}>
+              View All Budget
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text fontSize={FontSizes.size22} fontWeight={'500'} marginBottom={10}>
+          All Expensess
+        </Text>
+
+        <ExpenseList />
+        <TouchableOpacity style={styles.fab} onPress={() => router.push('/(authenticated)/create-expense')}>
+          <Plus size={wp(8)} color={'white'} />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={() => {
-            router.push('/budget')
-          }}
-          style={[styles.container, { backgroundColor: theme.backgroundStrong.get(), justifyContent: 'center' }]}
-        >
-          <Text numberOfLines={1} adjustsFontSizeToFit fontSize={FontSizes.size14} fontFamily={'$heading'}>
-            View All Budget
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text fontSize={FontSizes.size22} fontWeight={'500'} marginBottom={10}>
-        All Expensess
-      </Text>
-
-      <ExpenseList />      
-      <TouchableOpacity style={styles.fab} onPress={() => router.push('/(authenticated)/create-expense')}>
-        <Plus size={wp(8)} color={'white'} />
-      </TouchableOpacity>
-      <CreateOrEditBudget setShowModal={setShowModal} showModal={showModal} title="Add Budget" />
+        <CreateOrEditBudget setShowModal={setShowModal} showModal={showModal} title="Add Budget" />
       </View>
     </View>
   )

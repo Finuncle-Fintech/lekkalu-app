@@ -16,21 +16,21 @@ import { getAddIncomeExpenseInputs } from '@/utils/income-statement'
 import LoaderOverlay from '../../components/loader-overlay'
 import {
   APIAddIncomeStatementPayload,
-  APIIncomeSourceItemType,
+  // APIIncomeSourceItemType,
   useAddIncomeExpense,
   useAddIncomeSource,
-  useGetIncomeExpenseTypes,
-  useGetIncomeSourceTypes,
+  // useGetIncomeExpenseTypes,
+  // useGetIncomeSourceTypes,
   useUpdateIncomeExpense,
   useUpdateIncomeSource,
 } from '@/queries/income-statement'
 import { queryClient } from '@/utils/query-client'
 import { INCOME_STATEMENT_QUERY_KEYS } from '@/utils/query-keys/income-statement'
 
-interface ScreenParams {
-  type: 'income' | 'expense'
-  editItem?: APIIncomeSourceItemType | null
-}
+// interface ScreenParams {
+//   type: 'income' | 'expense'
+//   editItem?: APIIncomeSourceItemType | null
+// }
 
 const dummyIncomeTypes = [
   { id: 1, label: 'Salary' },
@@ -45,15 +45,15 @@ const dummyExpenseTypes = [
 const AddEditIncomeExpense = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const params = useLocalSearchParams<ScreenParams>()
+  const params = useLocalSearchParams<any>()
   const toast = useToast()
 
   const isIncome = useMemo(() => params?.type === 'income', [params])
   const editItem = params?.editItem
   const pageTitle = isIncome ? `${editItem ? 'Edit' : 'Add'} Income` : `${editItem ? 'Edit' : 'Add'} Expense`
 
-  const { data: incomeSourceTypesQueryData } = useGetIncomeSourceTypes({ enabled: isIncome })
-  const { data: incomeExpenseTypesQueryData } = useGetIncomeExpenseTypes({ enabled: !isIncome })
+  // const { data: incomeSourceTypesQueryData } = useGetIncomeSourceTypes({ enabled: isIncome })
+  // const { data: incomeExpenseTypesQueryData } = useGetIncomeExpenseTypes({ enabled: !isIncome })
   const { mutateAsync: addIncomeSourceMutation, isPending: isPendingAddIncomeSource } = useAddIncomeSource()
   const { mutateAsync: addIncomeExpenseMutation, isPending: isPendingAddIncomeExpense } = useAddIncomeExpense()
   const { mutateAsync: updateIncomeExpenseMutation, isPending: isPendingUpdateIncomeExpense } = useUpdateIncomeExpense()

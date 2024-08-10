@@ -1,6 +1,6 @@
 export type Budget = {
-    id: number
-    limit: number
-    month: string
-    year: string
+  id: number
+  limit: number
+  month: string
+  year: string
 }

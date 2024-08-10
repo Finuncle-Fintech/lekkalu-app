@@ -35,7 +35,7 @@ const EditLiabilitiesForScenario = ({ id, handleComplete }: EditLiabilitiesForSc
   const form = useForm<AddLiabilitySchema>({
     resolver: zodResolver(addLiabilitySchema),
     values: {
-      ...data,
+      ...(data as unknown as AddLiabilitySchema),
     },
   })
 
