@@ -1,8 +1,6 @@
-import { ActivityIndicator } from 'react-native'
 import React from 'react'
-import { Button, ButtonProps, Spinner, TextContextStyles } from 'tamagui'
+import { Button, ButtonProps, Spinner, TextContextStyles, View, Text } from 'tamagui'
 import { THEME_COLORS } from '@/utils/theme'
-import { View,Text } from 'tamagui'
 import { wp } from '@/utils/responsive'
 import { FontSizes } from '@/utils/fonts'
 
@@ -23,7 +21,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   isLoading = false,
   isDisable = false,
   textStyle,
-  buttonStyle
+  buttonStyle,
 }) => {
   return (
     <Button
@@ -35,13 +33,22 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       disabled={isDisable}
       flex={1}
       {...buttonStyle}
-      {...hasLikeOutline ? {borderColor:THEME_COLORS.primary[700],borderWidth:0.5,backgroundColor:'white'}: null}
-      {...(isLoading || isDisable) ? {opacity:0.5} : null}
-      
+      {...(hasLikeOutline
+        ? { borderColor: THEME_COLORS.primary[700], borderWidth: 0.5, backgroundColor: 'white' }
+        : null)}
+      {...(isLoading || isDisable ? { opacity: 0.5 } : null)}
     >
-      <View flexDirection='row' gap={wp(1)}>
+      <View flexDirection="row" gap={wp(1)}>
         {isLoading && <Spinner size="small" color={THEME_COLORS.primary[50]} />}
-        {!isLoading && <Text fontSize={FontSizes.size20} {...textStyle} {...hasLikeOutline ? {color:'black'} : {color:'white'}}>{text}</Text>}
+        {!isLoading && (
+          <Text
+            fontSize={FontSizes.size20}
+            {...textStyle}
+            {...(hasLikeOutline ? { color: 'black' } : { color: 'white' })}
+          >
+            {text}
+          </Text>
+        )}
       </View>
     </Button>
   )

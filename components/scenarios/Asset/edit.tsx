@@ -38,7 +38,7 @@ const EditAssetForScenario = ({ id, handleComplete }: EditAssetForScenarioType) 
 
   const form = useForm<AddPhysicalAssetSchemaForScenario>({
     resolver: zodResolver(addPhysicalAssetSchemaForScenario),
-    values: { ...data },
+    values: { ...data } as unknown as AddPhysicalAssetSchemaForScenario,
   })
 
   const { mutate, isPending, isSuccess, error } = useMutation({

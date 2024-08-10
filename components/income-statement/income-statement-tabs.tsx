@@ -32,7 +32,7 @@ const IncomeStatementTabs: FC<IncomeStatementTabsProps> = ({
   refetchIncomeSource,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('income')
-  const navigation = useNavigation()
+  const navigation = useNavigation<any>()
   const { mutateAsync: deleteIncomeExpense } = useDeleteIncomeExpense()
   const { mutateAsync: deleteIncomeSource } = useDeleteIncomeSource()
   const toast = useToast()
@@ -72,7 +72,13 @@ const IncomeStatementTabs: FC<IncomeStatementTabsProps> = ({
   }
 
   return (
-    <Tabs onValueChange={(val: TabType) => setActiveTab(val)} defaultValue="income" fd="column" w={'100%'} mt={hp(1)}>
+    <Tabs
+      onValueChange={(val: string) => setActiveTab(val as TabType)}
+      defaultValue="income"
+      fd="column"
+      w={'100%'}
+      mt={hp(1)}
+    >
       <Tabs.List px={wp(5)} pb={hp(1)} mt={hp(2)}>
         <Tabs.Tab
           bg={activeTab === 'income' ? THEME_COLORS.primary[50] : '$background'}

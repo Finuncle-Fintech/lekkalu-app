@@ -2,39 +2,27 @@ import { useEffect, useState } from 'react'
 import { useToast } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { omit, round } from 'lodash'
-import { Text, View, useTheme, Input } from 'tamagui'
+import { omit } from 'lodash'
+import dayjs from 'dayjs'
 import { CalendarDays, X } from '@tamagui/lucide-icons'
-import { Button, Dialog, XStack } from 'tamagui'
-import { Dimensions, useColorScheme } from 'react-native'
+import { Button, Dialog, XStack, Text, View, Input } from 'tamagui'
+import { isAxiosError } from 'axios'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Dimensions } from 'react-native'
 import { FontSizes } from '@/utils/fonts'
 import { THEME_COLORS } from '@/utils/theme'
-import {
-  SetBudgetSchema,
-  SetBudgetSchema2,
-  SetBudgetSchema3,
-  UpdateBudgetSchema,
-  setBudgetSchema,
-  setBudgetSchema2,
-  setBudgetSchema3,
-  updateBudgetSchema,
-} from '@/schema/budget'
+import { SetBudgetSchema, SetBudgetSchema2, SetBudgetSchema3, setBudgetSchema3 } from '@/schema/budget'
 import FormControl from '../form-control/form-control'
 import { hp, wp } from '@/utils/responsive'
-import RNDateTimePicker from '@react-native-community/datetimepicker'
 import CustomButton from '../custom-button'
 import { formatDate, getLastTenYears, getMonthIndex } from '@/utils/fn'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchBudgets, getSingleMonthBudget, setBudget, updateBudget } from '@/queries/budget'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
-import dayjs from 'dayjs'
-import { SERVER_DATE_FORMAT } from '@/utils/constants'
 import { Budget } from '@/types/budget'
 import { SelectMonthYearItem } from './select-month-year'
 import Label from '../form-control/components/label'
-import { isAxiosError } from 'axios'
 import { monthName } from '@/utils/constant/constant'
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 type AddOrEditBudgetProps = {
   title: string
@@ -55,7 +43,7 @@ export default function CreateOrEditBudget({
 
   const toast = useToast()
 
-  const { data, isFetching } = useQuery({
+  const { data } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
     queryFn: fetchBudgets,
   })
@@ -64,17 +52,16 @@ export default function CreateOrEditBudget({
     if (showModal && asset) {
       setDate(new Date(asset.month).toString())
     }
-    if(!showModal){
+    if (!showModal) {
       setSelectedMonthExist(false)
     }
   }, [showModal])
 
   const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'))
-  const [isOpenDatePicker, setOpenDatePicker] = useState(false)
   const [isSelectedMonthExist, setSelectedMonthExist] = useState(false)
   const [showMonthPicker, setShowMonthPicker] = useState(false)
   const [showYearPicker, setShowYearPicker] = useState(false)
-  const monthData: string[] = monthName;
+  const monthData: string[] = monthName
   const yearData: string[] = getLastTenYears()
 
   const [selectedMonth, setSelectedMonth] = useState<string>(monthData[new Date().getMonth()])
@@ -83,9 +70,8 @@ export default function CreateOrEditBudget({
   useEffect(() => {
     setSelectedMonthExist(false)
     const month = getMonthIndex(selectedMonth)
-    const customDate = dayjs(new Date(`${Number(selectedYear)}-${month+1}`)).format('YYYY-MM-DD')
+    const customDate = dayjs(new Date(`${Number(selectedYear)}-${month + 1}`)).format('YYYY-MM-DD')
     setDate(customDate)
-    console.log('customDate',customDate)
   }, [selectedMonth, selectedYear])
 
   const {
@@ -103,7 +89,7 @@ export default function CreateOrEditBudget({
 
   const setBudgetMutation = useMutation({
     mutationFn: setBudget,
-    onSuccess : async () => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
       })
@@ -117,18 +103,14 @@ export default function CreateOrEditBudget({
       // queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], context?.previousData);
       setShowModal(false)
       if (isAxiosError(error)) {
-        console.log(error)
         toast.show({ title: error?.message })
         return
       }
-      console.log(error)
       toast.show({ title: 'Something went wrong while setting budget. Please try again!' })
     },
   })
 
   const handleAddBudget = async (values: SetBudgetSchema3) => {
-    console.log(values)
-
     const isExist = await getSingleMonthBudget(new Date(date), data || [])
 
     if (!isExist) {
@@ -151,14 +133,11 @@ export default function CreateOrEditBudget({
       }
     },
     onError: async (error) => {
-      // queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], context?.previousData);
       setShowModal(false)
       if (isAxiosError(error)) {
-        console.log(error)
         toast.show({ title: error?.message })
         return
       }
-      console.log(error)
       toast.show({ title: 'Something went wrong while edit budget. Please try again!' })
     },
     onSuccess(data) {
@@ -202,8 +181,13 @@ export default function CreateOrEditBudget({
           <Dialog.Content bordered elevate key="content" gap={wp(2)}>
             <Dialog.Title>
               <View flexDirection="row" justifyContent="space-between" width={width - 50} alignItems="center">
-                <Text fontSize={FontSizes.size26} adjustsFontSizeToFit>{title}
-                  {isEdit && asset && <Text fontSize={FontSizes.size26} adjustsFontSizeToFit>{' (' + formatDate(asset?.month,'MMM, YYYY') + ')'}</Text>}
+                <Text fontSize={FontSizes.size26} adjustsFontSizeToFit>
+                  {title}
+                  {isEdit && asset && (
+                    <Text fontSize={FontSizes.size26} adjustsFontSizeToFit>
+                      {' (' + formatDate(asset?.month, 'MMM, YYYY') + ')'}
+                    </Text>
+                  )}
                 </Text>
                 <Dialog.Close asChild>
                   <Button size="$2" circular icon={X} onPress={() => setShowModal(false)} />
@@ -212,11 +196,7 @@ export default function CreateOrEditBudget({
             </Dialog.Title>
             <View>
               <FormControl>
-                <FormControl.Label
-                  fontSize={FontSizes.size16}
-                  lineHeight={FontSizes.size20}
-                  isRequired                 
-                >
+                <FormControl.Label fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired>
                   Limit
                 </FormControl.Label>
                 <Controller
@@ -242,7 +222,9 @@ export default function CreateOrEditBudget({
             {!isEdit && (
               <>
                 <View>
-                  <Label children={'Month'} fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired />
+                  <Label fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired>
+                    Month
+                  </Label>
                   <View flexDirection="row" alignItems="center">
                     <Input
                       fontSize={FontSizes.size15}
@@ -267,9 +249,11 @@ export default function CreateOrEditBudget({
                     </FormControl.ErrorMessage>
                   )}
                 </View>
-                
+
                 <View>
-                  <Label children={'Year'} fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired />
+                  <Label fontSize={FontSizes.size16} lineHeight={FontSizes.size20} isRequired>
+                    Year
+                  </Label>
                   <View flexDirection="row" alignItems="center">
                     <Input
                       fontSize={FontSizes.size15}
@@ -287,7 +271,7 @@ export default function CreateOrEditBudget({
                       style={{ position: 'absolute', right: 8 }}
                       color={THEME_COLORS.primary[700]}
                     />
-                  </View>                 
+                  </View>
                 </View>
               </>
             )}

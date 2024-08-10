@@ -1,25 +1,25 @@
 import { Button, FlatList, HStack, IconButton, VStack, useToast } from 'native-base'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EvilIcons } from '@expo/vector-icons'
-import { router, useFocusEffect } from 'expo-router'
+import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { router } from 'expo-router'
+import dayjs from 'dayjs'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
+import { Plus } from '@tamagui/lucide-icons'
 import { Text, View, useTheme } from 'tamagui'
 import { FontSizes } from '@/utils/fonts'
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
-import { RefreshControl, StyleSheet, TouchableOpacity } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import BackButton from '@/components/back-button'
 import LoaderOverlay from '@/components/loader-overlay'
 import EmptyContent from '@/components/empty-content'
 import CreateOrEditBudget from '@/components/add-or-edit-budget/add-or-edit-budget'
-import dayjs from 'dayjs'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BUDGET_QUERY_KEYS } from '@/utils/query-keys'
 import { deleteBudget, fetchBudgets } from '@/queries/budget'
-import { isAxiosError } from 'axios'
 import { Budget } from '@/types/budget'
 import { formatDate } from '@/utils/fn'
-import { Plus } from '@tamagui/lucide-icons'
 
 export default function BudgetList() {
   const queryClient = useQueryClient()
@@ -33,7 +33,7 @@ export default function BudgetList() {
   const { top } = useSafeAreaInsets()
   const toast = useToast()
 
-  const { data, isFetching, isRefetching, isLoading, refetch } = useQuery({
+  const { data, isRefetching, isLoading, refetch } = useQuery({
     queryKey: [BUDGET_QUERY_KEYS.BUDGETS],
     queryFn: fetchBudgets,
   })
@@ -46,7 +46,7 @@ export default function BudgetList() {
   function sortBudgetData(budgetData: Budget[]): Budget[] {
     try {
       budgetData?.forEach((item) => {
-        const [year, month] = item.month.split('-')
+        // const [year, month] = item.month.split('-')
         item.month = formatDate(item.month, 'YYYY-MM-DD')
       })
 
@@ -54,7 +54,7 @@ export default function BudgetList() {
 
       return sortedBudgetData
     } catch (error: any) {
-      console.log(error?.message)
+      // console.log(error?.message)
       return []
     }
   }
@@ -75,22 +75,22 @@ export default function BudgetList() {
 
       // Optimistically update to the new value
       queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], (oldBudgetList: Budget[]) =>
-        oldBudgetList.filter((budget: Budget) => budget.id != deleteBudgetId),
+        oldBudgetList.filter((budget: Budget) => budget.id !== deleteBudgetId),
       )
       return { previousData }
     },
-    onSuccess: (_, deletedBudgetId) => {
-      console.log('Budget Deleted !! ')
-      // toast.show({ title: 'Budget deleted successfully!' })
+    onSuccess: () => {
+      // console.log('Budget Deleted !! ')
+      toast.show({ title: 'Budget deleted successfully!' })
     },
-    onError: async (error, deleteBudgetId, context) => {
+    onError: async (error) => {
       // queryClient.setQueryData([BUDGET_QUERY_KEYS.BUDGETS], context?.previousData);
       if (isAxiosError(error)) {
-        console.log(error)
+        // console.log(error)
         toast.show({ title: error?.message })
         return
       }
-      console.log(error)
+      // console.log(error)
       toast.show({ title: `${error?.message}` })
       await refetch()
     },
@@ -196,14 +196,20 @@ export default function BudgetList() {
             )}
           />
         </View>
-        <TouchableOpacity style={styles.fab} onPress={() => {setShowModal(!showModal),setIsEdit(false)}}>
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => {
+            setShowModal(!showModal)
+            setIsEdit(false)
+          }}
+        >
           <Plus size={wp(8)} color={'white'} />
         </TouchableOpacity>
       </View>
       <CreateOrEditBudget
         setShowModal={setShowModal}
         showModal={showModal}
-        title={isEdit ? "Edit Budget" : "Add Budget"}
+        title={isEdit ? 'Edit Budget' : 'Add Budget'}
         isEdit={isEdit}
         asset={editData}
       />

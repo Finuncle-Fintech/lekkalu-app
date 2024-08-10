@@ -1,3 +1,3 @@
 export const BUDGET_QUERY_KEYS = {
-    BUDGETS: 'BUDGETS',
+  BUDGETS: 'BUDGETS',
 } as const

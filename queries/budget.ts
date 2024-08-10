@@ -22,15 +22,12 @@ export async function updateBudget(id: number, dto: UpdateBudgetSchema) {
   return data
 }
 
-export async function getSingleMonthBudget(date: Date,allBudgetList: SetBudgetSchema[]) {
-    
-  const data = allBudgetList?.filter((item) => {    
-
+export async function getSingleMonthBudget(date: Date, allBudgetList: SetBudgetSchema[]) {
+  const data = allBudgetList?.filter((item) => {
     const itemMonth = new Date(item.month).getMonth() + 1
     const itemYear = new Date(item.month).getFullYear()
-    
+
     return itemMonth === new Date(date).getMonth() + 1 && itemYear === new Date(date).getFullYear()
   })
-  return data?.[0] || null;
+  return data?.[0] || null
 }
-

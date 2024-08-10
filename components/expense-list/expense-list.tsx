@@ -49,7 +49,7 @@ export default function ExpenseList() {
       refreshing={expenseQuery.isLoading || tagsQuery.isLoading}
       keyExtractor={(item) => item.id.toString()}
       data={expenseQuery.data ?? []}
-      showsVerticalScrollIndicator={false}      
+      showsVerticalScrollIndicator={false}
       renderItem={({ item }) => (
         <VStack
           space={4}
@@ -60,7 +60,7 @@ export default function ExpenseList() {
           mb="4"
           display={'flex'}
           flexDirection={'row'}
-          justifyContent={'space-between'}          
+          justifyContent={'space-between'}
         >
           <View flex={1} mr={wp(3)}>
             <HStack space={2}>
