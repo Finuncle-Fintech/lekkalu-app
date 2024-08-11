@@ -13,7 +13,6 @@ module.exports = function (api) {
           logTimings: true,
         },
       ],
-      'expo-router/babel',
       'react-native-reanimated/plugin',
       [
         'module-resolver',
