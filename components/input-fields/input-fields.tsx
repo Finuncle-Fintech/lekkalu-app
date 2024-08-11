@@ -81,7 +81,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
               color={inputColor}
               _actionSheetContent={{ bg: systemTheme === 'dark' ? tamagtheme.backgroundHover.get() : 'white' }}
             >
-              {input.options.map((option) => (
+              {input.options.map((option: any) => (
                 <Select.Item
                   _text={{
                     color: inputColor,
@@ -130,6 +130,8 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
               }}
               flatListProps={{
                 contentContainerStyle: { backgroundColor: tamagtheme.background.get() },
+                data: [],
+                renderItem: () => <></>,
               }}
               styleIndicator={{ top: -4 }}
             />
@@ -159,7 +161,6 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
               value={field.value}
               onChange={field.onChange}
               defaultValue={input.defaultChecked}
-              className={input.className}
               style={input.style}
             >
               {input.options.map((each) => (
@@ -175,7 +176,7 @@ export default function InputFields({ inputs, control, errors }: InputFieldsProp
           return (
             <Input
               color={inputColor}
-              placeholder={input.label}
+              placeholder={'Enter Value'}
               onChangeText={field.onChange}
               fontSize={FontSizes.size15}
               height={hp(5)}

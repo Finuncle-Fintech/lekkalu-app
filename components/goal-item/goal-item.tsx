@@ -2,9 +2,8 @@ import React, { FC } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { Text, View, useTheme } from 'tamagui'
 import { PieChart } from 'react-native-gifted-charts'
-import { useNavigation } from 'expo-router/src/useNavigation'
 import dayjs from 'dayjs'
-import { router } from 'expo-router'
+import { router, useNavigation } from 'expo-router'
 
 import { hp, wp } from '@/utils/responsive'
 import { THEME_COLORS } from '@/utils/theme'
@@ -37,7 +36,7 @@ interface GoalItemProps {
 const GoalItem: FC<GoalItemProps> = (props) => {
   const { id, name, created_at, track_kpi } = props.data
   const theme = useTheme()
-  const navigation = useNavigation()
+  const navigation = useNavigation<any>()
   const { data: goalProgressQueryData } = useGetGoalProgress(id)
   const { mutate: mutateDeleteGoal } = useDeleteGoal()
 
@@ -64,8 +63,8 @@ const GoalItem: FC<GoalItemProps> = (props) => {
 
   const handleOnPressEditGoal = () => {
     router.push({
-      pathname: '/(authenticated)/add-goal',
-      params: { edit: true, goalDetails: JSON.stringify(props.data) },
+      pathname: '/add-goal',
+      params: { edit: 'true', goalDetails: JSON.stringify(props.data) },
     })
   }
 

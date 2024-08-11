@@ -1,6 +1,6 @@
 import { Heading, View } from 'native-base'
 import { Redirect } from 'expo-router'
-import { useColorScheme } from 'react-native'
+import { AppRegistry, useColorScheme } from 'react-native'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
 
@@ -29,3 +29,5 @@ export default function App() {
 
   return <Redirect href="/login" />
 }
+
+AppRegistry.registerComponent('main', () => App)

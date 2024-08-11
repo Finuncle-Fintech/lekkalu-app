@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import { FlatList, TouchableOpacity, StyleSheet, Share } from 'react-native'
 import { Toast } from 'native-base'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { router, useLocalSearchParams } from 'expo-router'
+import { Href, router, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { View, Text, ScrollView } from 'tamagui'
 import dayjs from 'dayjs'
@@ -263,7 +263,7 @@ const ComparisonForUnAuthenticatedUser = () => {
                   router.push({
                     pathname: `/scenarios/${item?.id}`,
                     params: { id: item?.id, backToComparison: String(comparisonId) },
-                  })
+                  } as Href)
                 }}
               >
                 <Text w="85%">{item?.name}</Text>

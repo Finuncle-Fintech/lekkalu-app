@@ -56,7 +56,7 @@ const AddEditEntityForScenario = ({
       <Modal.Content style={{ backgroundColor: background }}>
         <Modal.Body>
           <View f={1} style={{ paddingHorizontal: wp(10), marginTop: hp(3) }}>
-            <View fd="row" ai="center" columnGap={wp(4)} mb={wp(5)} position="fixed">
+            <View fd="row" ai="center" columnGap={wp(4)} mb={wp(5)}>
               <Text fontSize={FontSizes.size20} fontFamily={'$heading'} color={textColor} alignSelf="center" pt={15}>
                 {entityName}
               </Text>

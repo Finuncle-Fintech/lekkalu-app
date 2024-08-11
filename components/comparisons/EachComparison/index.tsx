@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import { Unlock, Lock } from '@tamagui/lucide-icons'
-import { router } from 'expo-router'
+import { Href, router } from 'expo-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { View, Text, useTheme } from 'tamagui'
 import EditDeleteMenu from '@/components/edit-delete-menu'
@@ -25,9 +25,9 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
 
   const handleNavigationToComparison = () => {
     router.push({
-      pathname: `/(authenticated)/comparisons/${id})`,
+      pathname: `/(authenticated)/comparisons/${id}`,
       params: { id },
-    })
+    } as Href)
   }
 
   const { mutate: remove, isPending: isDeletingComparison } = useMutation({
@@ -77,7 +77,7 @@ const EachComparison = ({ access, name, id }: EachComparisonType) => {
         <EditDeleteMenu
           onEdit={() =>
             router.push({
-              pathname: '/(authenticated)/comparisons/add',
+              pathname: '/comparisons/add',
               params: { isEdit: 'true', id },
             })
           }
