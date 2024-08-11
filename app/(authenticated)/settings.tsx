@@ -3,7 +3,7 @@ import { Separator, Text, View, useTheme } from 'tamagui'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import { AntDesign, Feather, MaterialIcons } from '@expo/vector-icons'
-import { router } from 'expo-router'
+import { Href, router } from 'expo-router'
 
 import { useAuthContext } from '@/hooks/use-auth'
 import { hp, wp } from '@/utils/responsive'
@@ -40,12 +40,12 @@ export default function Settings() {
   }
 
   const onPressVerifyEmail = () => {
-    router.push('/email-verify?email=' + userData?.email)
+    router.push(('/email-verify?email=' + userData?.email) as Href)
   }
 
-  const onPressForgotPassword = () => {
-    router.push('/reset-password')
-  }
+  // const onPressForgotPassword = () => {
+  //   router.push('/reset-password')
+  // }
 
   const onPressSubmitFeedback = () => {
     router.push('/submit-feedback')

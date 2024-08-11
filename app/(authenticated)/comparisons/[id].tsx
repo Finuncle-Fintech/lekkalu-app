@@ -16,7 +16,7 @@ import {
 } from 'echarts/components'
 import { LineChart as LC } from 'echarts/charts'
 import { SVGRenderer } from '@wuba/react-native-echarts'
-import { router, useLocalSearchParams } from 'expo-router'
+import { Href, router, useLocalSearchParams } from 'expo-router'
 import * as echarts from 'echarts/core'
 
 import dayjs from 'dayjs'
@@ -46,14 +46,14 @@ echarts.use([SVGRenderer, GridComponent, LegendComponent, DataZoomComponent, Too
 const ComparisonWithId = () => {
   const insets = useSafeAreaInsets()
   const params = useLocalSearchParams()
-  const comparisonId = +params.id
+  const comparisonId = Number(params?.id)
   const [isAddScenarioModalOpen, setIsAddScenarioModalOpen] = useState(false)
   const { getAPIClientForImaginaryUser } = useImaginaryAuth()
 
   useRerouteUnAuthenticatedUser({ pathname: '/comparison', params: { id: comparisonId } })
 
   const handleBack = () => {
-    router.push('/(authenticated)/comparisons/')
+    router.push('/(authenticated)/comparisons/' as Href)
     return true
   }
 
@@ -63,8 +63,8 @@ const ComparisonWithId = () => {
   }, [])
 
   const { data: comparison, refetch: refetchComparison } = useQuery({
-    queryKey: [`${COMPARISON.COMPARISON}-${comparisonId}`],
-    queryFn: () => fetchComparisonById(comparisonId),
+    queryKey: [`${COMPARISON.COMPARISON}-${Number(params.id)}`],
+    queryFn: () => fetchComparisonById(Number(params.id)),
     staleTime: 0,
   })
 
@@ -263,7 +263,7 @@ const ComparisonWithId = () => {
                   router.push({
                     pathname: `/(authenticated)/scenarios/${item?.id}`,
                     params: { id: item?.id, backToComparison: String(comparisonId) },
-                  })
+                  } as Href)
                 }}
               >
                 <Text w="85%">{item?.name}</Text>
@@ -273,7 +273,7 @@ const ComparisonWithId = () => {
                   isDeleting={isDeletingScenarioFromComparison}
                   onEdit={() => {
                     router.push({
-                      pathname: '/(authenticated)/scenarios/add',
+                      pathname: '/scenarios/add',
                       params: {
                         scenarioDetails: JSON.stringify(item),
                         edit: 'true',

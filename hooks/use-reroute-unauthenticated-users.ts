@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
-import { router } from 'expo-router'
+import { router, useRootNavigationState } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRootNavigationState } from 'expo-router/src/hooks'
 
 const useRerouteUnAuthenticatedUser = ({ pathname, params }: any) => {
   const rootNavigationState = useRootNavigationState()

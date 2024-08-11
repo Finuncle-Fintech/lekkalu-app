@@ -157,14 +157,14 @@ export default function AuthenticatedAppLayout() {
           unmountOnBlur: true,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="update-lending-transaction/[id]"
         options={{
           title: 'Update Lending Transaction',
           href: null,
           unmountOnBlur: true,
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="lending-account/[id]"
         options={{

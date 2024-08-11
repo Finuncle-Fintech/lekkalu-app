@@ -1,5 +1,5 @@
 import { UndefinedInitialDataOptions, useMutation, useQuery } from '@tanstack/react-query'
-import { AxiosResponse } from 'axios'
+// import { AxiosResponse } from 'axios'
 
 import { INCOME_STATEMENT_QUERY_KEYS } from '@/utils/query-keys/income-statement'
 import { apiClient } from '@/utils/client'
@@ -68,7 +68,7 @@ const getIncomeSourceTypes = () => {
 }
 
 const useGetIncomeSourceTypes = (options: Pick<UndefinedInitialDataOptions, 'enabled'> = {}) => {
-  return useQuery<AxiosResponse<Option[]>>({
+  return useQuery<any>({
     queryKey: [INCOME_STATEMENT_QUERY_KEYS.INCOME_SOURCE_TYPES],
     queryFn: getIncomeSourceTypes,
     ...options,
@@ -80,7 +80,7 @@ const getIncomeExpenseTypes = () => {
 }
 
 const useGetIncomeExpenseTypes = (options: Pick<UndefinedInitialDataOptions, 'enabled'> = {}) => {
-  return useQuery<AxiosResponse<Option[]>>({
+  return useQuery<any>({
     queryKey: [INCOME_STATEMENT_QUERY_KEYS.INCOME_EXPENSE_TYPES],
     queryFn: getIncomeExpenseTypes,
     ...options,

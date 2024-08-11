@@ -19,7 +19,7 @@ import { openDeviceMailClientApp } from '@/utils/helpers'
 
 const EmailVerify = () => {
   const insets = useSafeAreaInsets()
-  const params = useLocalSearchParams()
+  const params = useLocalSearchParams<any>()
   const { control, handleSubmit, formState, reset } = useForm<VerifyEmailSchema>({
     resolver: zodResolver(verifyEmailSchema),
     defaultValues: { email: params?.email || '' },

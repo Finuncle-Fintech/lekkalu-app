@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import { useTheme, Text, View } from 'tamagui'
 import { useMutation } from '@tanstack/react-query'
-import { router } from 'expo-router'
+import { Href, router } from 'expo-router'
 import { Lock, Unlock } from '@tamagui/lucide-icons'
 import { useToast } from 'native-base'
 import { hp, wp } from '@/utils/responsive'
@@ -41,7 +41,7 @@ export default function EachScenario({ item }: any) {
     router.push({
       pathname: `/(authenticated)/scenarios/${id}`,
       params: { id },
-    })
+    } as Href)
   }
 
   return (
