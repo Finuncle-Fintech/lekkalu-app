@@ -1,24 +1,21 @@
-import { Heading, View } from 'native-base'
+import { View } from 'native-base'
 import { Redirect } from 'expo-router'
-import { AppRegistry, useColorScheme } from 'react-native'
+import { AppRegistry } from 'react-native'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
+import { Spinner } from 'tamagui'
 
 import { useAuthContext } from '@/hooks/use-auth'
-import { FontSizes } from '@/utils/fonts'
 
 dayjs.extend(relativeTime)
 
 export default function App() {
-  const { isAuthenticationInProgress, userData } = useAuthContext()
-  const systemTheme = useColorScheme()
+  const { isSuccessLoadingUserData, userData } = useAuthContext()
 
-  if (isAuthenticationInProgress) {
+  if (!isSuccessLoadingUserData) {
     return (
       <View flex={1} bg="brand.900" alignItems="center" justifyContent="center">
-        <Heading color={systemTheme === 'dark' ? 'white' : 'black'} fontSize={FontSizes.size26}>
-          Authenticating....
-        </Heading>
+        <Spinner size="large" />
       </View>
     )
   }
