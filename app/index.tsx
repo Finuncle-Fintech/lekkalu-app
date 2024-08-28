@@ -1,33 +1,36 @@
-import { Heading, View } from 'native-base'
+import { useEffect } from 'react'
+import { View } from 'native-base'
 import { Redirect } from 'expo-router'
-import { AppRegistry, useColorScheme } from 'react-native'
+import { AppRegistry } from 'react-native'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
+import { Spinner } from 'tamagui'
 
 import { useAuthContext } from '@/hooks/use-auth'
-import { FontSizes } from '@/utils/fonts'
 
 dayjs.extend(relativeTime)
 
 export default function App() {
-  const { isAuthenticationInProgress, userData } = useAuthContext()
-  const systemTheme = useColorScheme()
+  const { fetchUserData, isLoadingUserData, userData } = useAuthContext()
 
-  if (isAuthenticationInProgress) {
+  useEffect(() => {
+    fetchUserData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (isLoadingUserData) {
     return (
       <View flex={1} bg="brand.900" alignItems="center" justifyContent="center">
-        <Heading color={systemTheme === 'dark' ? 'white' : 'black'} fontSize={FontSizes.size26}>
-          Authenticating....
-        </Heading>
+        <Spinner size="large" />
       </View>
     )
   }
 
-  if (typeof userData !== 'undefined') {
+  if (userData) {
     return <Redirect href="/(authenticated)/dashboard" />
+  } else {
+    return <Redirect href="/login" />
   }
-
-  return <Redirect href="/login" />
 }
 
 AppRegistry.registerComponent('main', () => App)

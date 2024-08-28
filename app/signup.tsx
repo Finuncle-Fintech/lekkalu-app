@@ -2,7 +2,7 @@ import { FormControl, Input, Pressable } from 'native-base'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
-import { ScrollView, Text, View, XStack, useTheme, Checkbox, Label, Button } from 'tamagui'
+import { ScrollView, Text, View, XStack, useTheme, Checkbox, Label, Button, Spinner } from 'tamagui'
 import { Check } from '@tamagui/lucide-icons'
 
 import { SignupSchema, signupSchema } from '@/schema/auth'
@@ -206,6 +206,7 @@ export default function Signup() {
           color="white"
           disabled={signupMutation.isPending}
         >
+          {signupMutation?.isPending && <Spinner color={'$backgroundFocus'} />}
           Submit
         </Button>
 

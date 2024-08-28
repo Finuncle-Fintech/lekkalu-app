@@ -16,7 +16,11 @@ export function useAuth() {
   const qc = useQueryClient()
   const toast = useToast()
 
-  const { mutate: fetchUserData, data: userData } = useMutation({
+  const {
+    mutate: fetchUserData,
+    data: userData,
+    isPending: isLoadingUserData,
+  } = useMutation({
     mutationKey: [AUTH.USER_DATA],
     mutationFn: fetchUser,
     onSuccess: () => {
@@ -144,6 +148,8 @@ export function useAuth() {
     userData,
     deleteAccountMutation,
     loginWithGoogleMutation,
+    isLoadingUserData,
+    fetchUserData,
   }
 }
 

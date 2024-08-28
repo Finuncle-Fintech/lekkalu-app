@@ -1,7 +1,7 @@
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, Redirect } from 'expo-router'
-import { Button, Checkbox, Input, Label, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
+import { Button, Checkbox, Input, Label, Spinner, Stack, Text, XStack, YStack, useTheme } from 'tamagui'
 import { Check as CheckIcon } from '@tamagui/lucide-icons'
 // import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { LoginSchema, loginSchema } from '../schema/auth'
@@ -159,6 +159,7 @@ export default function Login() {
           bg="$primary"
           color="white"
         >
+          {loginMutation?.isPending && <Spinner color={'$backgroundFocus'} />}
           Login
         </Button>
         {/* <GoogleSigninButton handleLogin={handleGoogleSignIn} /> */}
