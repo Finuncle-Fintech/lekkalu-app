@@ -19,7 +19,7 @@ export function useAuth() {
   const {
     mutate: fetchUserData,
     data: userData,
-    isSuccess: isSuccessLoadingUserData,
+    isPending: isLoadingUserData,
   } = useMutation({
     mutationKey: [AUTH.USER_DATA],
     mutationFn: fetchUser,
@@ -148,7 +148,8 @@ export function useAuth() {
     userData,
     deleteAccountMutation,
     loginWithGoogleMutation,
-    isSuccessLoadingUserData,
+    isLoadingUserData,
+    fetchUserData,
   }
 }
 

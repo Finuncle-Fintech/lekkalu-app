@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { View } from 'native-base'
 import { Redirect } from 'expo-router'
 import { AppRegistry } from 'react-native'
@@ -10,9 +11,14 @@ import { useAuthContext } from '@/hooks/use-auth'
 dayjs.extend(relativeTime)
 
 export default function App() {
-  const { isSuccessLoadingUserData, userData } = useAuthContext()
+  const { fetchUserData, isLoadingUserData, userData } = useAuthContext()
 
-  if (!isSuccessLoadingUserData) {
+  useEffect(() => {
+    fetchUserData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (isLoadingUserData) {
     return (
       <View flex={1} bg="brand.900" alignItems="center" justifyContent="center">
         <Spinner size="large" />
@@ -20,11 +26,11 @@ export default function App() {
     )
   }
 
-  if (typeof userData !== 'undefined') {
+  if (userData) {
     return <Redirect href="/(authenticated)/dashboard" />
+  } else {
+    return <Redirect href="/login" />
   }
-
-  return <Redirect href="/login" />
 }
 
 AppRegistry.registerComponent('main', () => App)
